@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Navbar from "./components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://dev.jasonjmichael.com"),
   title: "Jason Michael",
   description: "Jason Michael's Portfolio Site",
   openGraph: {
@@ -31,11 +33,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <main className="max-h-auto relative flex min-h-screen flex-col items-center bg-slate-100 dark:bg-slate-900 selection:bg-slate-200/30 overflow-x-hidden">
+          <div className="flex h-full w-full">
+            <Navbar />
+          </div>
+          {children}
+        </main>
       </body>
     </html>
   );
