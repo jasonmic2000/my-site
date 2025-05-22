@@ -1,16 +1,16 @@
-"use client"
+"use client";
+import { Button } from "@/components/ui/button";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
+  FiCommand,
   FiHome,
   FiPaperclip,
-  FiUser,
   FiSun,
-//   FiMoon,
+  FiUser,
+  //   FiMoon,
   FiZap,
-  FiCommand,
 } from "react-icons/fi";
-import { usePathname, useRouter } from "next/navigation";
-import React from "react";
-import { useState, useEffect } from "react";
 // import { useKBar } from "kbar";
 // import { useTheme } from "next-themes";
 
@@ -40,9 +40,9 @@ const NavbarItems = [
 const Navbar = () => {
   const router = useRouter();
   const path = usePathname();
-//   const { theme, setTheme } = useTheme();
+  //   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-//   const { query } = useKBar();
+  //   const { query } = useKBar();
   const [tooltipVisibility, setTooltipVisibility] = useState([
     false,
     false,
@@ -59,7 +59,7 @@ const Navbar = () => {
           return (
             <div key={item.slug}>
               {path === item.slug ? (
-                <button
+                <Button
                   key={index}
                   className="relative flex w-full items-center justify-center rounded bg-zinc-800 py-1 px-4 shadow duration-300 ease-in-out hover:scale-110 hover:bg-zinc-800 hover:shadow-xl focus:bg-zinc-800 dark:bg-zinc-700 dark:hover:bg-zinc-700 dark:focus:bg-zinc-700"
                   onClick={() => router.push(item.slug)}
@@ -82,9 +82,9 @@ const Navbar = () => {
                       {item.name}
                     </span>
                   )}
-                </button>
+                </Button>
               ) : (
-                <button
+                <Button
                   key={index}
                   className="relative flex w-full items-center justify-center rounded bg-zinc-700 py-1 px-4 shadow duration-300 ease-in-out hover:scale-110 hover:bg-zinc-800 hover:shadow-xl focus:bg-zinc-800 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:focus:bg-zinc-700"
                   onClick={() => router.push(item.slug)}
@@ -107,34 +107,58 @@ const Navbar = () => {
                       {item.name}
                     </span>
                   )}
-                </button>
+                </Button>
               )}
             </div>
           );
         })}
         <div className="flex flex-row gap-12">
           {mounted === true && (
-            <button
-              className="flex w-full items-center justify-center rounded bg-zinc-700 py-1 px-4 shadow duration-300 ease-in-out hover:scale-110 hover:bg-zinc-800 hover:shadow-xl dark:bg-zinc-800 dark:hover:bg-zinc-700"
-            //   onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            <Button
+              className="flex items-center justify-center rounded bg-zinc-700 py-1 px-4 shadow duration-300 ease-in-out hover:scale-110 hover:bg-zinc-800 hover:shadow-xl dark:bg-zinc-800 dark:hover:bg-zinc-700"
+              //   onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
               <div className="p-2 text-zinc-100">
                 {/* {theme === "dark" ? <FiSun /> : <FiMoon />} */}
                 <FiSun />
               </div>
-            </button>
+            </Button>
           )}
-          <button
-            className="flex w-full items-center justify-center rounded bg-zinc-700 py-1 px-4 shadow duration-300 ease-in-out hover:scale-110 hover:bg-zinc-800 hover:shadow-xl dark:bg-zinc-800 dark:hover:bg-zinc-700"
+          <Button
+            className="flex items-center justify-center rounded bg-zinc-700 py-1 px-4 shadow duration-300 ease-in-out hover:scale-110 hover:bg-zinc-800 hover:shadow-xl dark:bg-zinc-800 dark:hover:bg-zinc-700"
             // onClick={query.toggle}
           >
             <div className="p-2">
+              Hello there!
               <FiCommand size="1rem" className="text-zinc-100" />
             </div>
-          </button>
+          </Button>
         </div>
       </div>
     </div>
+    // <header>
+    //   <div className="mx-auto max-w-(--breakpoint-sm) px-3">
+    //     <div className="flex flex-wrap justify-between gap-y-2">
+    //       <Link href="/">
+    //         <div className="font-semibold">Jason Michael&nbsp;🔬</div>
+    //       </Link>
+    //       <nav className="flex items-center gap-1 text-sm">
+    //         <Link href="/blog">blog</Link>
+    //         <span>{`/`}</span>
+    //         <Link href="/projects">projects</Link>
+    //         <span>{`/`}</span>
+    //         <button
+    //           id="magnifying-glass"
+    //           aria-label="Search"
+    //           className="flex items-center rounded-sm border border-black/15 bg-neutral-100 px-2 py-1 text-xs transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:bg-neutral-900 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"
+    //         >
+    //           <FiSearch />
+    //           &nbsp;Search
+    //         </button>
+    //       </nav>
+    //     </div>
+    //   </div>
+    // </header>
   );
 };
 
