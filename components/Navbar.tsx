@@ -12,6 +12,7 @@ import {
   FiUser,
   //   FiMoon,
   FiZap,
+  FiSearch,
 } from "react-icons/fi";
 // import { useKBar } from "kbar";
 // import { useTheme } from "next-themes";
@@ -156,9 +157,12 @@ const Navbar = () => {
               aria-label="Search"
               className="flex items-center rounded-sm border border-black/15 bg-neutral-100 px-2 py-1 text-xs transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black focus-visible:bg-black/5 focus-visible:text-black dark:border-white/20 dark:bg-neutral-900 dark:hover:bg-white/5 dark:hover:text-white dark:focus-visible:bg-white/5 dark:focus-visible:text-white"
             >
-              {/* <FiSearch /> */}
+              <FiSearch />
               &nbsp;Search
             </button>
+            {/* <Link href="#" onClick={() => {}}>
+              Search
+            </Link> */}
           </nav>
         </div>
       </div>
