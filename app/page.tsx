@@ -32,7 +32,7 @@ const Home = () => {
                 <Image
                   src="https://i.pinimg.com/280x280_RS/a5/82/42/a58242e96fd87bca86b0d8dc92058a98.jpg"
                   alt="avatar"
-                  className="h-32 w-32 m-0 rounded-full shadow-xl grayscale"
+                  className={`h-32 w-32 m-0 rounded-full shadow-xl not-hover:grayscale transition duration-300`}
                   width={280}
                   height={280}
                 />
