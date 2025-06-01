@@ -35,10 +35,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col items-center justify-center mx-auto mt-2 lg:mt-8 mb-20 lg:mb-40
-    scrollbar-hide`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-[#F4F4F5] text-[#3F3F46] dark:bg-[#18181B] dark:text-[#D4D4D8] antialiased flex flex-col items-center justify-center scrollbar-hide mx-auto`}
       >
-        <main className="flex-auto min-w-0 mt-2 md:mt-6 flex flex-col px-6 sm:px-4 md:px-0 max-w-[640px] w-full">
+        <main className="flex-auto min-w-0 max-w-[640px] w-full mt-2 md:mt-6 px-6 sm:px-4 md:px-0">
           <Navbar />
           {children}
         </main>
