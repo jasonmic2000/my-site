@@ -5,7 +5,7 @@ const Work = ({
   showDetails = false,
 }: {
   workEntries: WorkEntryMeta[];
-  showDetails?: boolean;
+  showDetails: boolean;
 }) => {
   return (
     <div>

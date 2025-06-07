@@ -10,6 +10,7 @@ import Image from "next/image";
 
 const Home = async () => {
   const workEntries = await getAllWorkEntries();
+  const mostRecentWorkEntry = workEntries[0];
 
   return (
     // <>
@@ -93,7 +94,7 @@ const Home = async () => {
             sometimes ideas. Always me.
           </p>
         </section>
-        <Work workEntries={workEntries} showDetails={false} />
+        <Work workEntries={[mostRecentWorkEntry]} showDetails={false} />
       </main>
     </>
   );
