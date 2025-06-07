@@ -9,7 +9,12 @@ const Work = ({
 }) => {
   return (
     <div>
-      <h2 className="font-semibold">Work</h2>
+      <div className="flex flex-row justify-between mb-4">
+        <h2 className="font-semibold text-black dark:text-white">Work</h2>
+        {!showDetails && (
+          <span className="font-semibold font-sans text-sm">See all work</span>
+        )}
+      </div>
       {workEntries.map((entry: WorkEntryMeta) => (
         <ul className="flex flex-col py-4" key={entry.startDate}>
           <li className="animate">
@@ -19,7 +24,9 @@ const Work = ({
               {`${entry.startDate} - ${entry.endDate}`}
             </div>
             <article>
-              {entry.initialDetails && <div className="py-4 font-serif">{entry.initialDetails}</div>}
+              {entry.initialDetails && (
+                <div className="py-4 font-serif">{entry.initialDetails}</div>
+              )}
               {showDetails && (
                 <div
                   className="font-serif list-circle"
