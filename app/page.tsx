@@ -1,12 +1,16 @@
 // import { getPinnedRepos } from "../lib/repos";
 // import type { Repo } from "../lib/types";
 
+import Work from "@/components/Work";
+import { getAllWorkEntries } from "@/lib/utils";
 import Image from "next/image";
 
 // import PinnedRepos from "../components/PinnedRepos";
 // import Footer from "../components/Footer";
 
-const Home = () => {
+const Home = async () => {
+  const workEntries = await getAllWorkEntries();
+
   return (
     // <>
     //     <main className="flex flex-col min-h-screen items-center justify-center">
@@ -43,8 +47,8 @@ const Home = () => {
     //     </main>
     // </>
     <>
-      <main>
-        <header className="flex flex-col-reverse items-start md:flex-row md:justify-between md:items-center md:px-4">
+      <main className="md:px-4 max-w-2xl">
+        <header className="flex flex-col-reverse items-start md:flex-row md:justify-between md:items-center">
           <div>
             <h2 className="mt-2 md:m-0 text-[2rem] font-extrabold">
               <span>Jason </span>
@@ -64,7 +68,7 @@ const Home = () => {
             />
           </div>
         </header>
-        <section className="max-w-2xl mx-auto px-4 py-12 font-serif">
+        <section className=" mx-auto py-12 font-serif">
           <p className="mb-4">
             I’m a <em>software engineer</em>, <em>problem solver</em>,{" "}
             <em>mentor</em>, <em>manager</em>, <em>lifelong student</em>,{" "}
@@ -89,6 +93,7 @@ const Home = () => {
             sometimes ideas. Always me.
           </p>
         </section>
+        <Work workEntries={workEntries} showDetails={false} />
       </main>
     </>
   );
