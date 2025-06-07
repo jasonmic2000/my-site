@@ -23,15 +23,12 @@ const Work = ({
             <span className="text-sm opacity-75">
               {`${entry.startDate} - ${entry.endDate}`}
             </span>
-            <article>
+            <article className="py-4 font-serif">
               {entry.initialDetails && (
-                <p className="py-4 font-serif">{entry.initialDetails}</p>
+                <p className="pb-4">{entry.initialDetails}</p>
               )}
               {showDetails && (
-                <div
-                  className="font-serif list-circle"
-                  dangerouslySetInnerHTML={{ __html: entry.detailsHtml }}
-                />
+                <div className="markdown-list" dangerouslySetInnerHTML={{ __html: entry.detailsHtml }} />
               )}
             </article>
           </li>

@@ -2,7 +2,7 @@
 import Link from "next/link";
 // import { useKBar } from "kbar";
 import { useTheme } from "next-themes";
-import { FiMoon, FiSun } from "react-icons/fi";
+import { FiMoon } from "react-icons/fi";
 
 const NavbarItems = [
   {
@@ -13,6 +13,10 @@ const NavbarItems = [
     name: "projects",
     slug: "/projects",
   },
+  {
+    name: "work",
+    slug: "/work",
+  }
 ];
 
 const Navbar = () => {
@@ -88,7 +92,7 @@ const Navbar = () => {
               setTheme(resolvedTheme === "dark" ? "light" : "dark")
             }
           >
-            {resolvedTheme === "dark" ? <FiMoon /> : <FiSun />}
+             <FiMoon />
           </button>
         </div>
       </div>
