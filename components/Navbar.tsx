@@ -2,7 +2,7 @@
 import Link from "next/link";
 // import { useKBar } from "kbar";
 import { useTheme } from "next-themes";
-import { FaCircleHalfStroke } from "react-icons/fa6";
+import { FiMoon, FiSun } from "react-icons/fi";
 
 const NavbarItems = [
   {
@@ -66,7 +66,7 @@ const Navbar = () => {
     <nav className="lg:mb-16 mb-12 py-5">
       <div className="flex flex-col md:flex-row md:items-center justify-between">
         <div className="flex items-center">
-          <Link href="/" className="text-xl font-semibold hover:text-black dark:hover:text-white transition duration-300">
+          <Link href="/" className="text-lg font-semibold hover:text-black dark:hover:text-white transition duration-300">
             ¯\_(ツ)_/¯
           </Link>
         </div>
@@ -88,10 +88,7 @@ const Navbar = () => {
               setTheme(resolvedTheme === "dark" ? "light" : "dark")
             }
           >
-            <FaCircleHalfStroke
-              name="fa6-solid:circle-half-stroke"
-              className="h-[14px] w-[14px]"
-            />
+            {resolvedTheme === "dark" ? <FiMoon /> : <FiSun />}
           </button>
         </div>
       </div>
