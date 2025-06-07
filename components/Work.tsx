@@ -19,7 +19,7 @@ const Work = ({
               {`${entry.startDate} - ${entry.endDate}`}
             </div>
             <article>
-              <div className="py-4 font-serif">{entry.initialDetails}</div>
+              {entry.initialDetails && <div className="py-4 font-serif">{entry.initialDetails}</div>}
               {showDetails && (
                 <div
                   className="font-serif list-circle"
