@@ -72,26 +72,37 @@ const Home = async () => {
       </section>
       <section className="mx-auto font-serif">
         <p className="mb-4">
-          I’m a <em>software engineer</em>, <em>problem solver</em>,{" "}
-          <em>mentor</em>, <em>manager</em>, <em>lifelong student</em>,{" "}
-          <em>gamer</em>, and full-time <em>geek</em>.
+          I’m a <em>software engineer</em>, <em>manager</em>, <em>mentor</em>,{" "}
+          <em>problem solver</em>, <em>lifelong student</em>, <em>gamer</em>,
+          and full-time <em>geek</em>.
         </p>
         <p className="mb-4">
-          I love building things that are thoughtful — whether it’s clean,
-          accessible UI, a snappy front end, or a self-hosted setup running on
-          my home server. I’m curious by nature and thrive on figuring things
-          out: debugging tricky issues, learning how systems work under the
-          hood, or just customizing my desk setup for the tenth time.
+          My first brush with code was in the 7th grade, guiding a little
+          triangle called the “Turtle” across the screen with BASIC and Logo. I
+          didn’t know it then, but that triangle sparked a curiosity that’s
+          still going strong. Since then, I’ve explored everything from HTML and
+          Java in school to PHP and C++ in college — eventually finding my way
+          back to the web, where I now build clean, accessible interfaces (and
+          occasionally break things just to learn how they work).
         </p>
         <p className="mb-4">
-          Outside of work, I’m deep into <em>board games</em>,{" "}
-          <em>video games</em>, and exploring ways to work and live more
-          intentionally. I also enjoy mentoring others, writing, and constantly
-          tweaking my productivity workflows.
+          These days, I focus on thoughtful engineering — whether it’s crafting
+          intuitive, accessible UIs, improving performance, or running
+          self-hosted experiments on my home server. I’ve also found myself
+          mentoring more lately — not necessarily in a formal way, but by helping
+          teammates debug tricky problems, reviewing code, and supporting where
+          I can.
+        </p>
+        <p className="mb-4">
+          Outside work, video games have been a constant in my life — not just
+          as a hobby, but as a space that’s shaped my curiosity, creativity, and
+          the way I think about systems. I also spend time on board games,
+          productivity experiments, and occasionally fall down rabbit holes
+          about hardware, workflows, or terminal customization.
         </p>
         <p>
           This site is my digital playground — a space to share what I’m working
-          on, learning, or experimenting with. Sometimes code, sometimes ideas.
+          on, learning, or obsessed with. Sometimes code, sometimes ideas.
           Always me.
         </p>
       </section>
