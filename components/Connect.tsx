@@ -33,7 +33,7 @@ export const Connect = () => {
       <Link
         href={`mailto:${SITE.EMAIL}`}
         aria-label={`Email ${SITE.NAME}`}
-        className="flex gap-2"
+        className="flex gap-2 hover:text-black dark:hover:text-white transition duration-300 ease-in-out"
       >
         {SITE.EMAIL}
       </Link>
