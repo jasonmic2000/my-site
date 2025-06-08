@@ -48,56 +48,55 @@ const Home = async () => {
     //       </div>
     //     </main>
     // </>
+
     <>
-      <main className="space-y-20 px-4 pb-24 max-w-2xl">
-        <section className="flex flex-col-reverse items-start md:flex-row md:justify-between md:items-center">
-          <div>
-            <h2 className="mt-2 md:m-0 text-[2rem] font-extrabold">
-              <span>Jason </span>
-              <span className="text-rose-400">Michael</span>
-            </h2>
-            <p className="m-0 italic font-serif">
-              Associate Technology Manager at Maxxton
-            </p>
-          </div>
-          <div>
-            <Image
-              src="https://i.pinimg.com/280x280_RS/a5/82/42/a58242e96fd87bca86b0d8dc92058a98.jpg"
-              alt="avatar"
-              className={`h-32 w-32 m-0 rounded-full shadow-xl md:not-hover:grayscale transition duration-300`}
-              width={280}
-              height={280}
-            />
-          </div>
-        </section>
-        <section className="mx-auto font-serif">
-          <p className="mb-4">
-            I’m a <em>software engineer</em>, <em>problem solver</em>,{" "}
-            <em>mentor</em>, <em>manager</em>, <em>lifelong student</em>,{" "}
-            <em>gamer</em>, and full-time <em>geek</em>.
+      <section className="flex flex-col-reverse items-start md:flex-row md:justify-between md:items-center">
+        <div>
+          <h2 className="mt-2 md:m-0 text-[2rem] font-extrabold">
+            <span>Jason </span>
+            <span className="text-rose-400">Michael</span>
+          </h2>
+          <p className="m-0 italic font-serif">
+            Associate Technology Manager at Maxxton
           </p>
-          <p className="mb-4">
-            I love building things that are thoughtful — whether it’s clean,
-            accessible UI, a snappy front end, or a self-hosted setup running on
-            my home server. I’m curious by nature and thrive on figuring things
-            out: debugging tricky issues, learning how systems work under the
-            hood, or just customizing my desk setup for the tenth time.
-          </p>
-          <p className="mb-4">
-            Outside of work, I’m deep into <em>board games</em>,{" "}
-            <em>video games</em>, and exploring ways to work and live more
-            intentionally. I also enjoy mentoring others, writing, and
-            constantly tweaking my productivity workflows.
-          </p>
-          <p>
-            This site is my digital playground — a space to share what I’m
-            working on, learning, or experimenting with. Sometimes code,
-            sometimes ideas. Always me.
-          </p>
-        </section>
-        <Work workEntries={[mostRecentWorkEntry]} showDetails={false} />
-        <Connect />
-      </main>
+        </div>
+        <div>
+          <Image
+            src="https://i.pinimg.com/280x280_RS/a5/82/42/a58242e96fd87bca86b0d8dc92058a98.jpg"
+            alt="avatar"
+            className={`h-32 w-32 m-0 rounded-full shadow-xl md:not-hover:grayscale transition duration-300`}
+            width={280}
+            height={280}
+          />
+        </div>
+      </section>
+      <section className="mx-auto font-serif">
+        <p className="mb-4">
+          I’m a <em>software engineer</em>, <em>problem solver</em>,{" "}
+          <em>mentor</em>, <em>manager</em>, <em>lifelong student</em>,{" "}
+          <em>gamer</em>, and full-time <em>geek</em>.
+        </p>
+        <p className="mb-4">
+          I love building things that are thoughtful — whether it’s clean,
+          accessible UI, a snappy front end, or a self-hosted setup running on
+          my home server. I’m curious by nature and thrive on figuring things
+          out: debugging tricky issues, learning how systems work under the
+          hood, or just customizing my desk setup for the tenth time.
+        </p>
+        <p className="mb-4">
+          Outside of work, I’m deep into <em>board games</em>,{" "}
+          <em>video games</em>, and exploring ways to work and live more
+          intentionally. I also enjoy mentoring others, writing, and constantly
+          tweaking my productivity workflows.
+        </p>
+        <p>
+          This site is my digital playground — a space to share what I’m working
+          on, learning, or experimenting with. Sometimes code, sometimes ideas.
+          Always me.
+        </p>
+      </section>
+      <Work workEntries={[mostRecentWorkEntry]} showDetails={false} />
+      <Connect />
     </>
   );
 };

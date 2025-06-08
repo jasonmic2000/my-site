@@ -40,7 +40,6 @@ export const metadata: Metadata = {
   },
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -54,8 +53,7 @@ export default function RootLayout({
         <Providers>
           <>
             <Navbar />
-            {/* <div className="h-20 lg:h-28" /> */}
-            {children}
+            <main className="space-y-20 px-4 pb-24 max-w-2xl">{children}</main>
             <Footer />
           </>
         </Providers>

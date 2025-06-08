@@ -9,11 +9,7 @@ export const metadata: Metadata = {
 
 const WorkPage = async () => {
   const workEntries = await getAllWorkEntries();
-  return (
-    <>
-      <Work workEntries={workEntries} showDetails={true} />
-    </>
-  );
+  return <Work workEntries={workEntries} showDetails={true} />;
 };
 
 export default WorkPage;

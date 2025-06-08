@@ -9,7 +9,7 @@ const Work = ({
   showDetails: boolean;
 }) => {
   return (
-    <section className={`space-y-6 ${showDetails ? "mb-12 px-4" : ""}`}>
+    <section className="space-y-6">
       <div className="flex flex-row justify-between">
         <h2 className="font-semibold text-black dark:text-white">Work</h2>
         {!showDetails && (
