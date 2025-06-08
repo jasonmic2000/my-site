@@ -1,4 +1,5 @@
 import { WorkEntryMeta } from "@/lib/utils";
+import Link from "next/link";
 
 const Work = ({
   workEntries,
@@ -12,7 +13,9 @@ const Work = ({
       <div className="flex flex-row justify-between mb-4">
         <h2 className="font-semibold text-black dark:text-white">Work</h2>
         {!showDetails && (
-          <span className="font-semibold font-sans text-sm">See all work</span>
+          <Link href="/work" className="hover:text-black hover:dark:text-white transition duration-300 ease-in-out font-semibold font-sans text-sm">
+            See all work
+          </Link>
         )}
       </div>
       {workEntries.map((entry: WorkEntryMeta) => (
@@ -28,7 +31,10 @@ const Work = ({
                 <p className="pb-4">{entry.initialDetails}</p>
               )}
               {showDetails && (
-                <div className="markdown-list" dangerouslySetInnerHTML={{ __html: entry.detailsHtml }} />
+                <div
+                  className="markdown-list"
+                  dangerouslySetInnerHTML={{ __html: entry.detailsHtml }}
+                />
               )}
             </article>
           </li>
