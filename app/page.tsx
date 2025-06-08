@@ -57,7 +57,7 @@ const Home = async () => {
               <span className="text-rose-400">Michael</span>
             </h2>
             <p className="m-0 italic font-serif">
-              Associate Technology Engineer at Maxxton
+              Associate Technology Manager at Maxxton
             </p>
           </div>
           <div>
