@@ -49,7 +49,7 @@ const Home = async () => {
     //     </main>
     // </>
     <>
-      <main className="space-y-20 md:px-4 max-w-2xl">
+      <main className="space-y-20 px-4 max-w-2xl">
         <section className="flex flex-col-reverse items-start md:flex-row md:justify-between md:items-center">
           <div>
             <h2 className="mt-2 md:m-0 text-[2rem] font-extrabold">
