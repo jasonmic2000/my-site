@@ -1,0 +1,42 @@
+import { SOCIALS, SITE } from "@/lib/consts";
+import Link from "next/link";
+import React from "react";
+
+export const Connect = () => {
+  return (
+    <section className="animate space-y-4 p-4 mb-12">
+      <h5 className="font-semibold text-black dark:text-white">
+        Let&apos;s Connect
+      </h5>
+      <article>
+        <p className="font-serif">
+          If you want to get in touch with me about something or just to say hi,
+          reach out on social media or send me an email.
+        </p>
+      </article>
+      <ul className="flex flex-wrap mb-2 mt-8">
+        {SOCIALS.map(({ NAME, HREF, ICON }) => (
+          <li
+            key={NAME}
+            className="flex text-xl pr-2 text-nowrap hover:text-black dark:hover:text-white transition duration-300 ease-in-out"
+          >
+            <Link
+              href={HREF}
+              target="__blank"
+              aria-label={`${SITE.NAME} on ${NAME}`}
+            >
+              <ICON />
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <Link
+        href={`mailto:${SITE.EMAIL}`}
+        aria-label={`Email ${SITE.NAME}`}
+        className="flex gap-2"
+      >
+        {SITE.EMAIL}
+      </Link>
+    </section>
+  );
+};
