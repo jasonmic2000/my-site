@@ -9,7 +9,7 @@ const Work = ({
   showDetails: boolean;
 }) => {
   return (
-    <section className="space-y-6">
+    <section className={`space-y-6 ${showDetails ? "mb-12 px-4" : ""}`}>
       <div className="flex flex-row justify-between">
         <h2 className="font-semibold text-black dark:text-white">Work</h2>
         {!showDetails && (
@@ -26,13 +26,13 @@ const Work = ({
             <span className="text-sm opacity-75">
               {`${entry.startDate} - ${entry.endDate}`}
             </span>
-            <article className="py-4 font-serif">
+            <article className="pt-4 font-serif">
               {entry.initialDetails && (
-                <p className="pb-4">{entry.initialDetails}</p>
+                <p>{entry.initialDetails}</p>
               )}
               {showDetails && (
                 <div
-                  className="markdown-list"
+                  className="pt-4 pb-12 markdown-list"
                   dangerouslySetInnerHTML={{ __html: entry.detailsHtml }}
                 />
               )}

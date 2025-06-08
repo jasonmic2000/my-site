@@ -70,7 +70,7 @@ const Home = async () => {
             />
           </div>
         </section>
-        <section className="mx-auto pb-12 font-serif mb-8">
+        <section className="mx-auto font-serif">
           <p className="mb-4">
             I’m a <em>software engineer</em>, <em>problem solver</em>,{" "}
             <em>mentor</em>, <em>manager</em>, <em>lifelong student</em>,{" "}
