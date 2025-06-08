@@ -9,10 +9,10 @@ const NavbarItems = [
     name: "blog",
     slug: "/blog",
   },
-  {
-    name: "projects",
-    slug: "/projects",
-  },
+  // {
+  //   name: "projects",
+  //   slug: "/projects",
+  // },
   {
     name: "work",
     slug: "/work",
@@ -31,7 +31,7 @@ const Navbar = () => {
     //       <Link href="/">
     //         <div className="font-semibold">¯\_(ツ)_/¯</div>
     //       </Link>
-    //       <nav className="flex items-center gap-1 text-sm">
+    //       <header className="flex items-center gap-1 text-sm">
     //         <Link href="/blog">blog</Link>
     //         <span>{`|`}</span>
     //         <Link href="/projects">projects</Link>
@@ -61,13 +61,13 @@ const Navbar = () => {
     //             className="h-[14px] w-[14px] text-[#1c1c1c] dark:text-[#D4D4D4]"
     //           />
     //         </button>
-    //       </nav>
+    //       </header>
     //     </div>
     //   </div>
     // </header>
 
     // Astrofolio
-    <nav className="lg:mb-16 mb-12 py-5">
+    <header className="w-full lg:mb-16 mb-12 py-5">
       <div className="flex flex-col md:flex-row md:items-center justify-between">
         <div className="flex items-center">
           <Link href="/" className="text-lg font-semibold hover:text-black dark:hover:text-white transition duration-300">
@@ -96,7 +96,7 @@ const Navbar = () => {
           </button>
         </div>
       </div>
-    </nav>
+    </header>
   );
 };
 
