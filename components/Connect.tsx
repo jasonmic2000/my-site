@@ -5,9 +5,9 @@ import React from "react";
 export const Connect = () => {
   return (
     <section className="space-y-6">
-      <h5 className="font-semibold text-black dark:text-white">
+      <h2 className="font-semibold text-black dark:text-white">
         Let&apos;s Connect
-      </h5>
+      </h2>
       <article>
         <p className="font-serif">
           If you want to get in touch with me about something or just to say hi,

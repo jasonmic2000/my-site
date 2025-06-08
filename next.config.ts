@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [new URL("https://i.pinimg.com/**")],
   },
+  productionBrowserSourceMaps: true,
   experimental: {
     mdxRs: true,
   },
