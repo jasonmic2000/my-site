@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { DEFAULT_METADATA } from "@/lib/consts";
 import "../styles/globals.css";
 import Navbar from "../components/Navbar";
 import { Providers } from "./providers";
+import { Connect } from "@/components/Connect";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,18 +17,29 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://dev.jasonjmichael.com"),
-  title: "Jason Michael",
-  description: "Jason Michael's Portfolio Site",
+  metadataBase: new URL(DEFAULT_METADATA.url),
+  title: {
+    default: DEFAULT_METADATA.title,
+    template: "%s – Jason Michael", // 👈 Shows "Page Title – Jason Michael"
+  },
+  description: DEFAULT_METADATA.description,
   openGraph: {
-    siteName: "Jason Michael",
+    title: DEFAULT_METADATA.title,
+    description: DEFAULT_METADATA.description,
+    url: DEFAULT_METADATA.url,
+    siteName: DEFAULT_METADATA.siteName,
+    locale: DEFAULT_METADATA.locale,
     type: "website",
-    title: "Jason Michael",
   },
   twitter: {
-    title: "Jason Michael",
+    card: "summary_large_image",
+    title: DEFAULT_METADATA.title,
+    description: DEFAULT_METADATA.description,
+    site: DEFAULT_METADATA.twitterHandle,
+    creator: DEFAULT_METADATA.twitterHandle,
   },
 };
+
 
 export default function RootLayout({
   children,
@@ -41,7 +54,9 @@ export default function RootLayout({
         <Providers>
           <main className="flex-auto min-w-0 max-w-[640px] w-full mt-2 md:mt-6 px-6 sm:px-4 md:px-0">
             <Navbar />
+            {/* <div className="h-20 lg:h-28" /> */}
             {children}
+            <Connect />
           </main>
         </Providers>
       </body>
