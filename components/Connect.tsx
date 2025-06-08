@@ -4,7 +4,7 @@ import React from "react";
 
 export const Connect = () => {
   return (
-    <section className="animate space-y-4 p-4 mb-12">
+    <section className="space-y-6">
       <h5 className="font-semibold text-black dark:text-white">
         Let&apos;s Connect
       </h5>

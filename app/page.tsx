@@ -1,6 +1,7 @@
 // import { getPinnedRepos } from "../lib/repos";
 // import type { Repo } from "../lib/types";
 
+import { Connect } from "@/components/Connect";
 import Work from "@/components/Work";
 import { getAllWorkEntries } from "@/lib/utils";
 import Image from "next/image";
@@ -48,8 +49,8 @@ const Home = async () => {
     //     </main>
     // </>
     <>
-      <main className="md:px-4 max-w-2xl">
-        <header className="flex flex-col-reverse items-start md:flex-row md:justify-between md:items-center">
+      <main className="space-y-20 md:px-4 max-w-2xl">
+        <section className="flex flex-col-reverse items-start md:flex-row md:justify-between md:items-center">
           <div>
             <h2 className="mt-2 md:m-0 text-[2rem] font-extrabold">
               <span>Jason </span>
@@ -68,7 +69,7 @@ const Home = async () => {
               height={280}
             />
           </div>
-        </header>
+        </section>
         <section className="mx-auto py-12 font-serif mb-8">
           <p className="mb-4">
             I’m a <em>software engineer</em>, <em>problem solver</em>,{" "}
@@ -95,6 +96,7 @@ const Home = async () => {
           </p>
         </section>
         <Work workEntries={[mostRecentWorkEntry]} showDetails={false} />
+        <Connect />
       </main>
     </>
   );

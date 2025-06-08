@@ -9,8 +9,8 @@ const Work = ({
   showDetails: boolean;
 }) => {
   return (
-    <div>
-      <div className="flex flex-row justify-between mb-4">
+    <section className="space-y-6">
+      <div className="flex flex-row justify-between">
         <h2 className="font-semibold text-black dark:text-white">Work</h2>
         {!showDetails && (
           <Link href="/work" className="hover:text-black hover:dark:text-white transition duration-300 ease-in-out font-semibold font-sans text-sm">
@@ -19,8 +19,8 @@ const Work = ({
         )}
       </div>
       {workEntries.map((entry: WorkEntryMeta) => (
-        <ul className="flex flex-col py-4" key={entry.startDate}>
-          <li className="animate">
+        <ul className="flex flex-col" key={entry.startDate}>
+          <li>
             <p className="font-semibold">{entry.company}</p>
             <p className="text-sm opacity-75">{entry.role}</p>
             <span className="text-sm opacity-75">
@@ -40,7 +40,7 @@ const Work = ({
           </li>
         </ul>
       ))}
-    </div>
+    </section>
   );
 };
 
