@@ -22,7 +22,7 @@ export const Connect = () => {
           >
             <Link
               href={HREF}
-              target="__blank"
+              target="_blank"
               aria-label={`${SITE.NAME} on ${NAME}`}
             >
               <ICON />
