@@ -22,6 +22,7 @@ export const Connect = () => {
           >
             <Link
               href={HREF}
+              rel="noopener noreferrer"
               target="_blank"
               aria-label={`${SITE.NAME} on ${NAME}`}
             >
