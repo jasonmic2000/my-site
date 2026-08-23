@@ -302,12 +302,9 @@ something fixable in this repo; it needs an upstream fix in
 ### 🟠 Real bugs
 - [x] ~~`Connect.tsx:25` — `target="__blank"` typo~~ **Fixed 2026-08-13** —
   corrected to `target="_blank"`.
-  - [ ] **Still open**: `rel="noopener noreferrer"` is missing on the same
-    links. This is the standard pairing with `target="_blank"` to prevent
-    reverse-tabnabbing, and **is very likely why the Lighthouse Best
-    Practices score isn't 100** (its "cross-origin destinations are
-    unsafe" audit checks exactly this). The typo fix alone doesn't close
-    this out.
+  - [x] ~~Missing `rel="noopener noreferrer"`~~ — **fixed 2026-08-23**,
+    added to the social links alongside `target="_blank"`. Reverse-tabnabbing
+    gap fully closed.
 
 ### 🟡 Dead code
 - [ ] `cn()` in `lib/utils.ts` (the `clsx` + `tailwind-merge` helper,
@@ -385,40 +382,70 @@ still prerender as fully static content. Nothing in the dependency list is
 large enough to be a standout bundle concern; no action needed here.
 
 ### Likely causes of Lighthouse Accessibility not being 100
-- [ ] **No `<h1>` anywhere in the site.** The homepage name heading uses
-  `<h2>` (`app/page.tsx:14`), and section headings (`Work`, `Let's
-  Connect`) are also `<h2>` — so the page has no top-level heading and no
-  proper heading hierarchy. Fix: make the name heading an `<h1>` on the
-  homepage (or use a per-page `<h1>` matching each route's purpose), keep
-  section headings as `<h2>`.
+- [x] ~~No `<h1>` anywhere in the site~~ — **fixed 2026-08-23** on the
+  homepage: the name heading in `app/page.tsx` is now `<h1>`. **Not fully
+  closed out**: `/work` and `/blog` still have no `<h1>` — `Work.tsx`'s
+  internal "Work" heading is `<h2>` (correct when the component is embedded
+  in the homepage under the `<h1>` name heading, but on the standalone
+  `/work` page there's nothing above it at `<h1>` level), and `/blog` has no
+  heading at all. If Lighthouse is only being run against the homepage this
+  is done; if `/work`/`/blog` are audited too, they'll still fail the
+  "missing h1" check.
 - [x] ~~Structural list issue in `Work.tsx`~~ — **fixed 2026-08-23**, see
   §6.
-- [ ] **Low-contrast secondary text via opacity.** Secondary text uses
-  `opacity-75` on top of already-muted colors (e.g. `text-sm opacity-75` in
-  `Work.tsx` for role/dates, on top of body text colors `#3F3F46` on
-  `#F4F4F5` light / `#D4D4D8` on `#18181B` dark from `layout.tsx`).
-  Reducing opacity on text is one of the most common causes of Lighthouse's
-  color-contrast audit failing, since it lightens effective contrast below
-  WCAG AA (4.5:1) without being obvious visually. Recommend swapping
-  `opacity-75` for a fixed, contrast-checked muted color instead (e.g. a
-  specific zinc/slate shade verified against the background at 4.5:1+).
+- [ ] **Low-contrast secondary text via opacity — recommended fix below.**
+
+#### Recommended fix for the `opacity-75` secondary text
+Only used in two spots, both in `components/Work.tsx` (role and date/range
+text). Manually computing the effective contrast (opacity blends the text
+color with the solid page background behind it):
+- **Light mode**: base text `#3F3F46` at 75% opacity over bg `#F4F4F5` →
+  effective ratio ≈ **4.76:1** — technically passes WCAG AA (4.5:1) but
+  only barely, close enough to the cutoff that font-weight/anti-aliasing
+  differences could tip Lighthouse's automated check either way.
+- **Dark mode**: base text `#D4D4D8` at 75% opacity over bg `#18181B` →
+  effective ratio ≈ **7.2:1** — comfortably passes.
+So light mode is the marginal case and the most likely actual culprit.
+**Fix**: drop `opacity-75` and use a fixed, verified-contrast color
+instead. Handy detail: the site's existing hardcoded body colors
+(`#F4F4F5` / `#3F3F46` light, `#18181B` / `#D4D4D8` dark, all set directly
+in `app/layout.tsx`) are exact matches for Tailwind's stock
+`zinc-100` / `zinc-700` / `zinc-900` / `zinc-300` — so this is already a
+zinc-based palette, just written as raw hex instead of the named
+utilities. Staying in that same family, `zinc-600` (light) /
+`zinc-400` (dark) both check out well clear of AA:
+  - `text-zinc-600` on `#F4F4F5` ≈ **7.1:1**
+  - `dark:text-zinc-400` on `#18181B` ≈ **6.9:1**
+  Recommended change in `Work.tsx`:
+  ```diff
+  - <p className="text-sm opacity-75">{entry.role}</p>
+  + <p className="text-sm text-zinc-600 dark:text-zinc-400">{entry.role}</p>
+  ...
+  - <span className="text-sm opacity-75">
+  + <span className="text-sm text-zinc-600 dark:text-zinc-400">
+  ```
+  This both fixes the marginal contrast case and gives real headroom
+  instead of sitting right on the AA line.
+
+### `productionBrowserSourceMaps: true` — kept intentionally
+Previously flagged as a Best Practices consideration (ships full readable
+source to production). **User decision 2026-08-23: keep it** — this is a
+personal/portfolio site and the source being visible to anyone curious is
+fine. No longer tracked as an action item; noted here so the reasoning
+isn't lost if it comes up again later.
 
 ### Likely causes of Lighthouse Best Practices not being 100
-- [ ] **Missing `rel="noopener noreferrer"`** on the `target="_blank"`
-  social links in `Connect.tsx` — see §6. The `__blank` typo is fixed, but
-  the `rel` attribute is still missing. This is the single most likely fix
-  for a quick Best Practices win.
+- [x] ~~Missing `rel="noopener noreferrer"`~~ — **fixed 2026-08-23**, see
+  §6.
 - [x] ~~Running Next.js 15.3.2 with published CVEs~~ — **resolved
   2026-08-23**, now on Next 16.3.2, and `next` no longer appears at all in
-  `npm audit` output (see §3). Should remove this specific "no known JS
-  library vulnerabilities" cause for the Best Practices score not being
-  100 — worth re-running Lighthouse to confirm.
-- [ ] **`productionBrowserSourceMaps: true`** in `next.config.ts` ships full
-  readable source maps to production. Not itself a Lighthouse audit
-  failure, but it increases deployed output size and exposes original
-  source in browser devtools with no corresponding benefit unless paired
-  with an error-tracking service (e.g. Sentry) that consumes those maps
-  server-side. Worth turning off unless there's a specific consumer for it.
+  `npm audit` output (see §3).
+- `productionBrowserSourceMaps: true` — **kept intentionally**, see note
+  above under the accessibility/opacity section. Not tracked as an action
+  item.
+
+Worth re-running Lighthouse now to see where the score actually lands —
+both known causes in this tier are resolved.
 
 ### Image optimization
 - [x] ~~Avatar image hotlinked from `i.pinimg.com`~~ — **fixed 2026-08-23**.
@@ -459,24 +486,22 @@ the detailed sections above over time, so treat the sections as the source
 of truth and this as a routing map into them.
 
 ### 🔒 Security
-1. [ ] **Add `rel="noopener noreferrer"` to the `target="_blank"` links in
-   `Connect.tsx`.** Reverse-tabnabbing gap — a linked-to page can currently
-   use `window.opener` to redirect this site's tab. One-line fix per link,
-   3 links total. Still the top remaining item in this tier. *(§6, §7)*
+1. [x] ~~Add `rel="noopener noreferrer"` to the `target="_blank"` links in
+   `Connect.tsx`~~ — **fixed 2026-08-23**. Reverse-tabnabbing gap closed.
+   *(§6, §7)*
 2. [x] ~~Bump Next.js past 15.5.23~~ — **done 2026-08-23, taken all the way
    to 16.3.2.** `next` no longer appears in `npm audit` at all (the direct
    CVEs were fixed by the 15.5.23 patch; the transitive `postcss`/`sharp`
    vulnerabilities bundled with it needed the full v16 major to clear).
    *(§3, §4 step 3)*
-3. [ ] **Turn off `productionBrowserSourceMaps`** (or keep it only if
-   paired with a real source-map consumer like Sentry). Currently ships
-   fully readable source to every visitor for no offsetting benefit. *(§7)*
+3. [x] **`productionBrowserSourceMaps`** — **kept intentionally per user
+   decision 2026-08-23** (personal site, fine for source to be visible).
+   No longer an action item. *(§7)*
 
 ### 🚧 Major — real bugs, broken/degraded behavior, accessibility failures
 1. [x] ~~Missing `return` in `Navbar.tsx` (broke `next build` entirely)~~ —
    **fixed**.
-2. [x] ~~`target="__blank"` typo~~ — **fixed** (the `rel` gap above is the
-   remaining piece, tracked under Security).
+2. [x] ~~`target="__blank"` typo~~ — **fixed**.
 3. [x] ~~Next 16 upgrade broke the build via an invalid `instant` route
    segment config~~ — **fixed 2026-08-23**, see §6.
 4. [x] ~~`next lint` removed in Next 16, broke the lint script~~ — **fixed
@@ -486,11 +511,14 @@ of truth and this as a routing map into them.
    **fixed 2026-08-23**. Now served from `public/luffy-wano-avatar.jpg`
    with `priority={true}` (confirmed correct — see §7). Unused
    `remotePatterns` config for the old host was also cleaned up. *(§7)*
-7. [ ] **Add an `<h1>` to the homepage.** There is currently no `<h1>`
-   anywhere on the site — a real accessibility/SEO defect, not just a
-   Lighthouse nitpick. *(§7)*
+7. [x] ~~Add an `<h1>` to the homepage~~ — **fixed 2026-08-23**. Partial:
+   `/work` and `/blog` still have no `<h1>` of their own — low urgency
+   unless those routes are individually Lighthouse-audited too. *(§7)*
 8. [ ] **Replace `opacity-75` secondary text with a fixed, contrast-checked
-   color.** Likely cause of failed color-contrast audits (role/date text in
+   color.** Concrete recommended fix now written up in §7 (swap to
+   `text-zinc-600 dark:text-zinc-400`, computed ~7:1 contrast both modes,
+   vs. the current borderline ~4.76:1 in light mode). Likely cause of
+   failed color-contrast audits (role/date text in
    `Work.tsx`, and anywhere else the same pattern is used). *(§7)*
 
 ### 🧹 Nice to have — cleanup, DX, future-proofing, non-urgent upgrades
