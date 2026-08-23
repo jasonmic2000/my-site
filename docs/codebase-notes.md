@@ -5,14 +5,15 @@ audit findings from review sessions. Unlike a spec, this doc is expected to
 go stale — check off items as they're done, and re-verify dependency
 versions/audit results before acting on them since they're snapshots in time.
 
-Last updated: 2026-08-13
+Last updated: 2026-08-23
 
 ---
 
 ## 1. Architecture & structure overview
 
 ### Tech stack
-- **Framework**: Next.js 15.3.2 (App Router), React 19
+- **Framework**: Next.js 16.3.2 (App Router), React 19.2.8 — upgraded from
+  15.3.2 on 2026-08-23, see §4
 - **Language**: TypeScript (strict mode), path alias `@/*` → repo root
 - **Styling**: Tailwind CSS v4 (`@tailwindcss/postcss`), `tailwind-merge` +
   `clsx` via a `cn()` helper, dark mode via the `class` strategy
@@ -23,8 +24,11 @@ Last updated: 2026-08-13
 - **Icons**: `react-icons`
 - **shadcn/ui is configured** (`components.json`, "new-york" style, slate
   base) but `components/ui/` doesn't exist yet — scaffolded, unused
-- **Linting**: ESLint 9 flat config (`next/core-web-vitals`,
-  `next/typescript`, `prettier`)
+- **Linting**: ESLint 9 (9.39.5) flat config, using `eslint-config-next`'s
+  native flat-config exports (`eslint-config-next/core-web-vitals`,
+  `eslint-config-next/typescript`) directly + `eslint-config-prettier`. Run
+  via `npm run lint` → `eslint .` (the old `next lint` subcommand was
+  removed in Next 16). **ESLint 10 is not yet usable here** — see §6.
 - **Build tooling**: `next dev --turbopack` for dev, standard `next build`/
   `next start`
 - **Deploy**: Vercel (`@vercel/speed-insights` wired into root layout),
@@ -98,38 +102,40 @@ those files if needed for reference, no need to keep them live in-file.
 
 ---
 
-## 3. Dependency audit (snapshot: 2026-08-13)
+## 3. Dependency audit
 
 Re-run `npm outdated` / `npm audit` before acting on this — versions move.
 
-### Outdated packages
+### Outdated packages (snapshot: 2026-08-23, post Next 16 upgrade)
 
 | Package | Current | Latest | Bump type |
 |---|---|---|---|
-| next | 15.3.2 | 16.3.0 | major |
-| eslint-config-next | 15.3.2 | 16.3.0 | major (locked to next) |
-| @next/mdx | 15.3.3 | 16.3.0 | major (locked to next) |
-| eslint | 9.27.0 | 10.8.1 | major |
+| typescript | 5.8.3 | 7.0.2 | major (see caveat in §4) |
+| @types/node | 20.17.47 | 26.2.0 | major (tracks Node runtime — local Node is v22.21.1) |
 | @vercel/speed-insights | 1.2.0 | 2.0.0 | major |
-| typescript | 5.8.3 | 7.0.2 | major (see caveat below) |
-| @types/node | 20.17.47 | 26.2.0 | major (tracks Node runtime version) |
-| react / react-dom | 19.1.0 | 19.2.8 | minor |
-| @types/react / @types/react-dom | 19.1.4 / 19.1.5 | 19.2.18 / 19.2.4 | minor |
-| tailwindcss / @tailwindcss/postcss | 4.1.7 | 4.3.3 | minor |
+| eslint | 9.39.5 | 10.9.0 | major — **do not bump yet, see §6** |
+| @tailwindcss/postcss / tailwindcss | 4.1.7 | 4.3.3 | minor |
 | tailwind-merge | 3.3.0 | 3.6.0 | minor |
 | tw-animate-css | 1.3.0 | 1.4.0 | minor |
 | react-icons | 5.5.0 | 5.7.0 | minor |
-| @eslint/eslintrc, eslint-config-prettier | — | — | patch |
+| eslint-config-prettier | 10.1.5 | 10.1.8 | patch |
 
-### `npm audit` findings
-13 advisories (2 critical, 8 high) as of the snapshot date. Most
-(`tar`, `postcss`, `sharp`, `picomatch`, `minimatch`, `js-yaml`, `flatted`,
-`ajv`, `brace-expansion`) are transitive deps of `next` itself or the
-ESLint toolchain, not directly reachable through this site's own code — low
-practical exposure for a static portfolio. However, several are fixed
-simply by bumping Next past 15.5.23 (cache-confusion, SSRF-in-rewrites,
-and other Next-specific CVEs), so this isn't pure noise — it's a concrete
-reason to prioritize the Next patch bump below.
+`next`, `eslint-config-next`, `@next/mdx`, `react`, `react-dom`,
+`@types/react`, `@types/react-dom` are all now at latest (16.3.2 / 19.2.8 /
+19.2.18 / 19.2.4 respectively) — see §4, done 2026-08-23.
+
+### ~~`npm audit` findings~~ (superseded, see §4/§6 for current state)
+Original snapshot (2026-08-13, Next 15.3.2): 13 advisories (2 critical, 8
+high). After the Next 16 upgrade this dropped to **6 advisories (1
+critical, 4 high, 1 moderate)**, and critically, **`next` no longer appears
+in the audit output at all** — the prior `next` entry was flagged both for
+direct Next.js CVEs (fixed by the 15.5.23 patch) and for bundling
+vulnerable transitive `postcss`/`sharp` versions (only fixed by the v16
+major, which is why the full jump to 16 mattered, not just the patch bump).
+Everything remaining (`brace-expansion`, `flatted`, `js-yaml`,
+`mdast-util-to-hast`, `picomatch`, `tar`) is transitive dev-toolchain
+noise from the ESLint/typescript-eslint dependency tree, not reachable
+through this site's runtime.
 
 ### Unused dependencies
 None found. Every entry in `dependencies` and `devDependencies` was checked
@@ -148,23 +154,35 @@ with Prettier; nothing is currently enforcing formatting in this repo.
 
 Batched by risk — don't do this all in one shot.
 
-1. [ ] **Safe bulk bump** (patch/minor, low risk): `react`, `react-dom`,
-   `@types/react`, `@types/react-dom`, `tailwindcss`,
-   `@tailwindcss/postcss`, `tailwind-merge`, `tw-animate-css`,
-   `react-icons`, `@eslint/eslintrc`, `eslint-config-prettier`. Run
-   `npm update`, then `npm run build` + smoke test.
-2. [ ] **Next.js 15.3.2 → 15.5.23** (stay within major 15 first) — picks up
-   security fixes without v16 breaking changes. Verify build, dev server,
-   and MDX rendering still work.
-3. [ ] **Next.js 15 → 16 (major)** — bump `next`, `eslint-config-next`, and
-   `@next/mdx` together (must stay in lockstep with Next's major version).
-   Run `npx @next/codemod@canary upgrade latest` and check the official
-   upgrade guide. Likely candidates for breakage in this repo: minimum
-   Node version requirement, and whether `experimental.mdxRs` in
-   `next.config.ts` has graduated out of experimental.
-4. [ ] **ESLint 9 → 10 (major)** — do after Next 16, since
-   `eslint-config-next@16` needs to declare ESLint 10 compatibility first.
-   Flat config (`eslint.config.mjs`) should carry over with minimal changes.
+1. [x] **Safe bulk bump** — done as part of the Next 16 upgrade: `react`,
+   `react-dom` → 19.2.8, `@types/react` → 19.2.18, `@types/react-dom` →
+   19.2.4. Still open: `tailwindcss`/`@tailwindcss/postcss`,
+   `tailwind-merge`, `tw-animate-css`, `react-icons`,
+   `eslint-config-prettier` (all minor/patch, low risk — see §3 table).
+2. [x] ~~Next.js 15.3.2 → 15.5.23~~ — done 2026-08-23, then immediately
+   superseded by step 3 the same day.
+3. [x] **Next.js 15 → 16 (major)** — done 2026-08-23. `next`,
+   `eslint-config-next`, `@next/mdx` all bumped to `16.3.2` together.
+   **Two things broke and were fixed as part of this** (full detail in
+   §6):
+   - The upgrade codemod inserted `export const instant = false;` (a Cache
+     Components route-segment opt-out) into `app/layout.tsx` and all three
+     page files, but the project doesn't have `cacheComponents` enabled in
+     `next.config.ts` — so the config key was invalid and broke the build
+     (`Route segment config "instant" requires nextConfig.cacheComponents
+     to be enabled`). Removed all four instances rather than opting into
+     Cache Components, since that's a deliberate feature adoption this repo
+     hasn't asked for.
+   - `next lint` was removed as a CLI command in Next 16. `package.json`'s
+     `lint` script now runs `eslint .` directly.
+4. [x] **ESLint 9 → 10 — attempted, reverted.** `eslint-config-next@16.3.2`
+   declares `eslint: ">=9.0.0"` as a peer (so npm allows ESLint 10), but its
+   bundled `eslint-plugin-react` is not actually compatible with ESLint
+   10's rule-context API changes and crashes at lint time (see §6).
+   Rolled back to latest ESLint 9 (`9.39.5`). **Don't retry this until
+   `eslint-config-next` (or its bundled `eslint-plugin-react`) ships a
+   fix** — re-check `npm ls eslint-plugin-react` and try again on the next
+   `eslint-config-next` release.
 5. [ ] **@vercel/speed-insights 1 → 2 (major)** — small surface area (just
    the `<SpeedInsights />` import in `app/layout.tsx`), check changelog for
    API changes first.
@@ -173,8 +191,9 @@ Batched by risk — don't do this all in one shot.
    implementation rather than a version bump; ecosystem tooling (ESLint
    plugins, Next's type-checking) is still catching up. Revisit later.
 7. [ ] **@types/node** — match to the Node version actually used in dev and
-   on Vercel (check `node -v` locally and the Vercel project's Node
-   setting) rather than blindly taking latest (26.x).
+   on Vercel. Local dev Node is confirmed **v22.21.1**; still need to check
+   the Vercel project's configured Node version before picking a target
+   (don't just take latest/26.x).
 
 ---
 
@@ -197,12 +216,17 @@ this is a clean-slate move rather than a true migration.
    Note: no Tailwind-class-sorting equivalent to
    `prettier-plugin-tailwindcss` exists in Biome — but that plugin was
    never installed here either, so nothing is lost.
-4. [ ] Update `package.json` scripts: replace `"lint": "next lint"` with
+4. [ ] Update `package.json` scripts: replace `"lint": "eslint ."` with
    `"lint": "biome check ."` (or split `biome lint .` / `biome format
-   --write .`).
+   --write .`). (Note: the script already changed once, from `next lint` to
+   `eslint .`, when `next lint` was removed in the Next 16 upgrade — see
+   §4/§6.)
 5. [ ] Remove `eslint`, `eslint-config-next` (if dropping Next-specific
-   linting), `eslint-config-prettier`, `@eslint/eslintrc` from
-   devDependencies; delete `eslint.config.mjs`.
+   linting), `eslint-config-prettier` from devDependencies; delete
+   `eslint.config.mjs`. (`@eslint/eslintrc` is already gone — it was
+   dropped when `eslint.config.mjs` was rewritten to use
+   `eslint-config-next`'s native flat-config exports instead of the legacy
+   `FlatCompat` shim, see §6.)
 6. [ ] If using VS Code, swap the ESLint extension for the Biome extension
    and set it as the default formatter.
 
@@ -231,6 +255,49 @@ Route (app)                                 Size  First Load JS
 + First Load JS shared by all             101 kB
 ```
 - [x] Fix missing `return` in `components/Navbar.tsx`
+
+### ✅ Fixed — Next 16 upgrade broke the build a second time
+The Next 15→16 upgrade codemod added `export const instant = false;` (a
+Cache Components route-segment opt-out marker, with a `TODO: Cache
+Components adoption` comment) to `app/layout.tsx`, `app/page.tsx`,
+`app/work/page.tsx`, and `app/blog/page.tsx`. This key is only valid when
+`nextConfig.cacheComponents` is enabled — which it isn't here — so every
+route with the marker failed to build:
+`Route segment config "instant" requires nextConfig.cacheComponents to be
+enabled`. **Fixed 2026-08-23** by removing all four instances rather than
+turning on Cache Components, since adopting that caching model is a
+deliberate architectural decision this repo hasn't made, not a
+prerequisite for upgrading.
+- [x] Remove invalid `export const instant = false;` from all 4 route
+  files
+
+### ✅ Fixed — `next lint` removed in Next 16
+`package.json`'s `"lint": "next lint"` script broke (`Invalid project
+directory provided, no such directory: .../lint`) because Next 16 dropped
+the built-in `next lint` CLI command entirely. **Fixed 2026-08-23** —
+script now runs `"lint": "eslint ."` directly. This also required rewriting
+`eslint.config.mjs`: the old config used the legacy `FlatCompat` shim
+(`@eslint/eslintrc`) to load `next/core-web-vitals` etc. as
+eslintrc-style strings, but `eslint-config-next@16.3.2` now ships native
+flat-config arrays directly (`eslint-config-next/core-web-vitals`,
+`eslint-config-next/typescript`). Rewrote the config to import those
+directly, which also let `@eslint/eslintrc` be dropped as a dependency
+entirely (it's no longer used anywhere).
+- [x] Fix `lint` script for Next 16
+- [x] Rewrite `eslint.config.mjs` to use native flat-config exports
+
+### 🟠 Blocked — ESLint 10 is not usable with `eslint-config-next` yet
+Attempted bumping `eslint` 9 → 10 alongside the Next 16 upgrade (see §4
+step 4). It installs fine (peer range `>=9.0.0` allows it), but linting
+crashes: `TypeError: Error while loading rule 'react/display-name':
+contextOrFilename.getFilename is not a function`. This is
+`eslint-config-next`'s bundled `eslint-plugin-react` (`^7.37.0`) calling
+an ESLint rule-context method (`context.getFilename()`) that ESLint 10
+removed/changed. **Reverted to latest ESLint 9 (`9.39.5`)** — this isn't
+something fixable in this repo; it needs an upstream fix in
+`eslint-plugin-react` or `eslint-config-next`. Re-attempt later.
+- [ ] Re-check ESLint 10 compatibility next time `eslint-config-next` is
+  updated
 
 ### 🟠 Real bugs
 - [x] ~~`Connect.tsx:25` — `target="__blank"` typo~~ **Fixed 2026-08-13** —
@@ -304,9 +371,10 @@ Route (app)                                 Size  First Load JS
 
 ---
 
-## 7. Build & performance analysis (snapshot: 2026-08-13)
+## 7. Build & performance analysis (snapshot: 2026-08-13, re-verified 2026-08-23)
 
-### Bundle size (confirmed via `npm run build`, 2026-08-13, post-Navbar-fix)
+### Bundle size
+Original measurement (Next 15.5.23, 2026-08-13):
 ```
 Route (app)                                 Size  First Load JS
 ┌ ○ /                                    5.58 kB         110 kB
@@ -314,15 +382,14 @@ Route (app)                                 Size  First Load JS
 ├ ○ /blog                                  136 B         101 kB
 └ ○ /work                                  220 B         105 kB
 + First Load JS shared by all             101 kB
-  ├ chunks/4bd1b696-0630ddb528269b85.js  53.3 kB
-  ├ chunks/684-d62f9fe6fc8970be.js         46 kB
-  └ other shared chunks (total)          2.08 kB
 ```
-All routes prerender as static content. ~101 kB shared First Load JS is
-normal for a stock Next.js/React 19 app with no heavy client libraries —
-nothing in the dependency list (react-icons, next-themes, remark, etc.) is
-large enough to be a standout bundle concern. No action needed here beyond
-what's already tracked in the framework version upgrade (§4).
+Next 16's build output no longer prints the per-route size table (Turbopack
+build output changed format) — re-verified 2026-08-23 on Next 16.3.2 via
+raw chunk sizes in `.next/static/chunks` instead: largest chunks ~224K,
+~164K, ~112K, tapering down to single-digit KB — same rough shape as
+before, no regression. All 4 routes (`/`, `/blog`, `/work`, `/_not-found`)
+still prerender as fully static content. Nothing in the dependency list is
+large enough to be a standout bundle concern; no action needed here.
 
 ### Likely causes of Lighthouse Accessibility not being 100
 - [ ] **No `<h1>` anywhere in the site.** The homepage name heading uses
@@ -348,12 +415,11 @@ what's already tracked in the framework version upgrade (§4).
   social links in `Connect.tsx` — see §6. The `__blank` typo is fixed, but
   the `rel` attribute is still missing. This is the single most likely fix
   for a quick Best Practices win.
-- [ ] **Running Next.js 15.3.2**, which has published CVEs fixed in later
-  15.x/16.x releases (see §3 dependency audit) — Lighthouse's Best
-  Practices category includes a "no known JS library vulnerabilities"
-  audit, which can flag outdated framework versions. Another reason the
-  Next patch bump (15.3.2 → 15.5.23+) in §4 is worth doing sooner rather
-  than later.
+- [x] ~~Running Next.js 15.3.2 with published CVEs~~ — **resolved
+  2026-08-23**, now on Next 16.3.2, and `next` no longer appears at all in
+  `npm audit` output (see §3). Should remove this specific "no known JS
+  library vulnerabilities" cause for the Best Practices score not being
+  100 — worth re-running Lighthouse to confirm.
 - [ ] **`productionBrowserSourceMaps: true`** in `next.config.ts` ships full
   readable source maps to production. Not itself a Lighthouse audit
   failure, but it increases deployed output size and exposes original
@@ -389,7 +455,7 @@ what's already tracked in the framework version upgrade (§4).
 
 ---
 
-## 8. Prioritized to-do list (as of 2026-08-13)
+## 8. Prioritized to-do list (as of 2026-08-23)
 
 Synthesized from §§2–7. Ordered by urgency within each tier, not by effort.
 Re-check off items directly here as they land — this list will drift from
@@ -400,13 +466,12 @@ of truth and this as a routing map into them.
 1. [ ] **Add `rel="noopener noreferrer"` to the `target="_blank"` links in
    `Connect.tsx`.** Reverse-tabnabbing gap — a linked-to page can currently
    use `window.opener` to redirect this site's tab. One-line fix per link,
-   3 links total. *(§6, §7)*
-2. [ ] **Bump Next.js past 15.5.23.** This is the one dependency issue with
-   genuine runtime exposure — the current 15.3.2 has published CVEs
-   including an SSRF via rewrites and unauthenticated disclosure of
-   internal server-function endpoints. Everything else `npm audit` flags is
-   transitive build-tooling noise (ESLint/typescript-eslint's own deps),
-   not reachable through this site's runtime. *(§3, §4 step 2)*
+   3 links total. Still the top remaining item in this tier. *(§6, §7)*
+2. [x] ~~Bump Next.js past 15.5.23~~ — **done 2026-08-23, taken all the way
+   to 16.3.2.** `next` no longer appears in `npm audit` at all (the direct
+   CVEs were fixed by the 15.5.23 patch; the transitive `postcss`/`sharp`
+   vulnerabilities bundled with it needed the full v16 major to clear).
+   *(§3, §4 step 3)*
 3. [ ] **Turn off `productionBrowserSourceMaps`** (or keep it only if
    paired with a real source-map consumer like Sentry). Currently ships
    fully readable source to every visitor for no offsetting benefit. *(§7)*
@@ -416,16 +481,20 @@ of truth and this as a routing map into them.
    **fixed**.
 2. [x] ~~`target="__blank"` typo~~ — **fixed** (the `rel` gap above is the
    remaining piece, tracked under Security).
-3. [ ] **Add an `<h1>` to the homepage.** There is currently no `<h1>`
+3. [x] ~~Next 16 upgrade broke the build via an invalid `instant` route
+   segment config~~ — **fixed 2026-08-23**, see §6.
+4. [x] ~~`next lint` removed in Next 16, broke the lint script~~ — **fixed
+   2026-08-23**, `lint` now runs `eslint .` directly, see §6.
+5. [ ] **Add an `<h1>` to the homepage.** There is currently no `<h1>`
    anywhere on the site — a real accessibility/SEO defect, not just a
    Lighthouse nitpick. *(§7)*
-4. [ ] **Fix `Work.tsx`'s list structure** — one `<ul>` wrapping the
+6. [ ] **Fix `Work.tsx`'s list structure** — one `<ul>` wrapping the
    `.map()`, not one `<ul>` per entry. Currently announced to screen
    readers as N separate one-item lists. *(§6, §7)*
-5. [ ] **Replace `opacity-75` secondary text with a fixed, contrast-checked
+7. [ ] **Replace `opacity-75` secondary text with a fixed, contrast-checked
    color.** Likely cause of failed color-contrast audits (role/date text in
    `Work.tsx`, and anywhere else the same pattern is used). *(§7)*
-6. [ ] **Self-host the avatar image and add `priority` to its `<Image>`.**
+8. [ ] **Self-host the avatar image and add `priority` to its `<Image>`.**
    Two compounding issues: it's likely the page's LCP element and is
    currently lazy-loaded instead of preloaded (direct performance hit), and
    it's hotlinked from `i.pinimg.com` with zero control over the asset's
@@ -434,18 +503,17 @@ of truth and this as a routing map into them.
    because of that reliability risk, not just the perf score. *(§7)*
 
 ### 🧹 Nice to have — cleanup, DX, future-proofing, non-urgent upgrades
-- [ ] Safe dependency bulk-bump: `react`, `react-dom`, `@types/react`,
-  `@types/react-dom`, `tailwindcss`, `@tailwindcss/postcss`,
-  `tailwind-merge`, `tw-animate-css`, `react-icons`, `@eslint/eslintrc`,
-  `eslint-config-prettier`. *(§4 step 1)*
-- [ ] Next.js 15 → 16 major upgrade (bundle with `eslint-config-next` and
-  `@next/mdx`). *(§4 step 3)*
-- [ ] ESLint 9 → 10 major upgrade, after Next 16. *(§4 step 4)*
+- [ ] Remaining safe dependency bump: `tailwindcss`/`@tailwindcss/postcss`,
+  `tailwind-merge`, `tw-animate-css`, `react-icons`, `eslint-config-prettier`
+  (all minor/patch). *(§3, §4 step 1)*
 - [ ] `@vercel/speed-insights` 1 → 2 major upgrade. *(§4 step 5)*
 - [ ] TypeScript: stay on `5.9.x`, don't jump to the `7.x` native-compiler
   line yet. *(§4 step 6)*
-- [ ] `@types/node`: match to actual Node runtime version, not latest.
-  *(§4 step 7)*
+- [ ] `@types/node`: local Node confirmed at v22.21.1 — still need to check
+  Vercel's configured Node version before picking a target. *(§4 step 7)*
+- [ ] Re-attempt ESLint 9 → 10 once `eslint-config-next`'s bundled
+  `eslint-plugin-react` supports ESLint 10's rule-context API — currently
+  blocked upstream, not something fixable in this repo. *(§4 step 4, §6)*
 - [ ] ESLint+Prettier → Biome migration. *(§5, full plan)*
 - [ ] Remove dead code: unused `cn()` helper, unused `AnimatedArrow.tsx`,
   leftover commented-out fields in `lib/consts.ts` / `lib/utils.ts`. *(§6)*
