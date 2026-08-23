@@ -354,20 +354,13 @@ something fixable in this repo; it needs an upstream fix in
   today since the nav list is static, but inconsistent with the
   stable-key pattern used elsewhere.
 
-### 🟡 Structural/semantic HTML issue (also an accessibility finding, see §7)
-- [ ] `components/Work.tsx` renders a **separate `<ul>` per work entry
-  inside the `.map()`**, each containing exactly one `<li>`:
-  ```tsx
-  {workEntries.map((entry) => (
-    <ul className="flex flex-col" key={entry.startDate}>
-      <li>...</li>
-    </ul>
-  ))}
-  ```
-  This should be a single `<ul>` wrapping the `.map()`, with `<li>` as the
-  repeated child — one list of N items, not N lists of one item each. The
-  current structure is announced to screen readers as N separate
-  single-item lists rather than one N-item list.
+### ✅ Fixed — structural/semantic HTML issue (also an accessibility finding, see §7)
+`components/Work.tsx` used to render a **separate `<ul>` per work entry
+inside the `.map()`**, each containing exactly one `<li>`, which is
+announced to screen readers as N separate single-item lists instead of one
+N-item list. **Fixed 2026-08-23** — now a single `<ul>` wraps the
+`.map()`, with `<li>` as the repeated child.
+- [x] Fix `Work.tsx` list structure
 
 ---
 
@@ -398,8 +391,8 @@ large enough to be a standout bundle concern; no action needed here.
   proper heading hierarchy. Fix: make the name heading an `<h1>` on the
   homepage (or use a per-page `<h1>` matching each route's purpose), keep
   section headings as `<h2>`.
-- [ ] **Structural list issue** in `Work.tsx` — see §6, also an
-  accessibility audit target (list semantics).
+- [x] ~~Structural list issue in `Work.tsx`~~ — **fixed 2026-08-23**, see
+  §6.
 - [ ] **Low-contrast secondary text via opacity.** Secondary text uses
   `opacity-75` on top of already-muted colors (e.g. `text-sm opacity-75` in
   `Work.tsx` for role/dates, on top of body text colors `#3F3F46` on
@@ -428,19 +421,22 @@ large enough to be a standout bundle concern; no action needed here.
   server-side. Worth turning off unless there's a specific consumer for it.
 
 ### Image optimization
-- [ ] **Avatar image is hotlinked from a third-party host**
-  (`i.pinimg.com`, allowlisted via `remotePatterns` in `next.config.ts`)
-  rather than self-hosted. This is the homepage's likely LCP (Largest
-  Contentful Paint) element. Risks: no control over the image's lifecycle
-  (Pinterest could rate-limit, block hotlinking, or take the image down),
-  an extra third-party DNS/TLS round-trip on every page load, and no
-  guaranteed cache headers from Pinterest's CDN. Recommend moving the image
-  into `public/` (or importing it locally) and letting `next/image`
-  optimize a first-party asset.
-- [ ] **Missing `priority` on the avatar `<Image>`** (`app/page.tsx`). As
-  the likely LCP element, it should be marked `priority` so Next.js
-  preloads it instead of lazy-loading it — lazy-loading an above-the-fold
-  LCP image is a direct Lighthouse performance hit.
+- [x] ~~Avatar image hotlinked from `i.pinimg.com`~~ — **fixed 2026-08-23**.
+  Now self-hosted at `public/luffy-wano-avatar.jpg` (15.8 KB) and served via
+  `next/image` from `/luffy-wano-avatar.jpg`. As a follow-up cleanup, the
+  now-unused `images.remotePatterns` entry for `i.pinimg.com` was removed
+  from `next.config.ts` (nothing in the codebase references that host
+  anymore — verified by grep).
+- [x] ~~Missing `priority` on the avatar `<Image>`~~ — **fixed
+  2026-08-23**, `priority={true}` was added. **This is the correct value,
+  not `false`**: `priority` tells Next.js to preload the image and skip
+  lazy-loading, which is exactly what you want for an image that's visible
+  immediately on page load without scrolling (the homepage avatar sits in
+  the hero section, above the fold) — and it's very likely this page's LCP
+  (Largest Contentful Paint) element, which is the specific Lighthouse
+  metric this was meant to help. `priority={false}` (or omitting it) is the
+  default and is correct for below-the-fold images that should lazy-load
+  instead — not the case here.
 - [ ] `public/` contains only `favicon.ico` (28K — larger than typical for
   a `.ico`) and no `apple-touch-icon`, `manifest.json`, or an Open Graph
   share image. `DEFAULT_METADATA` in `lib/consts.ts` doesn't set an `images`
@@ -485,22 +481,17 @@ of truth and this as a routing map into them.
    segment config~~ — **fixed 2026-08-23**, see §6.
 4. [x] ~~`next lint` removed in Next 16, broke the lint script~~ — **fixed
    2026-08-23**, `lint` now runs `eslint .` directly, see §6.
-5. [ ] **Add an `<h1>` to the homepage.** There is currently no `<h1>`
+5. [x] ~~Fix `Work.tsx`'s list structure~~ — **fixed 2026-08-23**, see §6.
+6. [x] ~~Self-host the avatar image and add `priority` to its `<Image>`~~ —
+   **fixed 2026-08-23**. Now served from `public/luffy-wano-avatar.jpg`
+   with `priority={true}` (confirmed correct — see §7). Unused
+   `remotePatterns` config for the old host was also cleaned up. *(§7)*
+7. [ ] **Add an `<h1>` to the homepage.** There is currently no `<h1>`
    anywhere on the site — a real accessibility/SEO defect, not just a
    Lighthouse nitpick. *(§7)*
-6. [ ] **Fix `Work.tsx`'s list structure** — one `<ul>` wrapping the
-   `.map()`, not one `<ul>` per entry. Currently announced to screen
-   readers as N separate one-item lists. *(§6, §7)*
-7. [ ] **Replace `opacity-75` secondary text with a fixed, contrast-checked
+8. [ ] **Replace `opacity-75` secondary text with a fixed, contrast-checked
    color.** Likely cause of failed color-contrast audits (role/date text in
    `Work.tsx`, and anywhere else the same pattern is used). *(§7)*
-8. [ ] **Self-host the avatar image and add `priority` to its `<Image>`.**
-   Two compounding issues: it's likely the page's LCP element and is
-   currently lazy-loaded instead of preloaded (direct performance hit), and
-   it's hotlinked from `i.pinimg.com` with zero control over the asset's
-   lifecycle — Pinterest changing or blocking hotlinking would silently
-   break the homepage. Treating this as "major" rather than "nice to have"
-   because of that reliability risk, not just the perf score. *(§7)*
 
 ### 🧹 Nice to have — cleanup, DX, future-proofing, non-urgent upgrades
 - [ ] Remaining safe dependency bump: `tailwindcss`/`@tailwindcss/postcss`,

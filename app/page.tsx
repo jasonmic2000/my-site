@@ -22,6 +22,7 @@ const Home = async () => {
         <div>
           <Image
             src="/luffy-wano-avatar.jpg"
+            priority={true}
             alt="avatar"
             className={`h-32 w-32 m-0 rounded-full shadow-xl md:not-hover:grayscale transition duration-300 ease-in-out`}
             width={280}
