@@ -213,39 +213,34 @@ is roughly a 20-minute job whenever it's prioritized.
 
 ## 6. Code quality analysis (snapshot: 2026-08-13)
 
-### 🔴 Critical — production build is currently broken
-`components/Navbar.tsx` lost its `return` statement, almost certainly during
-the manual removal of the old Astro Nano/Astrofolio commented drafts. The
-JSX is now an orphaned expression instead of the function's return value, so
-`Navbar` implicitly returns `void`:
+### ✅ Fixed — production build was broken
+`components/Navbar.tsx` had lost its `return` statement, almost certainly
+during the manual removal of the old Astro Nano/Astrofolio commented
+drafts, leaving the JSX as an orphaned expression so `Navbar` implicitly
+returned `void` (`TS2786`, confirmed via both `next build` and a standalone
+`tsc --noEmit`). **Fixed 2026-08-13** — `return (...)` restored.
+`npm run build` now compiles, type-checks, and prerenders all 6 pages
+cleanly:
 
-```tsx
-const Navbar = () => {
-  const { setTheme, resolvedTheme } = useTheme();
-
-    <header className="w-full lg:mb-16 mb-12 py-5">
-      ...
-    </header>          // <-- never returned
-};
 ```
-
-`npm run build` currently fails at the type-check step (`TS2786: 'Navbar'
-cannot be used as a JSX component`). Confirmed via both `next build` and a
-standalone `tsc --noEmit` — not a stale-cache artifact. **Fix**: wrap the
-JSX in `return ( ... )`.
-- [ ] Fix missing `return` in `components/Navbar.tsx`
+Route (app)                                 Size  First Load JS
+┌ ○ /                                    5.58 kB         110 kB
+├ ○ /_not-found                          1.02 kB         102 kB
+├ ○ /blog                                  136 B         101 kB
+└ ○ /work                                  220 B         105 kB
++ First Load JS shared by all             101 kB
+```
+- [x] Fix missing `return` in `components/Navbar.tsx`
 
 ### 🟠 Real bugs
-- [ ] **`Connect.tsx:25`** — social links use `target="__blank"` (double
-  underscore). The only special value the browser recognizes is `_blank`
-  (single underscore); `__blank` is treated as a literal, arbitrary window
-  name. Practical effect: the first click likely still opens a new tab, but
-  repeat clicks across different social links can end up reusing the same
-  named window instead of opening a fresh tab each time. Also missing
-  `rel="noopener noreferrer"`, which is the standard pairing with
-  `target="_blank"` to prevent reverse-tabnabbing — **this is very likely
-  part of why the Lighthouse Best Practices score isn't 100** (its
-  "cross-origin destinations are unsafe" audit checks exactly this).
+- [x] ~~`Connect.tsx:25` — `target="__blank"` typo~~ **Fixed 2026-08-13** —
+  corrected to `target="_blank"`.
+  - [ ] **Still open**: `rel="noopener noreferrer"` is missing on the same
+    links. This is the standard pairing with `target="_blank"` to prevent
+    reverse-tabnabbing, and **is very likely why the Lighthouse Best
+    Practices score isn't 100** (its "cross-origin destinations are
+    unsafe" audit checks exactly this). The typo fix alone doesn't close
+    this out.
 
 ### 🟡 Dead code
 - [ ] `cn()` in `lib/utils.ts` (the `clsx` + `tailwind-merge` helper,
@@ -311,18 +306,23 @@ JSX in `return ( ... )`.
 
 ## 7. Build & performance analysis (snapshot: 2026-08-13)
 
-**Caveat**: the production build currently fails at type-check (see §6
-critical bug), so the bundle sizes below are read from the last successful
-`.next/static` compile output, not a verified current production build.
-Re-measure after fixing `Navbar.tsx`.
-
-### Bundle size (approximate, from `.next/static/chunks`)
-Largest chunks observed: `framework-*.js` ~180K, `684-*.js` ~172K,
-`4bd1b696-*.js` ~168K, `polyfills-*.js` ~112K, `main-*.js` ~112K — roughly
-in line with a stock Next.js/React 19 app with no heavy added libraries.
-Nothing in the dependency list (react-icons, next-themes, remark, etc.) is
-large enough to be a standout bundle concern; there's no client-side
-charting/animation/state library bloating the client JS.
+### Bundle size (confirmed via `npm run build`, 2026-08-13, post-Navbar-fix)
+```
+Route (app)                                 Size  First Load JS
+┌ ○ /                                    5.58 kB         110 kB
+├ ○ /_not-found                          1.02 kB         102 kB
+├ ○ /blog                                  136 B         101 kB
+└ ○ /work                                  220 B         105 kB
++ First Load JS shared by all             101 kB
+  ├ chunks/4bd1b696-0630ddb528269b85.js  53.3 kB
+  ├ chunks/684-d62f9fe6fc8970be.js         46 kB
+  └ other shared chunks (total)          2.08 kB
+```
+All routes prerender as static content. ~101 kB shared First Load JS is
+normal for a stock Next.js/React 19 app with no heavy client libraries —
+nothing in the dependency list (react-icons, next-themes, remark, etc.) is
+large enough to be a standout bundle concern. No action needed here beyond
+what's already tracked in the framework version upgrade (§4).
 
 ### Likely causes of Lighthouse Accessibility not being 100
 - [ ] **No `<h1>` anywhere in the site.** The homepage name heading uses
@@ -344,9 +344,10 @@ charting/animation/state library bloating the client JS.
   specific zinc/slate shade verified against the background at 4.5:1+).
 
 ### Likely causes of Lighthouse Best Practices not being 100
-- [ ] **`target="__blank"` without `rel="noopener noreferrer"`** in
-  `Connect.tsx` — see §6. This is the single most likely fix for a quick
-  Best Practices win, and it's a real bug, not just a lint nit.
+- [ ] **Missing `rel="noopener noreferrer"`** on the `target="_blank"`
+  social links in `Connect.tsx` — see §6. The `__blank` typo is fixed, but
+  the `rel` attribute is still missing. This is the single most likely fix
+  for a quick Best Practices win.
 - [ ] **Running Next.js 15.3.2**, which has published CVEs fixed in later
   15.x/16.x releases (see §3 dependency audit) — Lighthouse's Best
   Practices category includes a "no known JS library vulnerabilities"
@@ -385,3 +386,76 @@ charting/animation/state library bloating the client JS.
   scores asked about here (that's the Lighthouse SEO category), but flagged
   since it's cheap to add once the metadata work above is being touched
   anyway.
+
+---
+
+## 8. Prioritized to-do list (as of 2026-08-13)
+
+Synthesized from §§2–7. Ordered by urgency within each tier, not by effort.
+Re-check off items directly here as they land — this list will drift from
+the detailed sections above over time, so treat the sections as the source
+of truth and this as a routing map into them.
+
+### 🔒 Security
+1. [ ] **Add `rel="noopener noreferrer"` to the `target="_blank"` links in
+   `Connect.tsx`.** Reverse-tabnabbing gap — a linked-to page can currently
+   use `window.opener` to redirect this site's tab. One-line fix per link,
+   3 links total. *(§6, §7)*
+2. [ ] **Bump Next.js past 15.5.23.** This is the one dependency issue with
+   genuine runtime exposure — the current 15.3.2 has published CVEs
+   including an SSRF via rewrites and unauthenticated disclosure of
+   internal server-function endpoints. Everything else `npm audit` flags is
+   transitive build-tooling noise (ESLint/typescript-eslint's own deps),
+   not reachable through this site's runtime. *(§3, §4 step 2)*
+3. [ ] **Turn off `productionBrowserSourceMaps`** (or keep it only if
+   paired with a real source-map consumer like Sentry). Currently ships
+   fully readable source to every visitor for no offsetting benefit. *(§7)*
+
+### 🚧 Major — real bugs, broken/degraded behavior, accessibility failures
+1. [x] ~~Missing `return` in `Navbar.tsx` (broke `next build` entirely)~~ —
+   **fixed**.
+2. [x] ~~`target="__blank"` typo~~ — **fixed** (the `rel` gap above is the
+   remaining piece, tracked under Security).
+3. [ ] **Add an `<h1>` to the homepage.** There is currently no `<h1>`
+   anywhere on the site — a real accessibility/SEO defect, not just a
+   Lighthouse nitpick. *(§7)*
+4. [ ] **Fix `Work.tsx`'s list structure** — one `<ul>` wrapping the
+   `.map()`, not one `<ul>` per entry. Currently announced to screen
+   readers as N separate one-item lists. *(§6, §7)*
+5. [ ] **Replace `opacity-75` secondary text with a fixed, contrast-checked
+   color.** Likely cause of failed color-contrast audits (role/date text in
+   `Work.tsx`, and anywhere else the same pattern is used). *(§7)*
+6. [ ] **Self-host the avatar image and add `priority` to its `<Image>`.**
+   Two compounding issues: it's likely the page's LCP element and is
+   currently lazy-loaded instead of preloaded (direct performance hit), and
+   it's hotlinked from `i.pinimg.com` with zero control over the asset's
+   lifecycle — Pinterest changing or blocking hotlinking would silently
+   break the homepage. Treating this as "major" rather than "nice to have"
+   because of that reliability risk, not just the perf score. *(§7)*
+
+### 🧹 Nice to have — cleanup, DX, future-proofing, non-urgent upgrades
+- [ ] Safe dependency bulk-bump: `react`, `react-dom`, `@types/react`,
+  `@types/react-dom`, `tailwindcss`, `@tailwindcss/postcss`,
+  `tailwind-merge`, `tw-animate-css`, `react-icons`, `@eslint/eslintrc`,
+  `eslint-config-prettier`. *(§4 step 1)*
+- [ ] Next.js 15 → 16 major upgrade (bundle with `eslint-config-next` and
+  `@next/mdx`). *(§4 step 3)*
+- [ ] ESLint 9 → 10 major upgrade, after Next 16. *(§4 step 4)*
+- [ ] `@vercel/speed-insights` 1 → 2 major upgrade. *(§4 step 5)*
+- [ ] TypeScript: stay on `5.9.x`, don't jump to the `7.x` native-compiler
+  line yet. *(§4 step 6)*
+- [ ] `@types/node`: match to actual Node runtime version, not latest.
+  *(§4 step 7)*
+- [ ] ESLint+Prettier → Biome migration. *(§5, full plan)*
+- [ ] Remove dead code: unused `cn()` helper, unused `AnimatedArrow.tsx`,
+  leftover commented-out fields in `lib/consts.ts` / `lib/utils.ts`. *(§6)*
+- [ ] Extract the 8×-repeated hover/transition class string into a shared
+  constant or helper. *(§6)*
+- [ ] Standardize import style (`@/*` alias everywhere, including
+  `layout.tsx`) and export convention (pick default or named, apply
+  consistently). *(§6)*
+- [ ] Decide on shadcn: adopt it or remove `components.json`. *(§2)*
+- [ ] Add an Open Graph share image, `apple-touch-icon`, and
+  `manifest.json`; consider `app/robots.ts`/`app/sitemap.ts`. *(§7)*
+- [ ] Build out the `/blog` route with the same MDX pattern as `/work`,
+  with per-post permalinks. *(§2)*
