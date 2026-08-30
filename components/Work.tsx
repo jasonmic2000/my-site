@@ -1,7 +1,8 @@
+import { HOVER_TRANSITION_CLASS } from "@/lib/consts";
 import { WorkEntryMeta } from "@/lib/utils";
 import Link from "next/link";
 
-const Work = ({
+export const Work = ({
   workEntries,
   showDetails = false,
 }: {
@@ -15,7 +16,7 @@ const Work = ({
         {!showDetails && (
           <Link
             href="/work"
-            className="hover:text-black hover:dark:text-white transition duration-300 ease-in-out font-semibold font-sans text-sm"
+            className={`font-semibold font-sans text-sm ${HOVER_TRANSITION_CLASS}`}
           >
             See all work
           </Link>
@@ -44,5 +45,3 @@ const Work = ({
     </section>
   );
 };
-
-export default Work;

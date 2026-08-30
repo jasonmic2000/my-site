@@ -1,4 +1,4 @@
-import Work from "@/components/Work";
+import { Work } from "@/components/Work";
 import { getAllWorkEntries } from "@/lib/utils";
 import { Metadata } from "next";
 

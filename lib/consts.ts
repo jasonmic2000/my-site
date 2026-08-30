@@ -1,5 +1,8 @@
 import { FaGithub, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
 
+export const HOVER_TRANSITION_CLASS =
+  "transition duration-300 ease-in-out hover:text-black dark:hover:text-white";
+
 export const DEFAULT_METADATA = {
   title: "Jason Michael",
   description: "Jason Michael's Website",
@@ -12,9 +15,6 @@ export const DEFAULT_METADATA = {
 export const SITE = {
   NAME: "My Portfolio",
   EMAIL: "jasonmic2000@gmail.com",
-//   NUM_POSTS_ON_HOMEPAGE: 3,
-//   NUM_WORKS_ON_HOMEPAGE: 2,
-//   NUM_PROJECTS_ON_HOMEPAGE: 3,
 } as const;
 
 export const HOME = {

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { DEFAULT_METADATA } from "@/lib/consts";
-import "../styles/globals.css";
-import Navbar from "../components/Navbar";
+import "@/styles/globals.css";
+import { Navbar } from "@/components/Navbar";
 import { Providers } from "./providers";
 import { Footer } from "@/components/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";

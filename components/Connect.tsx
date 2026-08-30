@@ -1,4 +1,4 @@
-import { SOCIALS, SITE } from "@/lib/consts";
+import { SOCIALS, SITE, HOVER_TRANSITION_CLASS } from "@/lib/consts";
 import Link from "next/link";
 import React from "react";
 
@@ -18,7 +18,7 @@ export const Connect = () => {
         {SOCIALS.map(({ NAME, HREF, ICON }) => (
           <li
             key={NAME}
-            className="flex text-xl pr-2 text-nowrap hover:text-black dark:hover:text-white transition duration-300 ease-in-out"
+            className={`flex text-xl pr-2 text-nowrap ${HOVER_TRANSITION_CLASS}`}
           >
             <Link
               href={HREF}
@@ -34,7 +34,7 @@ export const Connect = () => {
       <Link
         href={`mailto:${SITE.EMAIL}`}
         aria-label={`Email ${SITE.NAME}`}
-        className="flex gap-2 hover:text-black dark:hover:text-white transition duration-300 ease-in-out"
+        className={`flex gap-2 ${HOVER_TRANSITION_CLASS}`}
       >
         {SITE.EMAIL}
       </Link>

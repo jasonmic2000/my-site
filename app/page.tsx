@@ -1,5 +1,5 @@
 import { Connect } from "@/components/Connect";
-import Work from "@/components/Work";
+import { Work } from "@/components/Work";
 import { getAllWorkEntries } from "@/lib/utils";
 import Image from "next/image";
 

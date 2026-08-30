@@ -1,4 +1,5 @@
 "use client";
+import { HOVER_TRANSITION_CLASS } from "@/lib/consts";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { FiMoon } from "react-icons/fi";
@@ -14,7 +15,7 @@ const NavbarItems = [
   },
 ];
 
-const Navbar = () => {
+export const Navbar = () => {
   const { setTheme, resolvedTheme } = useTheme();
 
   return (
@@ -22,10 +23,7 @@ const Navbar = () => {
       <div className="flex px-4 md:px-0 flex-row items-center justify-between">
         <div className="flex items-center">
           <h1 className="text-md font-semibold">
-            <Link
-              href="/"
-              className="hover:text-black dark:hover:text-white transition duration-300 ease-in-out"
-            >
+            <Link href="/" className={HOVER_TRANSITION_CLASS}>
               ¯\_(ツ)_/¯
             </Link>
           </h1>
@@ -35,7 +33,7 @@ const Navbar = () => {
             <Link
               key={index}
               href={item.slug}
-              className="transition-all hover:text-black dark:hover:text-white flex align-middle relative duration-300 ease-in-out"
+              className={`flex align-middle relative ${HOVER_TRANSITION_CLASS}`}
             >
               {item.name}
             </Link>
@@ -43,7 +41,7 @@ const Navbar = () => {
           <button
             id="theme-toggle"
             aria-label="Toggle theme"
-            className="flex items-center justify-center transition duration-300 ease-in-out hover:text-black dark:hover:text-white"
+            className={`flex items-center justify-center ${HOVER_TRANSITION_CLASS}`}
             onClick={() =>
               setTheme(resolvedTheme === "dark" ? "light" : "dark")
             }
@@ -55,5 +53,3 @@ const Navbar = () => {
     </header>
   );
 };
-
-export default Navbar;
