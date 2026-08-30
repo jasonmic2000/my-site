@@ -393,9 +393,10 @@ large enough to be a standout bundle concern; no action needed here.
   "missing h1" check.
 - [x] ~~Structural list issue in `Work.tsx`~~ — **fixed 2026-08-23**, see
   §6.
-- [ ] **Low-contrast secondary text via opacity — recommended fix below.**
+- [x] ~~Low-contrast secondary text via opacity~~ — **fixed 2026-08-23**,
+  see recommended fix below (applied as written).
 
-#### Recommended fix for the `opacity-75` secondary text
+#### Fix applied for the `opacity-75` secondary text
 Only used in two spots, both in `components/Work.tsx` (role and date/range
 text). Manually computing the effective contrast (opacity blends the text
 color with the solid page background behind it):
@@ -416,7 +417,7 @@ utilities. Staying in that same family, `zinc-600` (light) /
 `zinc-400` (dark) both check out well clear of AA:
   - `text-zinc-600` on `#F4F4F5` ≈ **7.1:1**
   - `dark:text-zinc-400` on `#18181B` ≈ **6.9:1**
-  Recommended change in `Work.tsx`:
+  Change applied in `Work.tsx`:
   ```diff
   - <p className="text-sm opacity-75">{entry.role}</p>
   + <p className="text-sm text-zinc-600 dark:text-zinc-400">{entry.role}</p>
@@ -425,7 +426,8 @@ utilities. Staying in that same family, `zinc-600` (light) /
   + <span className="text-sm text-zinc-600 dark:text-zinc-400">
   ```
   This both fixes the marginal contrast case and gives real headroom
-  instead of sitting right on the AA line.
+  instead of sitting right on the AA line. Verified `npm run build` and
+  `npm run lint` both still pass clean after the change.
 
 ### `productionBrowserSourceMaps: true` — kept intentionally
 Previously flagged as a Best Practices consideration (ships full readable
@@ -514,12 +516,13 @@ of truth and this as a routing map into them.
 7. [x] ~~Add an `<h1>` to the homepage~~ — **fixed 2026-08-23**. Partial:
    `/work` and `/blog` still have no `<h1>` of their own — low urgency
    unless those routes are individually Lighthouse-audited too. *(§7)*
-8. [ ] **Replace `opacity-75` secondary text with a fixed, contrast-checked
-   color.** Concrete recommended fix now written up in §7 (swap to
-   `text-zinc-600 dark:text-zinc-400`, computed ~7:1 contrast both modes,
-   vs. the current borderline ~4.76:1 in light mode). Likely cause of
-   failed color-contrast audits (role/date text in
-   `Work.tsx`, and anywhere else the same pattern is used). *(§7)*
+8. [x] ~~Replace `opacity-75` secondary text with a fixed, contrast-checked
+   color~~ — **fixed 2026-08-23**. Swapped to `text-zinc-600
+   dark:text-zinc-400` in `Work.tsx` (~7:1 contrast both modes, vs. the
+   prior borderline ~4.76:1 in light mode). *(§7)*
+
+All items in the Major tier are now resolved. Only the partial `<h1>`
+gap on `/work`/`/blog` (noted above) and the Nice-to-have tier remain.
 
 ### 🧹 Nice to have — cleanup, DX, future-proofing, non-urgent upgrades
 - [ ] Remaining safe dependency bump: `tailwindcss`/`@tailwindcss/postcss`,

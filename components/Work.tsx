@@ -25,8 +25,8 @@ const Work = ({
         {workEntries.map((entry: WorkEntryMeta) => (
           <li key={entry.startDate}>
             <p className="font-semibold">{entry.company}</p>
-            <p className="text-sm opacity-75">{entry.role}</p>
-            <span className="text-sm opacity-75">
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">{entry.role}</p>
+            <span className="text-sm text-zinc-600 dark:text-zinc-400">
               {`${entry.startDate} - ${entry.endDate}`}
             </span>
             <article className="pt-4 font-serif">
