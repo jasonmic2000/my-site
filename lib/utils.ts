@@ -1,6 +1,6 @@
-import fs from "fs";
+import fs from "node:fs";
+import path from "node:path";
 import matter from "gray-matter";
-import path from "path";
 import { remark } from "remark";
 import html from "remark-html";
 
@@ -34,10 +34,10 @@ export async function getAllWorkEntries() {
         initialDetails: data.initialDetails,
         detailsHtml: htmlDetails.toString(),
       };
-    })
+    }),
   );
 
   return entries.sort(
-    (a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+    (a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
   );
 }

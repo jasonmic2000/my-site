@@ -1,8 +1,8 @@
 "use client";
-import { HOVER_TRANSITION_CLASS } from "@/lib/consts";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { FiMoon } from "react-icons/fi";
+import { HOVER_TRANSITION_CLASS } from "@/lib/consts";
 
 const NavbarItems = [
   {
@@ -29,9 +29,9 @@ export const Navbar = () => {
           </h1>
         </div>
         <div className="flex flex-row gap-4 md:mt-0 md:ml-auto items-center">
-          {NavbarItems.map((item, index) => (
+          {NavbarItems.map((item) => (
             <Link
-              key={index}
+              key={item.slug}
               href={item.slug}
               className={`flex align-middle relative ${HOVER_TRANSITION_CLASS}`}
             >
@@ -39,6 +39,7 @@ export const Navbar = () => {
             </Link>
           ))}
           <button
+            type="button"
             id="theme-toggle"
             aria-label="Toggle theme"
             className={`flex items-center justify-center ${HOVER_TRANSITION_CLASS}`}

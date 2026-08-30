@@ -1,6 +1,6 @@
-import { HOVER_TRANSITION_CLASS } from "@/lib/consts";
-import { WorkEntryMeta } from "@/lib/utils";
 import Link from "next/link";
+import { HOVER_TRANSITION_CLASS } from "@/lib/consts";
+import type { WorkEntryMeta } from "@/lib/utils";
 
 export const Work = ({
   workEntries,
@@ -26,7 +26,9 @@ export const Work = ({
         {workEntries.map((entry: WorkEntryMeta) => (
           <li key={entry.startDate}>
             <p className="font-semibold">{entry.company}</p>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">{entry.role}</p>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              {entry.role}
+            </p>
             <span className="text-sm text-zinc-600 dark:text-zinc-400">
               {`${entry.startDate} - ${entry.endDate}`}
             </span>
@@ -35,6 +37,7 @@ export const Work = ({
               {showDetails && (
                 <div
                   className="pt-4 pb-12 markdown-list"
+                  // biome-ignore lint/security/noDangerouslySetInnerHtml: detailsHtml is generated at build time from self-authored MDX in content/work/, not user input.
                   dangerouslySetInnerHTML={{ __html: entry.detailsHtml }}
                 />
               )}

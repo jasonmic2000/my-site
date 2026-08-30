@@ -54,4 +54,3 @@ export const SOCIALS = [
     HREF: "https://www.linkedin.com/in/jasonmic2000",
   },
 ] as const;
-

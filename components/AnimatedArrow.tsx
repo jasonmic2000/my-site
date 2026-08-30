@@ -1,7 +1,6 @@
-import React from 'react';
-
-export const AnimatedArrow = ({ className = '' }: { className?: string }) => {
+export const AnimatedArrow = ({ className = "" }: { className?: string }) => {
   return (
+    // biome-ignore lint/a11y/noSvgWithoutTitle: unused component, kept as-is; add a title or aria-hidden when this is wired in.
     <svg
       viewBox="0 0 24 24"
       className={`size-5 stroke-[3px] fill-none stroke-current opacity-50 group-hover:opacity-100 transition-opacity duration-300 ease-in-out ${className}`}

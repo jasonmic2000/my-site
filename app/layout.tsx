@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { DEFAULT_METADATA } from "@/lib/consts";
 import "@/styles/globals.css";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
 import { Providers } from "./providers";
-import { Footer } from "@/components/Footer";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,11 +52,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} bg-[#F4F4F5] text-[#3F3F46] dark:bg-[#18181B] dark:text-[#D4D4D8] antialiased flex flex-col items-center justify-center scrollbar-hide mx-auto min-w-0 max-w-[640px] w-full mt-2 md:mt-6`}
       >
         <Providers>
-          <>
-            <Navbar />
-            <main className="space-y-20 px-4 pb-24 max-w-2xl">{children}</main>
-            <Footer />
-          </>
+          <Navbar />
+          <main className="space-y-20 px-4 pb-24 max-w-2xl">{children}</main>
+          <Footer />
         </Providers>
         <SpeedInsights />
       </body>

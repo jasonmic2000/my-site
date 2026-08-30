@@ -1,7 +1,7 @@
+import Image from "next/image";
 import { Connect } from "@/components/Connect";
 import { Work } from "@/components/Work";
 import { getAllWorkEntries } from "@/lib/utils";
-import Image from "next/image";
 
 const Home = async () => {
   const workEntries = await getAllWorkEntries();
@@ -49,9 +49,9 @@ const Home = async () => {
           These days, I focus on thoughtful engineering — whether it’s crafting
           intuitive, accessible UIs, improving performance, or running
           self-hosted experiments on my home server. I’ve also found myself
-          mentoring more lately — not necessarily in a formal way, but by helping
-          teammates debug tricky problems, reviewing code, and supporting where
-          I can.
+          mentoring more lately — not necessarily in a formal way, but by
+          helping teammates debug tricky problems, reviewing code, and
+          supporting where I can.
         </p>
         <p className="mb-4">
           Outside work, video games have been a constant in my life — not just

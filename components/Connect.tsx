@@ -1,6 +1,5 @@
-import { SOCIALS, SITE, HOVER_TRANSITION_CLASS } from "@/lib/consts";
 import Link from "next/link";
-import React from "react";
+import { HOVER_TRANSITION_CLASS, SITE, SOCIALS } from "@/lib/consts";
 
 export const Connect = () => {
   return (
