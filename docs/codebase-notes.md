@@ -5,7 +5,7 @@ audit findings from review sessions. Unlike a spec, this doc is expected to
 go stale — check off items as they're done, and re-verify dependency
 versions/audit results before acting on them since they're snapshots in time.
 
-Last updated: 2026-08-23
+Last updated: 2026-08-30
 
 ---
 
@@ -22,8 +22,6 @@ Last updated: 2026-08-23
   `gray-matter`, body rendered via `remark`/`remark-html`
 - **Fonts**: `next/font/google` (Geist Sans/Mono)
 - **Icons**: `react-icons`
-- **shadcn/ui is configured** (`components.json`, "new-york" style, slate
-  base) but `components/ui/` doesn't exist yet — scaffolded, unused
 - **Linting**: ESLint 9 (9.39.5) flat config, using `eslint-config-next`'s
   native flat-config exports (`eslint-config-next/core-web-vitals`,
   `eslint-config-next/typescript`) directly + `eslint-config-prettier`. Run
@@ -91,9 +89,11 @@ those files if needed for reference, no need to keep them live in-file.
   that assumption so it doesn't read as an oversight later.
 - [ ] `AnimatedArrow.tsx` is unused (no imports anywhere) — either wire it in
   or delete it.
-- [ ] Decide on shadcn: either start using it (`npx shadcn add ...`) or strip
-  `components.json` if the plan changed, so it doesn't look like an
-  abandoned mid-setup.
+- [x] ~~Decide on shadcn~~ — **resolved 2026-08-30, user decision: remove**.
+  `components.json` deleted; the site keeps its current hand-rolled
+  component style. Note: `lib/utils.ts`'s `cn()` helper (originally shadcn
+  boilerplate) is tracked separately as unused dead code in §6 — that
+  decision is independent of this one.
 - [ ] Blog route (`/blog`) is a static placeholder. When built out, it's a
   natural fit for the same MDX+frontmatter pattern proven in
   `content/work/`, but will likely want individual permalinks
@@ -106,36 +106,31 @@ those files if needed for reference, no need to keep them live in-file.
 
 Re-run `npm outdated` / `npm audit` before acting on this — versions move.
 
-### Outdated packages (snapshot: 2026-08-23, post Next 16 upgrade)
+### Outdated packages (snapshot: 2026-08-30, post safe-bump round 2)
 
 | Package | Current | Latest | Bump type |
 |---|---|---|---|
-| typescript | 5.8.3 | 7.0.2 | major (see caveat in §4) |
-| @types/node | 20.17.47 | 26.2.0 | major (tracks Node runtime — local Node is v22.21.1) |
-| @vercel/speed-insights | 1.2.0 | 2.0.0 | major |
-| eslint | 9.39.5 | 10.9.0 | major — **do not bump yet, see §6** |
-| @tailwindcss/postcss / tailwindcss | 4.1.7 | 4.3.3 | minor |
-| tailwind-merge | 3.3.0 | 3.6.0 | minor |
-| tw-animate-css | 1.3.0 | 1.4.0 | minor |
-| react-icons | 5.5.0 | 5.7.0 | minor |
-| eslint-config-prettier | 10.1.5 | 10.1.8 | patch |
+| eslint | 9.39.5 | 10.9.1 | major — **do not bump yet, see §6** |
+| typescript | 5.9.3 | 7.0.2 | major — **intentionally held, see §4 step 6** |
 
-`next`, `eslint-config-next`, `@next/mdx`, `react`, `react-dom`,
-`@types/react`, `@types/react-dom` are all now at latest (16.3.2 / 19.2.8 /
-19.2.18 / 19.2.4 respectively) — see §4, done 2026-08-23.
+Everything else is now at latest: `next`/`eslint-config-next`/`@next/mdx`
+16.3.3, `react`/`react-dom` 19.2.8, `@types/react` 19.2.18,
+`@types/react-dom` 19.2.5, `@vercel/speed-insights` ^2.0.0,
+`tailwindcss`/`@tailwindcss/postcss` 4.3.3, `tailwind-merge` 3.6.0,
+`tw-animate-css` 1.4.0, `react-icons` 5.7.0, `eslint-config-prettier`
+10.1.8, `@types/node` `^22` (latest 22.x line) — all bumped 2026-08-30,
+`npm run build` and `npm run lint` both verified clean after. Only the two
+intentionally-held items above remain outdated.
 
 ### ~~`npm audit` findings~~ (superseded, see §4/§6 for current state)
-Original snapshot (2026-08-13, Next 15.3.2): 13 advisories (2 critical, 8
-high). After the Next 16 upgrade this dropped to **6 advisories (1
-critical, 4 high, 1 moderate)**, and critically, **`next` no longer appears
-in the audit output at all** — the prior `next` entry was flagged both for
-direct Next.js CVEs (fixed by the 15.5.23 patch) and for bundling
-vulnerable transitive `postcss`/`sharp` versions (only fixed by the v16
-major, which is why the full jump to 16 mattered, not just the patch bump).
-Everything remaining (`brace-expansion`, `flatted`, `js-yaml`,
-`mdast-util-to-hast`, `picomatch`, `tar`) is transitive dev-toolchain
-noise from the ESLint/typescript-eslint dependency tree, not reachable
-through this site's runtime.
+Timeline: 13 advisories (2026-08-13, Next 15.3.2) → 6 advisories
+(2026-08-23, after the Next 16 major) → **4 advisories (1 moderate, 3
+high)** as of 2026-08-30, after the round-2 safe bump (tailwind bump alone
+dropped one). `next` has not reappeared in the audit output since the v16
+upgrade. Everything remaining (`mdast-util-to-hast` plus a small number of
+others) is transitive dev-toolchain noise from the
+ESLint/typescript-eslint/remark dependency tree, not reachable through
+this site's runtime.
 
 ### Unused dependencies
 None found. Every entry in `dependencies` and `devDependencies` was checked
@@ -154,11 +149,13 @@ with Prettier; nothing is currently enforcing formatting in this repo.
 
 Batched by risk — don't do this all in one shot.
 
-1. [x] **Safe bulk bump** — done as part of the Next 16 upgrade: `react`,
-   `react-dom` → 19.2.8, `@types/react` → 19.2.18, `@types/react-dom` →
-   19.2.4. Still open: `tailwindcss`/`@tailwindcss/postcss`,
-   `tailwind-merge`, `tw-animate-css`, `react-icons`,
-   `eslint-config-prettier` (all minor/patch, low risk — see §3 table).
+1. [x] **Safe bulk bump** — done in two rounds. Round 1 (2026-08-23, with
+   the Next 16 upgrade): `react`/`react-dom` → 19.2.8, `@types/react` →
+   19.2.18, `@types/react-dom` → 19.2.4. Round 2 (2026-08-30): the rest —
+   `tailwindcss`/`@tailwindcss/postcss` → 4.3.3, `tailwind-merge` → 3.6.0,
+   `tw-animate-css` → 1.4.0, `react-icons` → 5.7.0, `eslint-config-prettier`
+   → 10.1.8, plus `next`/`eslint-config-next`/`@next/mdx` patch bump to
+   16.3.3. Build + lint verified clean after each round.
 2. [x] ~~Next.js 15.3.2 → 15.5.23~~ — done 2026-08-23, then immediately
    superseded by step 3 the same day.
 3. [x] **Next.js 15 → 16 (major)** — done 2026-08-23. `next`,
@@ -183,17 +180,18 @@ Batched by risk — don't do this all in one shot.
    `eslint-config-next` (or its bundled `eslint-plugin-react`) ships a
    fix** — re-check `npm ls eslint-plugin-react` and try again on the next
    `eslint-config-next` release.
-5. [ ] **@vercel/speed-insights 1 → 2 (major)** — small surface area (just
-   the `<SpeedInsights />` import in `app/layout.tsx`), check changelog for
-   API changes first.
-6. [ ] **TypeScript** — target `5.9.x` as "latest stable," do **not** jump to
-   `7.0.2`. TS 7 is the new Go-based native-compiler rewrite, a different
-   implementation rather than a version bump; ecosystem tooling (ESLint
-   plugins, Next's type-checking) is still catching up. Revisit later.
-7. [ ] **@types/node** — match to the Node version actually used in dev and
-   on Vercel. Local dev Node is confirmed **v22.21.1**; still need to check
-   the Vercel project's configured Node version before picking a target
-   (don't just take latest/26.x).
+5. [x] **@vercel/speed-insights 1 → 2 (major)** — done 2026-08-30. Bumped
+   to `^2.0.0`; the `<SpeedInsights />` import in `app/layout.tsx` needed no
+   changes, `npm run build` + `npm run lint` both verified clean.
+6. [x] **TypeScript → 5.9.3** — done 2026-08-30, bumped from 5.8.3 within
+   the 5.x line as planned. Still **not** jumping to `7.0.2`: TS 7 is the
+   new Go-based native-compiler rewrite, a different implementation rather
+   than a version bump; ecosystem tooling (ESLint plugins, Next's
+   type-checking) is still catching up. Revisit later.
+7. [x] **@types/node → `^22`** — done 2026-08-30. User confirmed Vercel
+   runs the same major as local dev (v22.x), so bumped from `^20` to `^22`
+   (latest 22.x line) rather than jumping to the unrelated `26.x` "latest"
+   tag. Verified clean build + lint after.
 
 ---
 
@@ -469,17 +467,32 @@ both known causes in this tier are resolved.
   metric this was meant to help. `priority={false}` (or omitting it) is the
   default and is correct for below-the-fold images that should lazy-load
   instead — not the case here.
-- [ ] `public/` contains only `favicon.ico` (28K — larger than typical for
-  a `.ico`) and no `apple-touch-icon`, `manifest.json`, or an Open Graph
-  share image. `DEFAULT_METADATA` in `lib/consts.ts` doesn't set an `images`
-  field for `openGraph`/`twitter`, so social shares of this site currently
-  render without a preview image. Not a Lighthouse Accessibility/Best
-  Practices item specifically, but worth fixing alongside the image work
-  above since it's the same general area.
-- [ ] No `app/robots.ts` or `app/sitemap.ts` — doesn't affect the two
-  scores asked about here (that's the Lighthouse SEO category), but flagged
-  since it's cheap to add once the metadata work above is being touched
-  anyway.
+- [x] ~~No `apple-touch-icon` or Open Graph share image~~ — **fixed
+  2026-08-30**. Added `app/opengraph-image.tsx` and `app/apple-icon.tsx`,
+  both using Next's file-convention dynamic image generation
+  (`ImageResponse` from `next/og`) rather than static assets — no external
+  image tooling needed, generated at build time as static routes
+  (confirmed via `npm run build`: `○ /apple-icon`, `○ /opengraph-image`).
+  Both match the site's existing rose-400/zinc branding (verified visually:
+  OG card is 1200×630 with "Jason **Michael**" + tagline on a `#18181B`
+  background; apple icon is a 180×180 "JM" monogram, same palette). Next
+  auto-registers these into the resolved `openGraph`/icon metadata — no
+  manual changes needed in `app/layout.tsx`'s `metadata` export.
+  `public/favicon.ico` (28K) was left as-is, not in scope for this pass.
+- [x] ~~No `app/robots.ts` or `app/sitemap.ts`~~ — **fixed 2026-08-30**.
+  Both added using Next's typed `MetadataRoute.Robots`/`MetadataRoute.Sitemap`
+  file conventions, sourcing the site URL from `DEFAULT_METADATA` in
+  `lib/consts.ts` rather than hardcoding it again. `sitemap.ts` currently
+  lists the 3 static routes (`/`, `/work`, `/blog`) by hand — if `/blog`
+  ever grows per-post permalinks (see §2), this will need to generate
+  entries per post instead of a fixed array.
+- [x] ~~No `manifest.json`~~ — **fixed 2026-08-30**, added `app/manifest.ts`
+  (typed `MetadataRoute.Manifest`), reusing the existing `favicon.ico` as
+  its icon rather than introducing a new asset.
+
+All four routes confirmed generating correctly via `npm run build`:
+`/robots.txt`, `/sitemap.xml`, `/manifest.webmanifest`, `/opengraph-image`,
+`/apple-icon`.
 
 ---
 
@@ -526,22 +539,28 @@ of truth and this as a routing map into them.
    dark:text-zinc-400` in `Work.tsx` (~7:1 contrast both modes, vs. the
    prior borderline ~4.76:1 in light mode). *(§7)*
 
-All items in the Major tier are now resolved. Only the partial `<h1>`
-gap on `/work`/`/blog` (noted above) and the Nice-to-have tier remain.
+All items in the Major and Security tiers are now fully resolved,
+including the `<h1>` gap (see item 7 above).
 
 ### 🧹 Nice to have — cleanup, DX, future-proofing, non-urgent upgrades
-- [ ] Remaining safe dependency bump: `tailwindcss`/`@tailwindcss/postcss`,
-  `tailwind-merge`, `tw-animate-css`, `react-icons`, `eslint-config-prettier`
-  (all minor/patch). *(§3, §4 step 1)*
-- [ ] `@vercel/speed-insights` 1 → 2 major upgrade. *(§4 step 5)*
-- [ ] TypeScript: stay on `5.9.x`, don't jump to the `7.x` native-compiler
-  line yet. *(§4 step 6)*
-- [ ] `@types/node`: local Node confirmed at v22.21.1 — still need to check
-  Vercel's configured Node version before picking a target. *(§4 step 7)*
+- [x] ~~Remaining safe dependency bump~~ — **done 2026-08-30**:
+  `tailwindcss`/`@tailwindcss/postcss` 4.3.3, `tailwind-merge` 3.6.0,
+  `tw-animate-css` 1.4.0, `react-icons` 5.7.0, `eslint-config-prettier`
+  10.1.8, plus `next`/`eslint-config-next`/`@next/mdx` patch → 16.3.3.
+  *(§3, §4 step 1)*
+- [x] ~~`@vercel/speed-insights` 1 → 2 major upgrade~~ — **done
+  2026-08-30**. *(§4 step 5)*
+- [x] ~~TypeScript: bump within 5.x~~ — **done 2026-08-30**, now `5.9.3`.
+  Still intentionally not on `7.x`. *(§4 step 6)*
+- [x] ~~`@types/node`~~ — **done 2026-08-30**, bumped to `^22` after user
+  confirmed Vercel matches local dev's Node 22.x. *(§4 step 7)*
 - [ ] Re-attempt ESLint 9 → 10 once `eslint-config-next`'s bundled
   `eslint-plugin-react` supports ESLint 10's rule-context API — currently
   blocked upstream, not something fixable in this repo. *(§4 step 4, §6)*
 - [ ] ESLint+Prettier → Biome migration. *(§5, full plan)*
+- [x] ~~Add an Open Graph share image, `apple-touch-icon`, and
+  `manifest.json`; add `app/robots.ts`/`app/sitemap.ts`~~ — **done
+  2026-08-30**, see §7 Image optimization section for full detail. *(§7)*
 - [ ] Remove dead code: unused `cn()` helper, unused `AnimatedArrow.tsx`,
   leftover commented-out fields in `lib/consts.ts` / `lib/utils.ts`. *(§6)*
 - [ ] Extract the 8×-repeated hover/transition class string into a shared
@@ -549,8 +568,7 @@ gap on `/work`/`/blog` (noted above) and the Nice-to-have tier remain.
 - [ ] Standardize import style (`@/*` alias everywhere, including
   `layout.tsx`) and export convention (pick default or named, apply
   consistently). *(§6)*
-- [ ] Decide on shadcn: adopt it or remove `components.json`. *(§2)*
-- [ ] Add an Open Graph share image, `apple-touch-icon`, and
-  `manifest.json`; consider `app/robots.ts`/`app/sitemap.ts`. *(§7)*
+- [x] ~~Decide on shadcn~~ — **done 2026-08-30, removed**. See §1/§2. *(§2)*
 - [ ] Build out the `/blog` route with the same MDX pattern as `/work`,
-  with per-post permalinks. *(§2)*
+  with per-post permalinks — note `app/sitemap.ts` will need updating to
+  generate per-post entries once this happens, see §7. *(§2)*
