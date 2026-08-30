@@ -382,15 +382,18 @@ still prerender as fully static content. Nothing in the dependency list is
 large enough to be a standout bundle concern; no action needed here.
 
 ### Likely causes of Lighthouse Accessibility not being 100
-- [x] ~~No `<h1>` anywhere in the site~~ — **fixed 2026-08-23** on the
-  homepage: the name heading in `app/page.tsx` is now `<h1>`. **Not fully
-  closed out**: `/work` and `/blog` still have no `<h1>` — `Work.tsx`'s
-  internal "Work" heading is `<h2>` (correct when the component is embedded
-  in the homepage under the `<h1>` name heading, but on the standalone
-  `/work` page there's nothing above it at `<h1>` level), and `/blog` has no
-  heading at all. If Lighthouse is only being run against the homepage this
-  is done; if `/work`/`/blog` are audited too, they'll still fail the
-  "missing h1" check.
+- [x] ~~No `<h1>` anywhere in the site~~ — **fully fixed 2026-08-23**.
+  Superseded the homepage-only fix: `components/Navbar.tsx`'s logo/home-link
+  (`¯\_(ツ)_/¯`) is now wrapped in `<h1>` (heading wraps the `Link`, not the
+  other way around), and since `Navbar` renders from the shared root layout
+  (`app/layout.tsx`), every route (`/`, `/work`, `/blog`) now gets exactly
+  one `<h1>` for free. This meant the homepage's `"Jason Michael"` heading
+  in `app/page.tsx` had to be demoted from `<h1>` to `<h2>` to avoid two
+  `<h1>`s on that page — kept the identical classes
+  (`text-[2rem] font-extrabold`), so **no visual size change**: Tailwind's
+  preflight (bundled via `@import "tailwindcss"`) strips default browser
+  heading styles, so font-size/weight come entirely from utility classes,
+  not the tag.
 - [x] ~~Structural list issue in `Work.tsx`~~ — **fixed 2026-08-23**, see
   §6.
 - [x] ~~Low-contrast secondary text via opacity~~ — **fixed 2026-08-23**,
@@ -513,9 +516,11 @@ of truth and this as a routing map into them.
    **fixed 2026-08-23**. Now served from `public/luffy-wano-avatar.jpg`
    with `priority={true}` (confirmed correct — see §7). Unused
    `remotePatterns` config for the old host was also cleaned up. *(§7)*
-7. [x] ~~Add an `<h1>` to the homepage~~ — **fixed 2026-08-23**. Partial:
-   `/work` and `/blog` still have no `<h1>` of their own — low urgency
-   unless those routes are individually Lighthouse-audited too. *(§7)*
+7. [x] ~~Add an `<h1>` to every page~~ — **fully fixed 2026-08-23**. Moved
+   the `<h1>` to the shared `Navbar` logo/home-link instead of keeping it
+   homepage-only, so `/`, `/work`, and `/blog` all get exactly one `<h1>`
+   from the shared root layout. Homepage's `"Jason Michael"` demoted to
+   `<h2>` (same visual size) to avoid a duplicate. *(§7)*
 8. [x] ~~Replace `opacity-75` secondary text with a fixed, contrast-checked
    color~~ — **fixed 2026-08-23**. Swapped to `text-zinc-600
    dark:text-zinc-400` in `Work.tsx` (~7:1 contrast both modes, vs. the

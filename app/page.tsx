@@ -11,10 +11,10 @@ const Home = async () => {
     <>
       <section className="flex flex-col-reverse items-start md:flex-row md:justify-between md:items-center">
         <div>
-          <h1 className="mt-2 md:m-0 text-[2rem] font-extrabold">
+          <h2 className="mt-2 md:m-0 text-[2rem] font-extrabold">
             <span>Jason </span>
             <span className="text-rose-400">Michael</span>
-          </h1>
+          </h2>
           <p className="m-0 italic font-serif">
             Associate Technology Manager at Maxxton
           </p>

@@ -21,12 +21,14 @@ const Navbar = () => {
     <header className="w-full lg:mb-16 mb-12 py-5">
       <div className="flex px-4 md:px-0 flex-row items-center justify-between">
         <div className="flex items-center">
-          <Link
-            href="/"
-            className="text-md font-semibold hover:text-black dark:hover:text-white transition duration-300 ease-in-out"
-          >
-            ¯\_(ツ)_/¯
-          </Link>
+          <h1 className="text-md font-semibold">
+            <Link
+              href="/"
+              className="hover:text-black dark:hover:text-white transition duration-300 ease-in-out"
+            >
+              ¯\_(ツ)_/¯
+            </Link>
+          </h1>
         </div>
         <div className="flex flex-row gap-4 md:mt-0 md:ml-auto items-center">
           {NavbarItems.map((item, index) => (
