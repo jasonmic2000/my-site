@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Jason Michael — Personal Portfolio
 
-## Getting Started
+Source for my personal site: [dev.jasonjmichael.com](https://dev.jasonjmichael.com)
 
-First, run the development server:
+A minimal, lightweight portfolio built with the Next.js App Router — home page, work history, and a blog (in progress).
+
+## Tech stack
+
+- [Next.js 16](https://nextjs.org/) (App Router) + React 19
+- TypeScript
+- [Tailwind CSS v4](https://tailwindcss.com/)
+- [Biome](https://biomejs.dev/) for linting and formatting
+- MDX (`@next/mdx`) for content, parsed with `gray-matter` + `remark`
+- [`next-themes`](https://github.com/pacocoursey/next-themes) for light/dark mode
+- [Vercel Speed Insights](https://vercel.com/docs/speed-insights)
+
+## Getting started
+
+Requires Node.js and npm.
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see it running.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the dev server (Turbopack) |
+| `npm run build` | Production build |
+| `npm run start` | Serve the production build |
+| `npm run lint` | Check formatting, lint rules, and import order with Biome |
+| `npm run lint:fix` | Same as above, applying safe fixes |
+| `npm run format` | Format all files with Biome |
 
-## Learn More
+## Content
 
-To learn more about Next.js, take a look at the following resources:
+Work history entries live in `content/work/*.mdx`, one file per role, with frontmatter:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```md
+---
+company: "Company Name"
+role: "Job Title"
+startDate: "Month Year"
+endDate: "Month Year"
+initialDetails: "One-line summary shown on the homepage."
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Bullet points with more detail, shown on the /work page.
+```
 
-## Deploy on Vercel
+Entries are sorted by `startDate` automatically — no other registration needed.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT — see [LICENSE](./LICENSE). Personal content (bio, work history text, avatar image) is not intended for reuse.
