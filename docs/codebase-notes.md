@@ -12,7 +12,7 @@ Last updated: 2026-08-30
 ## 1. Architecture & structure overview
 
 ### Tech stack
-- **Framework**: Next.js 16.3.2 (App Router), React 19.2.8 — upgraded from
+- **Framework**: Next.js 16.3.3 (App Router), React 19.2.8 — upgraded from
   15.3.2 on 2026-08-23, see §4
 - **Language**: TypeScript (strict mode), path alias `@/*` → repo root
 - **Styling**: Tailwind CSS v4 (`@tailwindcss/postcss`), `tailwind-merge` +
@@ -87,13 +87,13 @@ those files if needed for reference, no need to keep them live in-file.
 - [ ] `Work.tsx` uses `dangerouslySetInnerHTML` for `detailsHtml` — safe today
   since MDX content is self-authored, but worth a one-line comment noting
   that assumption so it doesn't read as an oversight later.
-- [ ] `AnimatedArrow.tsx` is unused (no imports anywhere) — either wire it in
-  or delete it.
+- [x] `AnimatedArrow.tsx` is unused (no imports anywhere) — **explicit user
+  decision 2026-08-30: keep as-is, do not remove**. Still unused; revisit
+  only if asked.
 - [x] ~~Decide on shadcn~~ — **resolved 2026-08-30, user decision: remove**.
   `components.json` deleted; the site keeps its current hand-rolled
-  component style. Note: `lib/utils.ts`'s `cn()` helper (originally shadcn
-  boilerplate) is tracked separately as unused dead code in §6 — that
-  decision is independent of this one.
+  component style. Note: `cn()` (originally shadcn boilerplate, formerly in
+  `lib/utils.ts`) was separately removed as unused dead code — see §6.
 - [ ] Blog route (`/blog`) is a static placeholder. When built out, it's a
   natural fit for the same MDX+frontmatter pattern proven in
   `content/work/`, but will likely want individual permalinks
@@ -305,49 +305,56 @@ something fixable in this repo; it needs an upstream fix in
     gap fully closed.
 
 ### 🟡 Dead code
-- [ ] `cn()` in `lib/utils.ts` (the `clsx` + `tailwind-merge` helper,
-  shadcn boilerplate) is defined but never called anywhere in the codebase.
-  Either start using it where hover/utility class strings are being
-  hand-concatenated (see duplication note below) or remove it along with
-  the `clsx`/`tailwind-merge` dependencies if shadcn adoption isn't
-  happening.
-- [ ] `AnimatedArrow.tsx` — unused component (already noted in §2).
-- [ ] Leftover commented-out fields in `lib/consts.ts` (`NUM_POSTS_ON_HOMEPAGE`,
-  `NUM_WORKS_ON_HOMEPAGE`, `NUM_PROJECTS_ON_HOMEPAGE`) and a commented
-  `slug` field in `lib/utils.ts`'s `WorkEntryMeta`/reader — small, but same
-  category as the design-draft comments: either use them or drop them.
+- [x] ~~`cn()` in `lib/utils.ts`~~ — **removed 2026-08-30**. Confirmed no
+  callers anywhere in the codebase, then deleted along with the now-fully-
+  unused `clsx`/`tailwind-merge` dependencies (`npm install` pruned both
+  from `node_modules`/lockfile — 2 packages removed).
+- [x] `AnimatedArrow.tsx` — **kept, per explicit user decision 2026-08-30**.
+  Still unused (no imports anywhere), but intentionally left in place —
+  do not remove without asking again.
+- [x] ~~Leftover commented-out fields~~ — **removed 2026-08-30**. Dropped
+  the commented `NUM_POSTS_ON_HOMEPAGE`/`NUM_WORKS_ON_HOMEPAGE`/
+  `NUM_PROJECTS_ON_HOMEPAGE` fields from `lib/consts.ts` and the commented
+  `slug` field (plus its matching commented return-line) from
+  `lib/utils.ts`.
 
 ### 🟡 Duplicated logic
-- [ ] The hover/transition utility-class string
-  `"transition duration-300 ease-in-out hover:text-black dark:hover:text-white"`
-  (or a near-identical reordering) is hand-repeated **8 times** across
-  `Navbar.tsx` (×3), `Connect.tsx` (×2), `Footer.tsx` (×1), and elsewhere.
-  Good candidate to centralize as a constant (e.g. `lib/consts.ts` or a
-  `cn()`-composed helper) or a small shared `<HoverLink>` wrapper, both to
-  cut duplication and to make future style tweaks a one-line change instead
-  of an 8-site find/replace.
+- [x] ~~Hand-repeated hover/transition utility-class string~~ — **fixed
+  2026-08-30**. Extracted to `HOVER_TRANSITION_CLASS` in `lib/consts.ts`
+  (`"transition duration-300 ease-in-out hover:text-black
+  dark:hover:text-white"`) and applied at all 7 sites across `Navbar.tsx`
+  (×3), `Connect.tsx` (×2), `Footer.tsx` (×1), `Work.tsx` (×1). Two real
+  inconsistencies got fixed as a side effect of normalizing to one
+  constant: `Navbar.tsx`'s nav-item links used `transition-all` instead of
+  the plain `transition` every other instance used (no other animated
+  properties there, so this was strictly more expensive for no benefit),
+  and `Work.tsx`'s "See all work" link had the modifier order reversed
+  (`hover:dark:text-white` instead of `dark:hover:text-white`).
+  **Placement note**: initially added to `lib/utils.ts` (which already held
+  the removed `cn()` helper) but that file imports Node-only modules
+  (`fs`, `path`, `gray-matter`, `remark`) — since `Navbar.tsx` is a client
+  component (`"use client"`), importing anything from `lib/utils.ts` there
+  pulled those Node built-ins into the client bundle and broke the build.
+  Moved to `lib/consts.ts` instead, which has no server-only dependencies
+  and is already safe to import from both client and server components.
 
-### 🟡 Inconsistent patterns
-- [ ] **Mixed import styles within the same file** — `app/layout.tsx` mixes
-  the `@/*` path alias (`@/lib/consts`, `@/components/Footer`) with
-  relative imports (`../styles/globals.css`, `../components/Navbar`) for
-  conceptually identical imports. Every other file in the repo consistently
-  uses the `@/*` alias — `layout.tsx` is the outlier.
-- [ ] **Mixed export conventions** — `Navbar` and `Work` use `export default`
-  (declared separately at the bottom of the file); `Connect` and `Footer`
-  use inline named exports (`export const Connect = ...`). This forces
-  inconsistent import syntax at call sites (`import Navbar from ...` vs
-  `import { Footer } from ...`) for components that are otherwise
-  structurally identical. Worth picking one convention (named exports are
-  slightly preferable — easier to grep, no default-export ambiguity — but
-  either is fine as long as it's consistent).
+### ✅ Fixed — inconsistent patterns
+- [x] ~~Mixed import styles in `app/layout.tsx`~~ — **fixed 2026-08-30**.
+  `../styles/globals.css` → `@/styles/globals.css`,
+  `../components/Navbar` → `@/components/Navbar`. Every import in the repo
+  now consistently uses the `@/*` alias.
+- [x] ~~Mixed export conventions~~ — **fixed 2026-08-30**. `Navbar` and
+  `Work` converted from `export default` to named exports
+  (`export const Navbar`/`export const Work`), matching `Connect` and
+  `Footer`. Updated all call sites: `app/layout.tsx`, `app/page.tsx`,
+  `app/work/page.tsx`.
 - [ ] **`"use client"` quote style** — double quotes in `Navbar.tsx`, single
-  quotes in `app/providers.tsx`. Cosmetic, but exactly the kind of thing
-  Biome/Prettier would auto-normalize (see §5).
+  quotes in `app/providers.tsx`. Still open — cosmetic, and exactly the
+  kind of thing Biome/Prettier would auto-normalize (see §5), so left for
+  that pass rather than a manual one-off fix.
 - [ ] **List `key` strategy** — `Work.tsx` keys on the stable
-  `entry.startDate`; `Navbar.tsx` keys nav items on array `index`. Low risk
-  today since the nav list is static, but inconsistent with the
-  stable-key pattern used elsewhere.
+  `entry.startDate`; `Navbar.tsx` keys nav items on array `index`. Still
+  open, low risk today since the nav list is static.
 
 ### ✅ Fixed — structural/semantic HTML issue (also an accessibility finding, see §7)
 `components/Work.tsx` used to render a **separate `<ul>` per work entry
@@ -496,7 +503,7 @@ All four routes confirmed generating correctly via `npm run build`:
 
 ---
 
-## 8. Prioritized to-do list (as of 2026-08-23)
+## 8. Prioritized to-do list (as of 2026-08-30)
 
 Synthesized from §§2–7. Ordered by urgency within each tier, not by effort.
 Re-check off items directly here as they land — this list will drift from
@@ -561,13 +568,15 @@ including the `<h1>` gap (see item 7 above).
 - [x] ~~Add an Open Graph share image, `apple-touch-icon`, and
   `manifest.json`; add `app/robots.ts`/`app/sitemap.ts`~~ — **done
   2026-08-30**, see §7 Image optimization section for full detail. *(§7)*
-- [ ] Remove dead code: unused `cn()` helper, unused `AnimatedArrow.tsx`,
-  leftover commented-out fields in `lib/consts.ts` / `lib/utils.ts`. *(§6)*
-- [ ] Extract the 8×-repeated hover/transition class string into a shared
-  constant or helper. *(§6)*
-- [ ] Standardize import style (`@/*` alias everywhere, including
-  `layout.tsx`) and export convention (pick default or named, apply
-  consistently). *(§6)*
+- [x] ~~Remove dead code~~ — **done 2026-08-30**: unused `cn()` helper and
+  leftover commented-out fields removed. `AnimatedArrow.tsx` deliberately
+  **kept** per user decision — not a leftover, don't remove it. *(§6)*
+- [x] ~~Extract the repeated hover/transition class string~~ — **done
+  2026-08-30**, `HOVER_TRANSITION_CLASS` in `lib/consts.ts`, applied at all
+  7 sites. *(§6)*
+- [x] ~~Standardize import style and export convention~~ — **done
+  2026-08-30**: `layout.tsx` now uses `@/*` alias throughout; `Navbar` and
+  `Work` converted to named exports. *(§6)*
 - [x] ~~Decide on shadcn~~ — **done 2026-08-30, removed**. See §1/§2. *(§2)*
 - [ ] Build out the `/blog` route with the same MDX pattern as `/work`,
   with per-post permalinks — note `app/sitemap.ts` will need updating to
