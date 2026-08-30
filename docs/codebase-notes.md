@@ -122,15 +122,23 @@ Everything else is now at latest: `next`/`eslint-config-next`/`@next/mdx`
 `npm run build` and `npm run lint` both verified clean after. Only the two
 intentionally-held items above remain outdated.
 
-### ~~`npm audit` findings~~ (superseded, see §4/§6 for current state)
+### `npm audit` findings — 0 vulnerabilities
 Timeline: 13 advisories (2026-08-13, Next 15.3.2) → 6 advisories
-(2026-08-23, after the Next 16 major) → **4 advisories (1 moderate, 3
-high)** as of 2026-08-30, after the round-2 safe bump (tailwind bump alone
-dropped one). `next` has not reappeared in the audit output since the v16
-upgrade. Everything remaining (`mdast-util-to-hast` plus a small number of
-others) is transitive dev-toolchain noise from the
-ESLint/typescript-eslint/remark dependency tree, not reachable through
-this site's runtime.
+(2026-08-23, after the Next 16 major) → 4 advisories (2026-08-30, after
+the round-2 safe bump) → **0 advisories (2026-08-30, `npm audit fix`)**.
+The remaining 4 (`brace-expansion`, `flatted`, `js-yaml`, `mdast-util-to-hast`
+— all transitive: `js-yaml` via `gray-matter`, the rest via ESLint's own
+dependency tree) were all patch-level bumps within their existing
+semver ranges, so `npm audit fix` (no `--force`, no breaking changes)
+resolved every one. Only `package-lock.json` changed — `package.json`
+itself didn't need touching since these were transitive re-resolutions,
+not direct dependency bumps. Verified `npm run build` + `npm run lint`
+both clean after.
+
+Worth periodically re-running `npm audit` going forward — this is a
+point-in-time result, and new advisories get published against the
+existing dependency tree over time even without any version changes on
+this end.
 
 ### Unused dependencies
 None found. Every entry in `dependencies` and `devDependencies` was checked
