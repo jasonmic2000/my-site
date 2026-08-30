@@ -15,18 +15,21 @@ Last updated: 2026-08-30
 - **Framework**: Next.js 16.3.3 (App Router), React 19.2.8 — upgraded from
   15.3.2 on 2026-08-23, see §4
 - **Language**: TypeScript (strict mode), path alias `@/*` → repo root
-- **Styling**: Tailwind CSS v4 (`@tailwindcss/postcss`), `tailwind-merge` +
-  `clsx` via a `cn()` helper, dark mode via the `class` strategy
+- **Styling**: Tailwind CSS v4 (`@tailwindcss/postcss`), dark mode via the
+  `class` strategy. Plain string constants for shared class fragments
+  (e.g. `HOVER_TRANSITION_CLASS` in `lib/consts.ts`) — no `clsx`/
+  `tailwind-merge`/`cn()`, removed as unused 2026-08-30.
 - **Theming**: `next-themes` (system/light/dark, toggle lives in `Navbar`)
 - **Content**: MDX + frontmatter (`@next/mdx`, `mdxRs: true`) parsed with
   `gray-matter`, body rendered via `remark`/`remark-html`
 - **Fonts**: `next/font/google` (Geist Sans/Mono)
 - **Icons**: `react-icons`
-- **Linting**: ESLint 9 (9.39.5) flat config, using `eslint-config-next`'s
-  native flat-config exports (`eslint-config-next/core-web-vitals`,
-  `eslint-config-next/typescript`) directly + `eslint-config-prettier`. Run
-  via `npm run lint` → `eslint .` (the old `next lint` subcommand was
-  removed in Next 16). **ESLint 10 is not yet usable here** — see §6.
+- **Linting & formatting**: Biome 2.5.11 (`biome.json`) — replaced
+  ESLint + (never-installed) Prettier entirely on 2026-08-30, see §5. Run
+  via `npm run lint` → `biome check .`; `npm run format` /
+  `npm run lint:fix` also available. Biome auto-detects a Next.js-aware
+  rule domain from the `next` dependency, so no framework-specific
+  linting was lost by dropping `eslint-config-next`.
 - **Build tooling**: `next dev --turbopack` for dev, standard `next build`/
   `next start`
 - **Deploy**: Vercel (`@vercel/speed-insights` wired into root layout),
@@ -84,12 +87,18 @@ those files if needed for reference, no need to keep them live in-file.
 - [ ] Extract a shared `getContentEntries(dir)`-style helper if/when a second
   MDX-backed content type is added (e.g. `content/blog/`), instead of
   copy-pasting `getAllWorkEntries`-style functions per content type.
-- [ ] `Work.tsx` uses `dangerouslySetInnerHTML` for `detailsHtml` — safe today
-  since MDX content is self-authored, but worth a one-line comment noting
-  that assumption so it doesn't read as an oversight later.
+- [x] ~~`Work.tsx` uses `dangerouslySetInnerHTML` without explanation~~ —
+  **resolved 2026-08-30**. Biome's `noDangerouslySetInnerHtml` rule
+  (part of its Next.js domain) flagged this during the Biome migration,
+  which prompted adding the comment this item asked for: a
+  `// biome-ignore` explaining `detailsHtml` is build-time output from
+  self-authored MDX, not user input. See §5.
 - [x] `AnimatedArrow.tsx` is unused (no imports anywhere) — **explicit user
   decision 2026-08-30: keep as-is, do not remove**. Still unused; revisit
-  only if asked.
+  only if asked. Note: Biome's `noSvgWithoutTitle` rule also flagged a
+  real a11y gap in this file (no accessible title on the `<svg>`) during
+  the Biome migration — suppressed rather than fixed, for the same
+  "leave it as-is" reason. See §5.
 - [x] ~~Decide on shadcn~~ — **resolved 2026-08-30, user decision: remove**.
   `components.json` deleted; the site keeps its current hand-rolled
   component style. Note: `cn()` (originally shadcn boilerplate, formerly in
@@ -180,14 +189,14 @@ Batched by risk — don't do this all in one shot.
      hasn't asked for.
    - `next lint` was removed as a CLI command in Next 16. `package.json`'s
      `lint` script now runs `eslint .` directly.
-4. [x] **ESLint 9 → 10 — attempted, reverted.** `eslint-config-next@16.3.2`
-   declares `eslint: ">=9.0.0"` as a peer (so npm allows ESLint 10), but its
-   bundled `eslint-plugin-react` is not actually compatible with ESLint
-   10's rule-context API changes and crashes at lint time (see §6).
-   Rolled back to latest ESLint 9 (`9.39.5`). **Don't retry this until
-   `eslint-config-next` (or its bundled `eslint-plugin-react`) ships a
-   fix** — re-check `npm ls eslint-plugin-react` and try again on the next
-   `eslint-config-next` release.
+4. [x] **ESLint 9 → 10 — attempted, reverted, then made moot.**
+   `eslint-config-next@16.3.2` declares `eslint: ">=9.0.0"` as a peer (so
+   npm allows ESLint 10), but its bundled `eslint-plugin-react` was not
+   actually compatible with ESLint 10's rule-context API changes and
+   crashed at lint time (see §6). Rolled back to ESLint 9 at the time.
+   **This whole line item is now moot** — ESLint was removed entirely on
+   2026-08-30 in favor of Biome (see §5), so there's no ESLint version to
+   manage anymore.
 5. [x] **@vercel/speed-insights 1 → 2 (major)** — done 2026-08-30. Bumped
    to `^2.0.0`; the `<SpeedInsights />` import in `app/layout.tsx` needed no
    changes, `npm run build` + `npm run lint` both verified clean.
@@ -203,41 +212,94 @@ Batched by risk — don't do this all in one shot.
 
 ---
 
-## 5. ESLint + Prettier → Biome migration plan
+## 5. ESLint + Prettier → Biome migration — done 2026-08-30
 
-Since Prettier was never actually installed here (see gap noted above),
-this is a clean-slate move rather than a true migration.
+Completed in full. Since Prettier was never actually installed here (see
+the gap noted in §3), this was a clean-slate move rather than a true
+migration — nothing to port over from a Prettier config.
 
-1. [ ] `npm install --save-dev --save-exact @biomejs/biome`, then
-   `npx biome init` to generate `biome.json`.
-2. [ ] **Known gap**: `eslint-config-next` provides Next.js-specific lint
-   rules (e.g. flagging raw `<img>`/`<a>` instead of `next/image`/
-   `next/link`, rules-of-hooks) that Biome has no equivalent for, being
-   framework-agnostic. Decide: drop Next-specific linting entirely (likely
-   fine — current code already uses `next/image`/`next/link` correctly),
-   or keep a slimmed-down ESLint just for `eslint-config-next` alongside
-   Biome.
-3. [ ] Configure `biome.json` formatter + linter to match current code style
-   (double quotes, semicolons, as used throughout `app/`/`components/`).
-   Note: no Tailwind-class-sorting equivalent to
-   `prettier-plugin-tailwindcss` exists in Biome — but that plugin was
-   never installed here either, so nothing is lost.
-4. [ ] Update `package.json` scripts: replace `"lint": "eslint ."` with
-   `"lint": "biome check ."` (or split `biome lint .` / `biome format
-   --write .`). (Note: the script already changed once, from `next lint` to
-   `eslint .`, when `next lint` was removed in the Next 16 upgrade — see
-   §4/§6.)
-5. [ ] Remove `eslint`, `eslint-config-next` (if dropping Next-specific
-   linting), `eslint-config-prettier` from devDependencies; delete
-   `eslint.config.mjs`. (`@eslint/eslintrc` is already gone — it was
-   dropped when `eslint.config.mjs` was rewritten to use
-   `eslint-config-next`'s native flat-config exports instead of the legacy
-   `FlatCompat` shim, see §6.)
-6. [ ] If using VS Code, swap the ESLint extension for the Biome extension
-   and set it as the default formatter.
+**Correction to the original plan**: it assumed Biome had no Next.js-aware
+linting, so ESLint might need to stick around just for
+`eslint-config-next`'s framework-specific rules. That assumption was
+wrong — verified via Biome's own docs (see chat history 2026-08-30).
+Biome auto-detects a **"Next" domain** from `package.json` (activates
+whenever `next >= 14.0.0` is present, no config needed) with 12 rules, 8
+enabled by default, including `useExhaustiveDependencies`/
+`useHookAtTopLevel` (parallels `eslint-plugin-react-hooks`) and
+`noImgElement` (flags raw `<img>` in favor of `next/image`, which was the
+specific gap originally cited). No equivalent found for enforcing
+`next/link` over raw `<a>`, but this codebase already uses `next/link`
+correctly everywhere. Net result: ESLint was dropped **entirely**, no
+slimmed-down config kept alongside Biome.
 
-Given the repo's current size (4 routes, 5 components, 2 lib files), this
-is roughly a 20-minute job whenever it's prioritized.
+1. [x] Installed `@biomejs/biome@2.5.11` (exact-pinned) as a
+   devDependency, ran `npx biome init` to generate `biome.json`.
+2. [x] ~~Known gap~~ — see correction above; resolved by not needing a
+   workaround at all.
+3. [x] Configured `biome.json`: `indentStyle: "space"`, `indentWidth: 2`,
+   `quoteStyle: "double"` (matching the codebase's existing style — the
+   generator defaults to tabs, which would have been wrong here).
+   Confirmed no Tailwind-class-sorting equivalent exists, same as noted
+   originally — not a loss since it was never set up. **One extra config
+   step not in the original plan**: `styles/globals.css` failed to parse
+   at first — Biome's CSS parser rejects Tailwind's `@apply`/`@theme`/
+   `@custom-variant` at-rules unless explicitly enabled. Added
+   `css.parser.tailwindDirectives: true` to `biome.json` to fix.
+4. [x] `package.json` scripts updated: `"lint": "biome check ."`, plus two
+   new convenience scripts not in the original plan —
+   `"lint:fix": "biome check --write ."` and
+   `"format": "biome format --write ."`.
+5. [x] Removed `eslint`, `eslint-config-next`, `eslint-config-prettier`
+   from devDependencies and deleted `eslint.config.mjs`. `npm install`
+   pruned **314 packages** (the entire ESLint/typescript-eslint plugin
+   tree) — `node_modules` audit went from ~450 packages to 134.
+6. [x] Added `.vscode/extensions.json` (recommends `biomejs.biome`) and
+   `.vscode/settings.json` (sets Biome as the default formatter,
+   `formatOnSave: true`, `source.fixAll.biome` on save — Biome's linter
+   itself flagged and corrected an outdated two-key version of this
+   config to the newer consolidated key while setting it up).
+
+### What running Biome for the first time actually caught
+`biome check --write .` reformatted 19 files (import sorting, JSX
+formatting, 2-space indent normalization — all cosmetic, no logic
+changes). After the CSS fix, the remaining findings were genuine and
+reviewed individually rather than blindly auto-applied:
+- **Applied via `--write --unsafe`** (mechanical, reviewed, safe):
+  `app/layout.tsx`'s redundant `<>...</>` fragment removed;
+  `lib/utils.ts`'s `fs`/`path` imports switched to the `node:` protocol;
+  unused `import React from "react"` removed from `AnimatedArrow.tsx` and
+  `Connect.tsx` (harmless — Next's JSX transform doesn't need it).
+- **Fixed manually** (needed a real code decision, not just formatting):
+  - `Navbar.tsx`'s nav-item `key={index}` → `key={item.slug}` — this is
+    the exact "List `key` strategy" inconsistency already tracked below;
+    now resolved.
+  - `Navbar.tsx`'s theme-toggle `<button>` was missing an explicit `type`
+    attribute (defaults to `type="submit"`, risky if ever nested in a
+    `<form>`) — added `type="button"`.
+  - `Work.tsx`'s `dangerouslySetInnerHTML` usage — this is the long-open
+    §2 item ("worth a one-line comment noting that assumption"). Resolved
+    by adding a `// biome-ignore lint/security/noDangerouslySetInnerHtml:
+    ...` comment explaining `detailsHtml` comes from self-authored MDX at
+    build time, not user input. **Placement note**: the suppression
+    comment must sit directly above the specific JSX attribute the
+    diagnostic points at, not above the enclosing element — placing it
+    above `<div>` silently did nothing (`suppressions/unused` warning);
+    moving it directly above the `dangerouslySetInnerHTML={...}` line
+    fixed it.
+  - `AnimatedArrow.tsx`'s `<svg>` has no accessible title
+    (`lint/a11y/noSvgWithoutTitle`) — a real finding, but fixing it means
+    editing the component's markup, which conflicts with the explicit
+    "leave `AnimatedArrow.tsx` as-is" decision from earlier. Suppressed
+    with a comment instead of fixed, noting it's unused and the real fix
+    (`aria-hidden="true"`, since it's decorative) should happen whenever
+    the component actually gets wired in.
+- `app/providers.tsx` picked up formatting for free as a side effect of
+  the reformat pass — its `'use client'` single-quote style (the other
+  half of the already-tracked "`use client` quote style" inconsistency
+  below) is now double-quoted like everywhere else.
+
+Verified `npm run build` and `npm run lint` (now `biome check .`) both
+clean throughout.
 
 ---
 
@@ -292,18 +354,19 @@ entirely (it's no longer used anywhere).
 - [x] Fix `lint` script for Next 16
 - [x] Rewrite `eslint.config.mjs` to use native flat-config exports
 
-### 🟠 Blocked — ESLint 10 is not usable with `eslint-config-next` yet
+### ⚪ Moot — ESLint 10 incompatibility (ESLint removed entirely 2026-08-30)
 Attempted bumping `eslint` 9 → 10 alongside the Next 16 upgrade (see §4
-step 4). It installs fine (peer range `>=9.0.0` allows it), but linting
-crashes: `TypeError: Error while loading rule 'react/display-name':
-contextOrFilename.getFilename is not a function`. This is
-`eslint-config-next`'s bundled `eslint-plugin-react` (`^7.37.0`) calling
-an ESLint rule-context method (`context.getFilename()`) that ESLint 10
-removed/changed. **Reverted to latest ESLint 9 (`9.39.5`)** — this isn't
-something fixable in this repo; it needs an upstream fix in
-`eslint-plugin-react` or `eslint-config-next`. Re-attempt later.
-- [ ] Re-check ESLint 10 compatibility next time `eslint-config-next` is
-  updated
+step 4). It installed fine (peer range `>=9.0.0` allows it), but linting
+crashed: `TypeError: Error while loading rule 'react/display-name':
+contextOrFilename.getFilename is not a function` — `eslint-config-next`'s
+bundled `eslint-plugin-react` (`^7.37.0`) calling an ESLint rule-context
+method (`context.getFilename()`) that ESLint 10 removed/changed. Reverted
+to ESLint 9 at the time. **This is now moot** — the repo migrated from
+ESLint to Biome entirely on 2026-08-30 (see §5), so there's no ESLint
+version to re-check compatibility for anymore. Left here as a record of
+a real ecosystem-fragmentation incident, one of the concrete reasons the
+Biome migration made sense.
+- [x] ~~Re-check ESLint 10 compatibility~~ — moot, ESLint removed. See §5.
 
 ### 🟠 Real bugs
 - [x] ~~`Connect.tsx:25` — `target="__blank"` typo~~ **Fixed 2026-08-13** —
@@ -356,13 +419,13 @@ something fixable in this repo; it needs an upstream fix in
   (`export const Navbar`/`export const Work`), matching `Connect` and
   `Footer`. Updated all call sites: `app/layout.tsx`, `app/page.tsx`,
   `app/work/page.tsx`.
-- [ ] **`"use client"` quote style** — double quotes in `Navbar.tsx`, single
-  quotes in `app/providers.tsx`. Still open — cosmetic, and exactly the
-  kind of thing Biome/Prettier would auto-normalize (see §5), so left for
-  that pass rather than a manual one-off fix.
-- [ ] **List `key` strategy** — `Work.tsx` keys on the stable
-  `entry.startDate`; `Navbar.tsx` keys nav items on array `index`. Still
-  open, low risk today since the nav list is static.
+- [x] ~~**`"use client"` quote style**~~ — **fixed 2026-08-30**, for free,
+  as a side effect of the Biome migration's formatting pass — `Navbar.tsx`
+  and `app/providers.tsx` both now double-quoted. See §5.
+- [x] ~~**List `key` strategy**~~ — **fixed 2026-08-30**. `Navbar.tsx` now
+  keys nav items on `item.slug` instead of array `index`, matching
+  `Work.tsx`'s stable-key pattern. Biome's `noArrayIndexKey` rule caught
+  this during the Biome migration. See §5.
 
 ### ✅ Fixed — structural/semantic HTML issue (also an accessibility finding, see §7)
 `components/Work.tsx` used to render a **separate `<ul>` per work entry
@@ -569,10 +632,17 @@ including the `<h1>` gap (see item 7 above).
   Still intentionally not on `7.x`. *(§4 step 6)*
 - [x] ~~`@types/node`~~ — **done 2026-08-30**, bumped to `^22` after user
   confirmed Vercel matches local dev's Node 22.x. *(§4 step 7)*
-- [ ] Re-attempt ESLint 9 → 10 once `eslint-config-next`'s bundled
-  `eslint-plugin-react` supports ESLint 10's rule-context API — currently
-  blocked upstream, not something fixable in this repo. *(§4 step 4, §6)*
-- [ ] ESLint+Prettier → Biome migration. *(§5, full plan)*
+- [x] ~~Re-attempt ESLint 9 → 10~~ — **moot, 2026-08-30**. ESLint was
+  removed entirely as part of the Biome migration below, so there's
+  nothing left to version-bump. *(§4 step 4, §6)*
+- [x] ~~ESLint+Prettier → Biome migration~~ — **done 2026-08-30**, full
+  detail in §5. Also resolved three other tracked items as side effects:
+  the `dangerouslySetInnerHTML` comment (§2), the `"use client"` quote
+  style and `Navbar.tsx` array-index-key inconsistencies (§6). Also caught
+  two new real findings not previously tracked — missing `type="button"`
+  on the theme toggle, and a missing accessible title on
+  `AnimatedArrow.tsx`'s `<svg>` (suppressed, not fixed, per the
+  "leave it as-is" decision). *(§5, full plan)*
 - [x] ~~Add an Open Graph share image, `apple-touch-icon`, and
   `manifest.json`; add `app/robots.ts`/`app/sitemap.ts`~~ — **done
   2026-08-30**, see §7 Image optimization section for full detail. *(§7)*
