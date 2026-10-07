@@ -18,11 +18,11 @@ export const Connect = () => {
           reach out on social media or send me an email.
         </p>
       </article>
-      <ul className="flex flex-wrap mb-2 mt-8">
+      <ul className="mt-8 mb-2 flex flex-wrap">
         {SOCIALS.map(({ NAME, HREF, ICON }) => (
           <li
             key={NAME}
-            className={`flex text-xl pr-2 text-nowrap ${HOVER_TRANSITION_CLASS}`}
+            className={`flex text-nowrap pr-2 text-xl ${HOVER_TRANSITION_CLASS}`}
           >
             <Link
               href={HREF}

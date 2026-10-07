@@ -14,13 +14,13 @@ const Home = async () => {
 
   return (
     <>
-      <section className="flex flex-col-reverse items-start md:flex-row md:justify-between md:items-center">
+      <section className="flex flex-col-reverse items-start md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="mt-2 md:m-0 text-[2rem] font-extrabold">
+          <h2 className="mt-2 font-extrabold text-[2rem] md:m-0">
             <span>Jason </span>
             <span className="text-rose-400">Michael</span>
           </h2>
-          <p className="m-0 italic font-serif">
+          <p className="m-0 font-serif italic">
             {mostRecentWorkEntry &&
               `${mostRecentWorkEntry.role} at ${mostRecentWorkEntry.company}`}
           </p>
@@ -30,7 +30,7 @@ const Home = async () => {
             src="/luffy-wano-avatar.jpg"
             priority={true}
             alt="Portrait of Jason Michael"
-            className="h-32 w-32 m-0 rounded-full shadow-xl md:not-hover:grayscale transition duration-300 ease-in-out"
+            className="m-0 h-32 w-32 rounded-full shadow-xl transition duration-300 ease-in-out md:not-hover:grayscale"
             width={280}
             height={280}
           />

@@ -17,7 +17,7 @@ export const Work = ({
         {!showDetails && (
           <Link
             href="/work"
-            className={`font-semibold font-sans text-sm ${HOVER_TRANSITION_CLASS}`}
+            className={`font-sans font-semibold text-sm ${HOVER_TRANSITION_CLASS}`}
           >
             See all work
           </Link>
@@ -37,7 +37,7 @@ export const Work = ({
               {entry.initialDetails && <p>{entry.initialDetails}</p>}
               {showDetails && (
                 <div
-                  className="pt-4 pb-12 markdown-list"
+                  className="markdown-list pt-4 pb-12"
                   // biome-ignore lint/security/noDangerouslySetInnerHtml: detailsHtml is generated at build time from self-authored MDX in content/work/, not user input.
                   dangerouslySetInnerHTML={{ __html: entry.detailsHtml }}
                 />

@@ -17,7 +17,7 @@ export const NavLink = ({
     <Link
       href={href}
       aria-current={isActive ? "page" : undefined}
-      className={`flex align-middle relative ${HOVER_TRANSITION_CLASS} ${isActive ? "text-black dark:text-white" : ""}`}
+      className={`relative flex align-middle ${HOVER_TRANSITION_CLASS} ${isActive ? "text-black dark:text-white" : ""}`}
     >
       {children}
     </Link>

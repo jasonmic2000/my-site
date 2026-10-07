@@ -49,11 +49,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground antialiased flex flex-col items-center justify-center mx-auto min-w-0 max-w-[640px] w-full mt-2 md:mt-6`}
+        className={`${geistSans.variable} ${geistMono.variable} mx-auto mt-2 flex w-full min-w-0 max-w-[640px] flex-col items-center justify-center bg-background text-foreground antialiased md:mt-6`}
       >
         <Providers>
           <Navbar />
-          <main className="space-y-20 px-4 pb-24 max-w-2xl">{children}</main>
+          <main className="max-w-2xl space-y-20 px-4 pb-24">{children}</main>
           <Footer />
         </Providers>
         <SpeedInsights />

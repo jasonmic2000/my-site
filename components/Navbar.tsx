@@ -16,10 +16,10 @@ const NavbarItems = [
 
 export const Navbar = () => {
   return (
-    <header className="w-full lg:mb-16 mb-12 py-5">
-      <div className="flex px-4 md:px-0 flex-row items-center justify-between">
+    <header className="mb-12 w-full py-5 lg:mb-16">
+      <div className="flex flex-row items-center justify-between px-4 md:px-0">
         <div className="flex items-center">
-          <h1 className="text-md font-semibold">
+          <h1 className="font-semibold text-md">
             <Link href="/" className={HOVER_TRANSITION_CLASS}>
               ¯\_(ツ)_/¯
             </Link>
@@ -27,7 +27,7 @@ export const Navbar = () => {
         </div>
         <nav
           aria-label="Main"
-          className="flex flex-row gap-4 md:mt-0 md:ml-auto items-center"
+          className="flex flex-row items-center gap-4 md:mt-0 md:ml-auto"
         >
           {NavbarItems.map((item) => (
             <NavLink key={item.slug} href={item.slug}>
