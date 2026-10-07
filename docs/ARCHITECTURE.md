@@ -8,7 +8,7 @@ Why things are the way they are: [DECISIONS.md](DECISIONS.md).
 - **Framework**: Next.js 16 (App Router), React 19, TypeScript (strict, `@/*` → repo root)
 - **Styling**: Tailwind CSS v4 (`@tailwindcss/postcss`), dark mode via `class` strategy
 - **Theming**: `next-themes` (system/light/dark); toggle lives in `Navbar`
-- **Content**: MDX + frontmatter, parsed with `gray-matter`, body rendered with `remark`/`remark-html`
+- **Content**: MDX + frontmatter, parsed with `vfile-matter`, body rendered with `remark`/`remark-html`
 - **Fonts**: `next/font/google` (Geist Sans/Mono) · **Icons**: `react-icons`
 - **Lint/format**: Biome (`biome.json`: recommended + `next`/`react` domains, `useSortedClasses`, unused imports/variables as errors); `npm run lint | lint:fix | format`; CI in `.github/workflows/ci.yml`
 - **Dev/build**: `next dev --turbopack`, `next build`, `next start`
@@ -29,7 +29,7 @@ Flat: `Navbar` (server) composed of `NavLink` (client, `aria-current` via `usePa
 
 ## Content layer
 `content/work/*.mdx` (frontmatter: `company`, `role`, `startDate` and optional `endDate` as ISO `YYYY-MM`,
-`initialDetails`) → `lib/content.ts#getAllWorkEntries()`: `fs` read → `gray-matter` → validated (throws at build
+`initialDetails`) → `lib/content.ts#getAllWorkEntries()`: `fs` read → `vfile-matter` (frontmatter) → validated (throws at build
 on bad frontmatter) → `remark().use(html)` → sort by `startDate` desc. Omit `endDate` for the current role.
 `lib/dates.ts#formatMonth` renders ISO months for display.
 Build/server-side only, called from async Server Components. No client fetching, no external services.
@@ -41,7 +41,7 @@ Only theme (`next-themes`, read via `useTheme()` in `Navbar`). No context, store
 ## Conventions
 - `@/*` alias imports everywhere; named component exports (default only where Next requires)
 - Server Components by default; `"use client"` only at leaves
-- Server-only code (`fs`, `gray-matter`, `remark`) must not be imported from client components; shared constants go in `lib/consts.ts` (this once broke the build via `HOVER_TRANSITION_CLASS`)
+- Server-only code (`fs`, `vfile-matter`, `remark`) must not be imported from client components; shared constants go in `lib/consts.ts` (this once broke the build via `HOVER_TRANSITION_CLASS`)
 - Shared class fragments are plain string constants (`HOVER_TRANSITION_CLASS`), no `cn()`/`clsx`
 - Secondary text uses `text-zinc-600 dark:text-zinc-400` (verified ≥ 6.9:1 contrast); body palette is zinc
 - Each page owns its single `<h1>` (home: name; `/work` and `/blog`: section title; posts: post title). The `Navbar` logo is a plain link. `Work` takes `headingAs` for this.

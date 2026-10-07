@@ -20,7 +20,7 @@ never invokes it.
 ## Packages
 | Package | Role |
 |---|---|
-| `next-mdx-remote-client` | MDX compile; has a built-in `parseFrontmatter` option, which would let us drop `gray-matter` (and its audit chain) |
+| `next-mdx-remote-client` | MDX compile (`evaluate` from `/rsc`); frontmatter is parsed beforehand by `vfile-matter` (which replaced `gray-matter`) so listings don't compile MDX |
 | `remark-gfm`, `remark-smartypants` | remark stage: tables/task lists; smart quotes |
 | `rehype-slug` → `rehype-autolink-headings` | rehype stage; **order matters** (slug first) |
 | `shiki` + `rehype-pretty-code` | syntax highlighting, dual light/dark theme |

@@ -1,32 +1,39 @@
 import fs from "node:fs";
 import path from "node:path";
-import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
+import { VFile } from "vfile";
+import { matter } from "vfile-matter";
 
-const CONTENT_DIR = path.join(process.cwd(), "content");
+export const CONTENT_DIR = path.join(process.cwd(), "content");
 const ISO_MONTH = /^\d{4}-(0[1-9]|1[0-2])$/;
 
-interface RawEntry {
+export interface RawEntry {
   fileName: string;
   data: Record<string, unknown>;
   content: string;
 }
 
 /** Reads every `.mdx` file in `content/<dir>` and splits frontmatter from body. */
-function readContentDir(dir: string): RawEntry[] {
+export function readContentDir(dir: string): RawEntry[] {
   const dirPath = path.join(CONTENT_DIR, dir);
   return fs
     .readdirSync(dirPath)
     .filter((file) => file.endsWith(".mdx"))
     .map((fileName) => {
-      const source = fs.readFileSync(path.join(dirPath, fileName), "utf8");
-      const { data, content } = matter(source);
-      return { fileName, data, content };
+      const file = new VFile(
+        fs.readFileSync(path.join(dirPath, fileName), "utf8"),
+      );
+      matter(file, { strip: true });
+      return {
+        fileName,
+        data: (file.data.matter ?? {}) as Record<string, unknown>,
+        content: String(file),
+      };
     });
 }
 
-function requireString(entry: RawEntry, key: string): string {
+export function requireString(entry: RawEntry, key: string): string {
   const value = entry.data[key];
   if (typeof value !== "string" || value.trim() === "") {
     throw new Error(`${entry.fileName}: frontmatter "${key}" must be a string`);
@@ -34,7 +41,7 @@ function requireString(entry: RawEntry, key: string): string {
   return value;
 }
 
-function requireMonth(entry: RawEntry, key: string): string {
+export function requireMonth(entry: RawEntry, key: string): string {
   const value = requireString(entry, key);
   if (!ISO_MONTH.test(value)) {
     throw new Error(

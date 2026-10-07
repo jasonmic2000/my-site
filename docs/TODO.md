@@ -7,7 +7,7 @@ the 2026-10-07 architecture review. Check items off (or delete them) as they lan
 Re-verify with: `npm outdated`, `npm audit`, `npm run lint`, `npx tsc --noEmit`, `npm run build`.
 - Lint, typecheck, build: clean; all 9 routes prerender statically.
 - `npm outdated`: only `typescript` (5.9.3 → 7.0.2, held) and `@types/node` (22.x → 26.x, held).
-- `npm audit`: 4 moderate, all the accepted `gray-matter` chain (see DECISIONS.md).
+- `npm audit`: 0 vulnerabilities (dropping `gray-matter` removed the js-yaml 3 chain).
 - Next 16.4.0, React 19.3, Biome 2.5.15. CI: `.github/workflows/ci.yml` (never run yet; first push will be its first test). Dependabot weekly.
 
 ## P2 — Dead / misleading config

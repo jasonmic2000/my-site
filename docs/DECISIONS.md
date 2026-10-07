@@ -15,9 +15,6 @@ Decisions already made. Don't reverse without asking. Newest context first withi
 - **shadcn removed** (2026-08-30): `components.json`, `cn()`, `clsx`, `tailwind-merge` deleted.
 - **`next lint` is gone in Next 16**; lint is `biome check .`.
 
-## Accepted risk
-- **`gray-matter → js-yaml 3 → argparse → sprintf-js`** (4 moderate in `npm audit`): input is self-authored build-time MDX. `npm audit fix --force` would "fix" it by downgrading to `gray-matter@2.0.1`; do not. Resolved structurally by dropping `gray-matter` in the blog work.
-
 ## Gotchas learned
 - Biome suppression comments must sit directly above the flagged JSX attribute, not the enclosing element, or they silently do nothing.
 - Biome's CSS parser needs `css.parser.tailwindDirectives: true` for `@apply`/`@theme`/`@custom-variant`.
