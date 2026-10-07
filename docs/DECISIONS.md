@@ -6,8 +6,9 @@ Decisions already made. Don't reverse without asking. Newest context first withi
 - **`components/AnimatedArrow.tsx` stays**, though unused (user decision 2026-08-30). Its `<svg>` has a `biome-ignore` for `noSvgWithoutTitle`; the real fix is `aria-hidden="true"` when it's wired in.
 - **`productionBrowserSourceMaps: true`** (user decision 2026-08-23): personal site, visible source is fine.
 - **TypeScript stays on 5.x**: TS 7 is the native (Go) rewrite; ecosystem/Next type-checking still catching up. Revisit later.
-- **Node is pinned to `22.x`** in `package.json` `engines` (and `.nvmrc`, which CI reads). A range like `>=22` overrides Vercel's project setting and picks the newest Node (it deployed on 24.x). Moving to a newer LTS means changing `engines`, `.nvmrc`, the Vercel project setting and `@types/node` together.
-- **`@types/node` stays on 22.x** to match Vercel's Node 22 runtime, not the unrelated 26.x "latest".
+- **Node is pinned to `24.x`** (2026-10-07) in `package.json` `engines` and `.nvmrc` (CI reads it); the Vercel project setting must match. Node 24 is the Active LTS (supported to April 2028) and Vercel's default. A range like `>=22` overrides Vercel's setting and picks the newest Node, so keep it an exact major. We left 22 because it reaches EOL in April 2027.
+- **Not on Node 26 yet**: it is still "Current" until it enters LTS on 2026-10-28, and Vercel's supported list is 24.x/22.x/20.x. Revisit once it is LTS *and* Vercel supports it; change `engines`, `.nvmrc`, the Vercel setting and `@types/node` together.
+- **`@types/node` follows the Node major (`^24`)**, not the npm `latest` tag (26.x).
 - **No CSP**: a strict policy needs per-request nonces (dynamic rendering) and `next-themes` injects an inline script; not worth losing static rendering. Baseline security headers are set in `next.config.ts` instead.
 
 ## Removed / not adopted

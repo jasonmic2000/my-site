@@ -12,7 +12,7 @@ Why things are the way they are: [DECISIONS.md](DECISIONS.md).
 - **Fonts**: `next/font/google` (Geist Sans/Mono) · **Icons**: `react-icons`
 - **Lint/format**: Biome (`biome.json`: recommended + `next`/`react` domains, `useSortedClasses`, unused imports/variables as errors); `npm run lint | lint:fix | format`; CI in `.github/workflows/ci.yml`
 - **Dev/build**: `next dev --turbopack`, `next build`, `next start`
-- **Deploy**: Vercel (Node 22), `@vercel/speed-insights`, domain `dev.jasonjmichael.com`
+- **Deploy**: Vercel (Node 24), `@vercel/speed-insights`, domain `dev.jasonjmichael.com`
 - Fully static: every route prerenders at build time.
 
 ## Routing (`app/`)
