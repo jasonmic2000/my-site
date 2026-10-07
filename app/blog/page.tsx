@@ -8,7 +8,12 @@ export const metadata: Metadata = pageMetadata({
 });
 
 const BlogPage = () => {
-  return <>This page is under construction</>;
+  return (
+    <section className="space-y-6">
+      <h1 className="font-semibold text-black dark:text-white">Blog</h1>
+      <p>This page is under construction</p>
+    </section>
+  );
 };
 
 export default BlogPage;

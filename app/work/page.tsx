@@ -11,7 +11,7 @@ export const metadata: Metadata = pageMetadata({
 
 const WorkPage = async () => {
   const workEntries = await getAllWorkEntries();
-  return <Work workEntries={workEntries} showDetails={true} />;
+  return <Work workEntries={workEntries} showDetails={true} headingAs="h1" />;
 };
 
 export default WorkPage;

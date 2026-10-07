@@ -6,14 +6,19 @@ import { formatMonth } from "@/lib/dates";
 export const Work = ({
   workEntries,
   showDetails = false,
+  headingAs: Heading = "h2",
 }: {
   workEntries: WorkEntry[];
   showDetails: boolean;
+  /** Use "h1" when this section is the page's primary heading. */
+  headingAs?: "h1" | "h2";
 }) => {
   return (
     <section className="space-y-6">
       <div className="flex flex-row justify-between">
-        <h2 className="font-semibold text-black dark:text-white">Work</h2>
+        <Heading className="font-semibold text-black dark:text-white">
+          Work
+        </Heading>
         {!showDetails && (
           <Link
             href="/work"

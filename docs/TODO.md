@@ -14,7 +14,6 @@ Re-verify with: `npm outdated`, `npm audit`, `npm run lint`, `npx tsc --noEmit`,
 
 ## P3 — Code quality
 - [ ] Generalize `lib/content.ts` (`readContentDir` + validators) into a shared `getContentEntries` when the blog lands
-- [ ] Revisit site-wide `<h1>` on the logo (each page should own its `<h1>`)
 
 
 ## Blog

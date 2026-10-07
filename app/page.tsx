@@ -16,10 +16,10 @@ const Home = async () => {
     <>
       <section className="flex flex-col-reverse items-start md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="mt-2 font-extrabold text-[2rem] md:m-0">
+          <h1 className="mt-2 font-extrabold text-[2rem] md:m-0">
             <span>Jason </span>
             <span className="text-rose-400">Michael</span>
-          </h2>
+          </h1>
           <p className="m-0 font-serif italic">
             {mostRecentWorkEntry &&
               `${mostRecentWorkEntry.role} at ${mostRecentWorkEntry.company}`}

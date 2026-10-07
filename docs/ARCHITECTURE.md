@@ -44,3 +44,4 @@ Only theme (`next-themes`, read via `useTheme()` in `Navbar`). No context, store
 - Server-only code (`fs`, `gray-matter`, `remark`) must not be imported from client components; shared constants go in `lib/consts.ts` (this once broke the build via `HOVER_TRANSITION_CLASS`)
 - Shared class fragments are plain string constants (`HOVER_TRANSITION_CLASS`), no `cn()`/`clsx`
 - Secondary text uses `text-zinc-600 dark:text-zinc-400` (verified ≥ 6.9:1 contrast); body palette is zinc
+- Each page owns its single `<h1>` (home: name; `/work` and `/blog`: section title; posts: post title). The `Navbar` logo is a plain link. `Work` takes `headingAs` for this.
