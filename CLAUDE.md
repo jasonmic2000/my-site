@@ -7,7 +7,8 @@ Personal portfolio (dev.jasonjmichael.com). Next.js 16 App Router, React 19, Typ
 ## Commands
 - `npm run dev` — dev server (Turbopack)
 - `npm run lint` / `lint:fix` / `format` — Biome (lint + format + import order)
-- `npx tsc --noEmit` — typecheck
+- `npm run typecheck` — `tsc --noEmit`
+- `npm run check` — lint + typecheck + build (same as CI)
 - `npm run build` — must pass before finishing any change; all routes must stay statically prerendered
 
 Verify with lint + typecheck + build. No test suite yet.
