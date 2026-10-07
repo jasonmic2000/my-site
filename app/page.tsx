@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { Connect } from "@/components/Connect";
 import { Work } from "@/components/Work";
 import { getAllWorkEntries } from "@/lib/content";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 const Home = async () => {
   const workEntries = await getAllWorkEntries();

@@ -14,10 +14,7 @@ Re-verify with: `npm outdated`, `npm audit`, `npm run lint`, `npx tsc --noEmit`,
 
 ## P3 — Code quality
 - [ ] Generalize `lib/content.ts` (`readContentDir` + validators) into a shared `getContentEntries` when the blog lands
-- [ ] Extract `ThemeToggle` so `Navbar` isn't a client component; add `<nav aria-label>` + `aria-current`; remove unused `id`
 - [ ] Revisit site-wide `<h1>` on the logo (each page should own its `<h1>`)
-- [ ] `sitemap.ts`: real `lastModified`; add `alternates.canonical`; per-page OG overrides
-- [ ] Minor: Footer trailing space inside link, `BlogPage` async without await
 
 ## P4 — Rules, scripts, CI
 - [ ] Biome: enable `useSortedClasses` (nursery), `next` + `react` domains, `noUnusedImports/Variables` as errors

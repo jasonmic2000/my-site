@@ -6,6 +6,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return routes.map((route) => ({
     url: `${DEFAULT_METADATA.url}${route}`,
-    lastModified: new Date(),
   }));
 }

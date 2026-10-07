@@ -10,7 +10,7 @@ export const Footer = () => {
           href="https://github.com/jasonmic2000"
           className={`${HOVER_TRANSITION_CLASS} hover:underline`}
         >
-          Jason Michael{" "}
+          Jason Michael
         </Link>
       </div>
     </footer>

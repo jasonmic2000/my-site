@@ -21,10 +21,11 @@ Flat, one folder per route; no dynamic routes, API routes, middleware/proxy or r
 - `page.tsx` (`/`) — bio + most recent work entry + `Connect`
 - `work/page.tsx` (`/work`) — full history via `getAllWorkEntries()`
 - `blog/page.tsx` (`/blog`) — placeholder ("under construction")
+- Per-page metadata goes through `lib/metadata.ts#pageMetadata` (canonical + OG/Twitter incl. image; page-level `openGraph` replaces the root one, so it must repeat shared fields)
 - Metadata file conventions: `opengraph-image.tsx`, `apple-icon.tsx` (both `ImageResponse`), `manifest.ts`, `robots.ts`, `sitemap.ts` (site URL from `DEFAULT_METADATA`)
 
 ## Components (`components/`)
-Flat: `Navbar` (client; theme toggle + links), `Footer`, `Work`, `Connect`, `AnimatedArrow` (unused, intentional).
+Flat: `Navbar` (server) composed of `NavLink` (client, `aria-current` via `usePathname`) and `ThemeToggle` (client); `Footer`, `Work`, `Connect`, `AnimatedArrow` (unused, intentional).
 
 ## Content layer
 `content/work/*.mdx` (frontmatter: `company`, `role`, `startDate` and optional `endDate` as ISO `YYYY-MM`,

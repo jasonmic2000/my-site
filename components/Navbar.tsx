@@ -1,7 +1,6 @@
-"use client";
 import Link from "next/link";
-import { useTheme } from "next-themes";
-import { FiMoon } from "react-icons/fi";
+import { NavLink } from "@/components/NavLink";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { HOVER_TRANSITION_CLASS } from "@/lib/consts";
 
 const NavbarItems = [
@@ -16,8 +15,6 @@ const NavbarItems = [
 ];
 
 export const Navbar = () => {
-  const { setTheme, resolvedTheme } = useTheme();
-
   return (
     <header className="w-full lg:mb-16 mb-12 py-5">
       <div className="flex px-4 md:px-0 flex-row items-center justify-between">
@@ -28,28 +25,17 @@ export const Navbar = () => {
             </Link>
           </h1>
         </div>
-        <div className="flex flex-row gap-4 md:mt-0 md:ml-auto items-center">
+        <nav
+          aria-label="Main"
+          className="flex flex-row gap-4 md:mt-0 md:ml-auto items-center"
+        >
           {NavbarItems.map((item) => (
-            <Link
-              key={item.slug}
-              href={item.slug}
-              className={`flex align-middle relative ${HOVER_TRANSITION_CLASS}`}
-            >
+            <NavLink key={item.slug} href={item.slug}>
               {item.name}
-            </Link>
+            </NavLink>
           ))}
-          <button
-            type="button"
-            id="theme-toggle"
-            aria-label="Toggle theme"
-            className={`flex items-center justify-center ${HOVER_TRANSITION_CLASS}`}
-            onClick={() =>
-              setTheme(resolvedTheme === "dark" ? "light" : "dark")
-            }
-          >
-            <FiMoon />
-          </button>
-        </div>
+          <ThemeToggle />
+        </nav>
       </div>
     </header>
   );
