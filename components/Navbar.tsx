@@ -17,7 +17,7 @@ const NavbarItems = [
 export const Navbar = () => {
   return (
     <header className="mb-12 w-full py-5 lg:mb-16">
-      <div className="flex flex-row items-center justify-between px-4 md:px-0">
+      <div className="flex flex-row items-center justify-between px-4">
         <div className="flex items-center">
           <Link
             href="/"
