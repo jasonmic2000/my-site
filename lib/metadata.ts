@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
 import { DEFAULT_METADATA } from "@/lib/consts";
 
-/**
- * Per-page metadata with a canonical URL and matching Open Graph/Twitter
- * fields. Page-level `openGraph`/`twitter` replace the root layout's objects
- * wholesale (and drop the `app/opengraph-image.tsx` file-convention image), so
- * shared fields and the image are repeated here.
- */
 const OG_IMAGE = "/opengraph-image";
 
+/** Feed autodiscovery links; must be repeated wherever `alternates` is set. */
+export const FEED_TYPES = {
+  "application/rss+xml": "/feed.xml",
+  "application/atom+xml": "/atom.xml",
+  "application/feed+json": "/feed.json",
+};
+
+/**
+ * Per-page metadata with a canonical URL and matching Open Graph/Twitter
+ * fields. Page-level `openGraph`/`twitter`/`alternates` replace the root
+ * layout's objects wholesale (and drop the `app/opengraph-image.tsx`
+ * file-convention image), so shared fields and the image are repeated here.
+ */
 export function pageMetadata({
   title,
   description,
@@ -22,7 +29,7 @@ export function pageMetadata({
   return {
     title,
     description,
-    alternates: { canonical: path },
+    alternates: { canonical: path, types: FEED_TYPES },
     openGraph: {
       title: fullTitle,
       description,

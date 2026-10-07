@@ -3,9 +3,10 @@ import Image from "next/image";
 import { Connect } from "@/components/Connect";
 import { Work } from "@/components/Work";
 import { getAllWorkEntries } from "@/lib/content";
+import { FEED_TYPES } from "@/lib/metadata";
 
 export const metadata: Metadata = {
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/", types: FEED_TYPES },
 };
 
 const Home = async () => {
