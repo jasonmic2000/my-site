@@ -13,28 +13,7 @@ export const DEFAULT_METADATA = {
 };
 
 export const SITE = {
-  NAME: "My Portfolio",
   EMAIL: "jasonmic2000@gmail.com",
-} as const;
-
-export const HOME = {
-  TITLE: "Home",
-  DESCRIPTION: "Welcome to my minimal and lightweight portfolio.",
-} as const;
-
-export const BLOG = {
-  TITLE: "Blog",
-  DESCRIPTION: "Writings on things I care about.",
-} as const;
-
-export const WORK = {
-  TITLE: "Work",
-  DESCRIPTION: "Places I've worked and contributions made.",
-} as const;
-
-export const PROJECTS = {
-  TITLE: "Projects",
-  DESCRIPTION: "Some of the things I've built.",
 } as const;
 
 export const SOCIALS = [

@@ -23,3 +23,4 @@ Decisions already made. Don't reverse without asking. Newest context first withi
 - Biome's CSS parser needs `css.parser.tailwindDirectives: true` for `@apply`/`@theme`/`@custom-variant`.
 - `ImageResponse` RCE (GHSA-vcvr-r3jv-pc5j) affected Next 16.2.0–16.3.5, fixed in 16.3.6; now on ≥16.4.0.
 - `<h1>` lives in `Navbar`'s logo so every route has exactly one (homepage name is `<h2>`). Revisit when blog posts get real titles.
+- Next.js re-adds `allowJs: true` to `tsconfig.json` on build if it's removed, so leave it in (harmless).

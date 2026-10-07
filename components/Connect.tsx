@@ -1,5 +1,10 @@
 import Link from "next/link";
-import { HOVER_TRANSITION_CLASS, SITE, SOCIALS } from "@/lib/consts";
+import {
+  DEFAULT_METADATA,
+  HOVER_TRANSITION_CLASS,
+  SITE,
+  SOCIALS,
+} from "@/lib/consts";
 
 export const Connect = () => {
   return (
@@ -23,7 +28,7 @@ export const Connect = () => {
               href={HREF}
               rel="noopener noreferrer"
               target="_blank"
-              aria-label={`${SITE.NAME} on ${NAME}`}
+              aria-label={`${DEFAULT_METADATA.siteName} on ${NAME}`}
             >
               <ICON />
             </Link>
@@ -32,7 +37,7 @@ export const Connect = () => {
       </ul>
       <Link
         href={`mailto:${SITE.EMAIL}`}
-        aria-label={`Email ${SITE.NAME}`}
+        aria-label={`Email ${DEFAULT_METADATA.siteName}`}
         className={`flex gap-2 ${HOVER_TRANSITION_CLASS}`}
       >
         {SITE.EMAIL}

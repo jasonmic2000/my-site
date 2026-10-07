@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(DEFAULT_METADATA.url),
   title: {
     default: DEFAULT_METADATA.title,
-    template: "%s – Jason Michael", // 👈 Shows "Page Title – Jason Michael"
+    template: `%s – ${DEFAULT_METADATA.siteName}`,
   },
   description: DEFAULT_METADATA.description,
   openGraph: {
@@ -49,7 +49,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-[#F4F4F5] text-[#3F3F46] dark:bg-[#18181B] dark:text-[#D4D4D8] antialiased flex flex-col items-center justify-center scrollbar-hide mx-auto min-w-0 max-w-[640px] w-full mt-2 md:mt-6`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground antialiased flex flex-col items-center justify-center mx-auto min-w-0 max-w-[640px] w-full mt-2 md:mt-6`}
       >
         <Providers>
           <Navbar />

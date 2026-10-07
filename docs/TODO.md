@@ -11,11 +11,6 @@ Re-verify with: `npm outdated`, `npm audit`, `npm run lint`, `npx tsc --noEmit`,
 - Next 16.4.0, React 19.3, Biome 2.5.15. No CI yet.
 
 ## P2 — Dead / misleading config
-- [ ] Delete `tailwind.config.js` (ignored by Tailwind v4; dark mode is `@custom-variant`); then drop `allowJs`
-- [ ] `globals.css`: remove unused shadcn tokens and the unused `tw-animate-css` import (no `animate-*` classes used)
-- [ ] Collapse duplicate color sources (oklch tokens vs hard-coded hex on `<body>`) into zinc theme tokens
-- [ ] Drop no-op `scrollbar-hide` class
-- [ ] `lib/consts.ts`: remove unused `HOME/BLOG/WORK/PROJECTS`; fix `SITE.NAME` ("My Portfolio") leaking into aria-labels; use consts in the title template
 
 ## P3 — Code quality
 - [ ] Guard `workEntries[0]` in `app/page.tsx` (renders `[undefined]` if empty)
