@@ -85,6 +85,7 @@ Optional polish; none are required.
 - [ ] **Email address obfuscation** in `Connect` (the address is plain text in the HTML and scrapeable).
 - [ ] **Projects page** (the old `PROJECTS` constant was removed as unused; the bio mentions self-hosted experiments and a home server).
 - [ ] **"Currently playing/reading" widget** (the bio mentions games and board games). Needs an external API; would require ISR or client fetch, so weigh against the fully-static rule first.
+- [ ] **Contact form — considered and deferred (2026-10-07).** Needs a server action/route handler, an email service (e.g. Resend) with secrets, spam protection (honeypot/Turnstile, rate limiting), server-side validation, accessible error handling and sender-domain deliverability setup (~half a day plus ongoing upkeep). `Connect` already has email and socials, which is the norm for developer portfolios. It would also invalidate the "no user input" premise behind the no-CSP decision (`docs/DECISIONS.md`), so revisit that if built. Cheaper alternatives first: email obfuscation, a "copy email" palette action, or a third-party form service (Formspree/Web3Forms) if a form is wanted later. Revisit if inbound contact demand shows up or the plain-text address becomes a spam problem.
 - [ ] Search, comments and a newsletter are deliberately **not** suggested: they add runtime cost or third-party scripts for little value at this scale.
 
 ## Waiting on others
