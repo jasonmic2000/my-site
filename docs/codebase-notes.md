@@ -656,6 +656,124 @@ including the `<h1>` gap (see item 7 above).
   2026-08-30**: `layout.tsx` now uses `@/*` alias throughout; `Navbar` and
   `Work` converted to named exports. *(§6)*
 - [x] ~~Decide on shadcn~~ — **done 2026-08-30, removed**. See §1/§2. *(§2)*
-- [ ] Build out the `/blog` route with the same MDX pattern as `/work`,
-  with per-post permalinks — note `app/sitemap.ts` will need updating to
-  generate per-post entries once this happens, see §7. *(§2)*
+- [ ] Build out the `/blog` route — **planning done, see §9**; not yet
+  implemented. *(§2)*
+
+---
+
+## 9. Blog implementation plan (planning stage — 2026-08-30, not yet built)
+
+Decided: **live components will be embedded in posts** (interactive demos,
+custom callouts, etc.), so the content pipeline needs real JSX-in-markdown
+support, not just markdown-to-HTML.
+
+### Correction to prior framing
+Earlier analysis referred to "our current integrated `@next/mdx`
+implementation" — that was inaccurate. `@next/mdx` is configured in
+`next.config.ts` (`mdx()` wrapper, `pageExtensions` includes `"mdx"`) but
+is **not actually exercised anywhere**. `content/work/*.mdx` files are
+read as plain text via `fs`, parsed by `gray-matter`, and converted with
+`remark().use(html)` straight to an HTML string — `@next/mdx`'s compiler
+is never invoked. There is no working MDX pipeline to migrate away from
+today, just unused config.
+
+### Chosen architecture: `next-mdx-remote-client`
+Not a competing MDX compiler — uses the same `@mdx-js/mdx` engine
+`@next/mdx` uses under the hood. The difference is *when* compilation
+happens: instead of Next's bundler auto-discovering and compiling `.mdx`
+page files at build time, `next-mdx-remote-client` exposes `compileMDX()`
+as a plain function you call yourself on a content string, anywhere —
+same shape of work `getAllWorkEntries()` already does (`fs` → read file →
+`gray-matter` → *do something with the content string*). Swapping that
+"something" from `remark().use(html)` to `compileMDX()` is the whole
+migration for the pipeline itself; file listing, frontmatter parsing, and
+sorting logic don't need to change.
+
+Chosen over:
+- **A plain remark→rehype pipeline (no MDX)** — would've been simpler
+  (one fewer dependency) but explicitly ruled out since it can't embed
+  live components, which is a stated requirement.
+- **Actually starting to use `@next/mdx`** — official, build-time,
+  zero-per-request cost, but its file-based-page model is a poor fit for
+  a `/blog/[slug]` dynamic route keyed by slug; would need either literal
+  per-post page files or dynamic `import()` gymnastics keyed by slug.
+  `next-mdx-remote-client` fits a "list of posts by slug" shape naturally
+  since it's just a function call, not a routing convention.
+
+**Known tradeoff, accepted**: `next-mdx-remote-client` is a
+community-maintained fork (of the original Vercel-authored
+`next-mdx-remote`), not maintained by the Next.js team directly, so it
+carries a small amount of the same ecosystem-lag risk that caused the
+ESLint 10 incident (§4 step 4, §6) — smaller in likely severity since MDX
+compilation itself is stable, well-established tech, but worth being
+aware of. Since the whole site is fully static (every route prerenders —
+see §7), `compileMDX()`'s runtime-style invocation still only runs once
+per post at `next build` time via `generateStaticParams()`, same
+performance shape as `@next/mdx`'s build-time compilation would have
+been — the site's fully-static character is preserved.
+
+### Packages to add
+| Package | Role | Plugin type |
+|---|---|---|
+| `next-mdx-remote-client` | MDX compilation, JSX-in-markdown support | — |
+| `remark-gfm` | GitHub-flavored markdown: tables, strikethrough, task lists | remark |
+| `remark-smartypants` | Smart quotes/em-dashes | remark |
+| `rehype-slug` | Auto-generates `id`s on headings | rehype |
+| `rehype-autolink-headings` | Clickable anchor links on headings | rehype |
+| `shiki` + `rehype-pretty-code` | VS Code–quality syntax highlighting, dual light/dark theme support | rehype |
+| `feed` | Generates RSS 2.0 / Atom 1.0 / JSON Feed output from one `Feed` object | — (custom Route Handler, not a plugin) |
+| `@vercel/analytics` | Pageview analytics — separate from the already-installed `@vercel/speed-insights` (Core Web Vitals), this is basic traffic stats | — |
+
+**Plugin ordering matters**: `rehype-slug` must run before
+`rehype-autolink-headings` in the `rehypePlugins` array (autolink needs
+the `id` slug to already exist on the heading). `remark-smartypants` and
+`remark-gfm` are remark-stage plugins (operate on the markdown AST before
+HTML/JSX conversion), `rehype-slug`/`rehype-autolink-headings`/
+`rehype-pretty-code` are rehype-stage (operate after conversion) — both
+lists get passed into `next-mdx-remote-client`'s `compileMDX()` options.
+
+### RSS/Atom feed
+`feed` generates RSS 2.0, Atom 1.0, and JSON Feed from a single `Feed`
+object — not a separate package choice per format, just calling
+`.rss2()`/`.atom1()`/`.json1()`. **Decision: generate all three**, exposed
+via custom Route Handlers (`app/feed.xml/route.ts` style) since unlike
+`robots.ts`/`sitemap.ts`/`manifest.ts` there's no `MetadataRoute` file
+convention for feeds — these need `Content-Type: application/rss+xml` /
+`application/atom+xml` / `application/feed+json` returned manually.
+**Open decision, not yet made**: full post content in the feed vs. just
+an excerpt+link — reader-friendliness vs. pipeline complexity tradeoff.
+
+### Open planning items (not yet decided)
+- [ ] **Slug strategy** — filename-as-slug vs. an explicit `slug`
+  frontmatter field. (Note: a `slug` field existed in `WorkEntryMeta` as
+  dead/commented-out code and was removed 2026-08-30, see §6 — now
+  actually needed for blog.)
+- [ ] **Blog frontmatter schema** — beyond what work entries have:
+  `title`, `date`, `description`/`excerpt` (used by the listing page, the
+  RSS feed, and per-post meta description), likely `draft: true/false`,
+  possibly `tags`.
+- [ ] **Draft handling** — filter draft posts from listing/RSS/sitemap in
+  production but show them in dev, or some other mechanism?
+- [ ] **Per-post OG images** — `app/opengraph-image.tsx` already exists
+  site-wide (static, always shows "Jason Michael"); Next supports the
+  same file convention per-route (`app/blog/[slug]/opengraph-image.tsx`),
+  so each post could get a unique share image with its actual title,
+  reusing the already-proven `ImageResponse` pattern.
+- [ ] **Full content vs. excerpt in the RSS feed** — see above.
+- [ ] **`components` map for MDX** — a central file mapping custom
+  elements (e.g. `<Callout>`) and overriding standard ones (e.g. `<a>` to
+  route through `next/link` for internal links) for use across all posts.
+- [ ] **Reading time** — not present in any of the three researched
+  references, but a common, cheap blog feature (e.g. the `reading-time`
+  package) worth considering.
+- [ ] **Table of contents** — optional, pairs naturally with
+  `rehype-slug`'s heading IDs; only worth it for longer posts.
+- [ ] **Extract shared `getContentEntries(dir)`-style helper** — already
+  tracked in §2, this is the natural moment to build it, since `/work`
+  and `/blog` will both need "list files in a dir, parse frontmatter,
+  sort" logic and shouldn't duplicate `getAllWorkEntries`-style code.
+- [ ] **`app/sitemap.ts` update** — currently lists routes as a fixed
+  array (`/`, `/work`, `/blog`); needs to generate per-post entries once
+  blog posts have real permalinks (see §7).
+
+Not yet started — implementation blocked on the open decisions above.
