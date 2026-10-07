@@ -44,4 +44,4 @@ right `Content-Type` (`application/rss+xml`, `application/atom+xml`, `applicatio
 ## v2 backlog
 - Per-post OG images (`app/blog/[slug]/opengraph-image.tsx`, reuse the `ImageResponse` pattern)
 - Reading time, table of contents (heading ids already exist via `rehype-slug`)
-- Tag pages, full-content feeds, a real first post (`hello-world.mdx` is a draft that exercises the pipeline)
+- Tag pages, full-content feeds, a real first post (`hello-world.mdx` is a published placeholder)

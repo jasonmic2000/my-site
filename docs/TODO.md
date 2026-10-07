@@ -10,5 +10,5 @@ Re-verify with: `npm outdated`, `npm audit`, `npm run lint`, `npm run typecheck`
 - Next 16.4.0, React 19.3, Biome 2.5.15. CI: `.github/workflows/ci.yml` (never run yet; first push will be its first test). Dependabot weekly.
 
 ## Blog
-- [ ] Write the first real post (remove `draft: true` from, or replace, `content/blog/hello-world.mdx`)
+- [ ] Replace the placeholder `content/blog/hello-world.mdx` with a real first post
 - [ ] Blog v2 backlog: see [BLOG-PLAN.md](BLOG-PLAN.md) (per-post OG images, reading time, TOC, tags)
