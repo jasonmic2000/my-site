@@ -26,9 +26,9 @@ Verify with lint + typecheck + build. No test suite yet.
 - `components/AnimatedArrow.tsx` is unused on purpose — keep it.
 - `productionBrowserSourceMaps: true` is intentional.
 - TypeScript stays on 5.x (TS 7 is the native rewrite; tooling not ready). `@types/node` stays on 22.x to match Vercel.
-- Blog (planned, see `docs/codebase-notes.md` §9): MDX via `next-mdx-remote-client`, not `@next/mdx`.
+- Blog (planned, see `docs/BLOG-PLAN.md`): MDX via `next-mdx-remote-client`, not `@next/mdx`.
 
 ## Gotchas
 - `npm audit` / `npm outdated` results rot; re-run them before trusting `docs/`.
 - Biome `biome-ignore` comments must sit directly above the flagged JSX attribute, not the enclosing element.
-- Update `docs/codebase-notes.md` when a decision changes.
+- Docs: `docs/ARCHITECTURE.md` (stable), `docs/DECISIONS.md`, `docs/TODO.md` (open items + dated health snapshot), `docs/BLOG-PLAN.md`. Update them when a decision or the architecture changes; check items off in TODO.
