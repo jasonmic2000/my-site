@@ -54,7 +54,9 @@ export default function RootLayout({
       >
         <Providers>
           <Navbar />
-          <main className="max-w-2xl space-y-20 px-4 pb-24">{children}</main>
+          <main className="w-full max-w-2xl space-y-20 px-4 pb-24">
+            {children}
+          </main>
           <Footer />
         </Providers>
         <Analytics />
