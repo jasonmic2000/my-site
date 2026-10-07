@@ -41,7 +41,11 @@ right `Content-Type` (`application/rss+xml`, `application/atom+xml`, `applicatio
 - One central MDX components map; shared `readContentDir` + validators in `lib/content.ts` serve `/work` and `/blog`
 - `sitemap.ts` generates per-post entries; `@vercel/analytics` added
 
-## v2 backlog
-- Per-post OG images (`app/blog/[slug]/opengraph-image.tsx`, reuse the `ImageResponse` pattern)
+## v2 backlog (confirmed by the owner, 2026-10-07; tracked in `docs/TODO.md`)
+- Per-post OG images (`app/blog/[slug]/opengraph-image.tsx`, reuse the `ImageResponse` pattern; pick up the new logo once it exists)
 - Reading time, table of contents (heading ids already exist via `rehype-slug`)
-- Tag pages, full-content feeds, a real first post (`hello-world.mdx` is a published placeholder)
+- Tag pages, full-content feeds
+- Code block niceties via `rehype-pretty-code`: copy button, optional title/filename, line highlighting
+- Shared post list component, reused by `/blog` and the home page's "Posts" section (2 most recent)
+- **First real post**: the detailed tech stack and design-decisions write-up for this site, explaining *why* each choice was made. Draw on `docs/DECISIONS.md` and `docs/ARCHITECTURE.md`; write it last so it matches the finished site. `hello-world.mdx` is a published placeholder until then (replace it, or keep it as a short "hello" post).
+- The owner will add further ideas as they come up; add them here.

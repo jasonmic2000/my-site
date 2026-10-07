@@ -11,6 +11,11 @@ Decisions already made. Don't reverse without asking. Newest context first withi
 - **`@types/node` follows the Node major (`^24`)**, not the npm `latest` tag (26.x).
 - **No Content Security Policy** (user decision 2026-10-07). The site has no logins, forms, user input or database; content is self-authored MDX compiled at build time, so there is little for a CSP to protect. A strict nonce-based CSP would force dynamic rendering on every page (no CDN caching, slower loads, higher cost, no ISR/PPR), which isn't worth it. Cheaper options exist if this changes: a no-nonce CSP in `next.config.ts` (keeps static rendering, allows `'unsafe-inline'`, still locks down `object-src`, `base-uri`, `form-action`, `frame-ancestors`) or the experimental hash-based SRI CSP. Revisit if the site ever accepts user input, adds auth, or embeds third-party content. Baseline security headers are set in `next.config.ts`.
 
+## Design principles (user, 2026-10-07)
+- **Readability and accessibility come first.** Decorative effects (background texture, parallax, icon animations) must never reduce text contrast below WCAG AA, interfere with keyboard/screen-reader use, or hurt performance.
+- **Motion must be opt-out-able.** Every animation respects `prefers-reduced-motion`, and any ambient/scroll-linked motion (e.g. background parallax) additionally gets a visible user toggle, persisted and applied before paint. Avoid anything that could trigger vestibular discomfort: small, slow, scroll-linked, transform-only; no autoplay or looping movement.
+- **Stay fully static.** New features should not force dynamic rendering (see the CSP decision) unless there is a strong reason.
+
 ## Removed / not adopted
 - **ESLint + Prettier → Biome only** (2026-08-30). Prettier was never installed. Biome's auto-detected Next domain replaced `eslint-config-next`. Motivated partly by the ESLint 10 incident: `eslint-plugin-react` (via `eslint-config-next`) crashed on ESLint 10's rule-context API change.
 - **No Cache Components.** The Next 16 upgrade codemod inserts `export const instant = false;`, which is invalid without `cacheComponents` and breaks the build. Remove it, don't opt in.
