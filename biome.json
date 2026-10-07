@@ -16,7 +16,18 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "preset": "recommended"
+      "preset": "recommended",
+      "correctness": {
+        "noUnusedImports": "error",
+        "noUnusedVariables": "error"
+      },
+      "nursery": {
+        "useSortedClasses": "error"
+      }
+    },
+    "domains": {
+      "next": "all",
+      "react": "recommended"
     }
   },
   "javascript": {
