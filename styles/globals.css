@@ -9,6 +9,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Reserve scrollbar space on every page so short pages (e.g. /blog) don't
+   shift horizontally relative to pages tall enough to scroll. */
+html {
+  scrollbar-gutter: stable;
+}
+
 :root {
   --background: var(--color-zinc-100);
   --foreground: var(--color-zinc-700);
