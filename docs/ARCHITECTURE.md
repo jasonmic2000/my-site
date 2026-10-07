@@ -30,7 +30,7 @@ Flat: `Navbar` (client; theme toggle + links), `Footer`, `Work`, `Connect`, `Ani
 `content/work/*.mdx` (frontmatter: `company`, `role`, `startDate`, `endDate`, `initialDetails`) →
 `lib/utils.ts#getAllWorkEntries()`: `fs` read → `gray-matter` → `remark().use(html)` → sort by `startDate` desc.
 Build/server-side only, called from async Server Components. No client fetching, no external services.
-`@next/mdx` is configured but **not used** by this pipeline (slated for removal, see TODO).
+`@next/mdx` is deliberately not used; the blog will use `next-mdx-remote-client` (see BLOG-PLAN.md).
 
 ## State
 Only theme (`next-themes`, read via `useTheme()` in `Navbar`). No context, store or forms.

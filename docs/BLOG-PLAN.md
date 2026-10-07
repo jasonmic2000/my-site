@@ -14,7 +14,7 @@ Rejected: plain remark→rehype (can't embed components); `@next/mdx` (file-base
 page model fits `/blog/[slug]` poorly; would need per-post page files or dynamic
 `import()`). Accepted tradeoff: community fork, small ecosystem-lag risk.
 
-`@next/mdx` is currently configured but unused (see TODO P2); the work pipeline
+`@next/mdx` was removed (it was configured but unused); the work pipeline
 never invokes it.
 
 ## Packages

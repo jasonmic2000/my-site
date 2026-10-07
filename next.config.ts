@@ -1,4 +1,3 @@
-import mdx from "@next/mdx";
 import type { NextConfig } from "next";
 
 const securityHeaders = [
@@ -14,13 +13,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   productionBrowserSourceMaps: true,
   poweredByHeader: false,
-  experimental: {
-    mdxRs: true,
-  },
-  pageExtensions: ["ts", "tsx", "js", "jsx", "mdx"],
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
 };
 
-export default mdx()(nextConfig);
+export default nextConfig;

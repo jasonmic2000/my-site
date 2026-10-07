@@ -10,7 +10,7 @@ A minimal, lightweight portfolio built with the Next.js App Router — home page
 - TypeScript
 - [Tailwind CSS v4](https://tailwindcss.com/)
 - [Biome](https://biomejs.dev/) for linting and formatting
-- MDX (`@next/mdx`) for content, parsed with `gray-matter` + `remark`
+- MDX files with frontmatter for content, parsed with `gray-matter` + `remark`
 - [`next-themes`](https://github.com/pacocoursey/next-themes) for light/dark mode
 - [Vercel Speed Insights](https://vercel.com/docs/speed-insights)
 

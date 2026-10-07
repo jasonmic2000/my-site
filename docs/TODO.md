@@ -11,7 +11,6 @@ Re-verify with: `npm outdated`, `npm audit`, `npm run lint`, `npx tsc --noEmit`,
 - Next 16.4.0, React 19.3, Biome 2.5.15. No CI yet.
 
 ## P2 — Dead / misleading config
-- [ ] Remove unused `@next/mdx`, `experimental.mdxRs`, `"mdx"` in `pageExtensions`; fix README's MDX line
 - [ ] Delete `tailwind.config.js` (ignored by Tailwind v4; dark mode is `@custom-variant`); then drop `allowJs`
 - [ ] `globals.css`: remove unused shadcn tokens and the unused `tw-animate-css` import (no `animate-*` classes used)
 - [ ] Collapse duplicate color sources (oklch tokens vs hard-coded hex on `<body>`) into zinc theme tokens
