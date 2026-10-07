@@ -17,7 +17,8 @@ Re-verify with: `npm outdated`, `npm audit`, `npm run check`.
 3. **Navbar theme toggle** and **home Posts section** — small, self-contained.
 4. **Essentials** (404/error pages, skip link, focus styles, reduced motion, JSON-LD).
 5. **Background texture** — after reduced-motion handling exists, since it depends on it.
-6. **Blog v2**, then the **first real post** last, so it can describe the site as it actually ended up.
+6. **Command palette (Ctrl/Cmd+K)** — after the theme toggle, motion toggle and Posts section, since its actions and results come from them.
+7. **Blog v2**, then the **first real post** last, so it can describe the site as it actually ended up.
 
 ## Content (owner-supplied)
 - [ ] **[needs input] Refresh the home page copy** (`app/page.tsx`). The bio is over a year old and predates two job changes. Needed: the new bio text (or key points to rework), current title/employer for the hero line (the hero already derives "role at company" from the latest work entry, so that part follows the work data).
@@ -43,6 +44,14 @@ Re-verify with: `npm outdated`, `npm audit`, `npm run check`.
   - **Off by default under `prefers-reduced-motion: reduce`**, and also provide a visible user toggle (persisted in `localStorage`, applied before paint like the theme) so anyone can disable the motion, or the whole texture.
   - Verify on mobile/low-end devices; consider disabling parallax on touch/small screens.
   - Try a static texture first; add parallax only if it still feels flat.
+
+- [ ] **Command palette, opened with Ctrl+K / Cmd+K.**
+  - **What it offers:** navigate (Home, Work, Blog, individual posts, and later tag pages); actions (toggle theme, toggle background motion, copy email, open GitHub/LinkedIn/X, open the RSS feed). Typing filters results; Enter runs the highlighted one.
+  - **Discoverability:** a visible trigger button in the navbar showing the shortcut hint (`⌘K` on macOS, `Ctrl K` elsewhere), since touch devices have no keyboard shortcut and most visitors won't guess it. Also works from the keyboard (`/` is a common secondary shortcut).
+  - **Accessibility (requirements):** modal dialog with focus trapped inside and restored to the trigger on close; Esc closes; combobox/listbox semantics (`aria-activedescendant`, `aria-selected`, live result count for screen readers); fully usable without a mouse; visible focus; no animation under `prefers-reduced-motion`. Don't intercept the shortcut while typing in a text field.
+  - **Stay static and light:** build the post/page index at build time on the server and pass it as props to a client component; lazy-load that component (dynamic import on first open or idle) so it doesn't add to first-load JS. Simple substring/fuzzy filter is enough at this scale. No search service.
+  - **Decision to make when starting:** hand-roll it on the native `<dialog>` element (zero dependencies, good built-in focus handling) vs the `cmdk` library (less code, but a dependency plus Radix pieces). Default: native `<dialog>` unless `cmdk` turns out to save real effort.
+  - **Depends on:** theme toggle and motion toggle (actions), shared post list/`getAllPosts()` (results), the logo/mascot (empty state, optional), and ideally the Playwright smoke test (open, filter, run an action).
 
 ## Blog v2
 All of these are in [BLOG-PLAN.md](BLOG-PLAN.md) (details and rationale there).
