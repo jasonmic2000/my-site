@@ -2,7 +2,7 @@
 
 # my-site
 
-Personal portfolio (dev.jasonjmichael.com). Next.js 16 App Router, React 19, TypeScript strict, Tailwind v4, Biome. Fully static; deployed on Vercel (Node 22).
+Personal portfolio (dev.jasonjmichael.com). Next.js 16 App Router, React 19, TypeScript strict, Tailwind v4, Biome. Fully static; deployed on Vercel (Node 24).
 
 ## Commands
 - `npm run dev` — dev server (Turbopack)
@@ -26,7 +26,7 @@ Verify with lint + typecheck + build. No test suite yet.
 - No shadcn, no `clsx`/`tailwind-merge`.
 - `components/AnimatedArrow.tsx` is unused on purpose — keep it.
 - `productionBrowserSourceMaps: true` is intentional.
-- TypeScript stays on 5.x (TS 7 is the native rewrite; tooling not ready). `@types/node` stays on 22.x to match Vercel.
+- TypeScript stays on 5.x (TS 7 is the native rewrite; tooling not ready). `@types/node` tracks the Node major (24.x).
 - Blog: MDX via `next-mdx-remote-client` (`evaluate`), not `@next/mdx`. Drafts are dev-only. See `docs/ARCHITECTURE.md` (Blog) and `docs/BLOG-PLAN.md`.
 
 ## Gotchas
