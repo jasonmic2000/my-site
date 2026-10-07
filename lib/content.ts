@@ -7,6 +7,7 @@ import { matter } from "vfile-matter";
 
 export const CONTENT_DIR = path.join(process.cwd(), "content");
 const ISO_MONTH = /^\d{4}-(0[1-9]|1[0-2])$/;
+const ISO_DATE = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
 export interface RawEntry {
   fileName: string;
@@ -49,6 +50,18 @@ export function requireMonth(entry: RawEntry, key: string): string {
     );
   }
   return value;
+}
+
+/** Accepts an ISO date string or a YAML-parsed Date and returns "YYYY-MM-DD". */
+export function requireIsoDate(entry: RawEntry, key: string): string {
+  const value = entry.data[key];
+  const iso = value instanceof Date ? value.toISOString().slice(0, 10) : value;
+  if (typeof iso !== "string" || !ISO_DATE.test(iso)) {
+    throw new Error(
+      `${entry.fileName}: frontmatter "${key}" must be an ISO date (YYYY-MM-DD)`,
+    );
+  }
+  return iso;
 }
 
 export interface WorkEntry {
