@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Work } from "@/components/Work";
-import { getAllWorkEntries } from "@/lib/utils";
+import { getAllWorkEntries } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Work",

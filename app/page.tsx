@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Connect } from "@/components/Connect";
 import { Work } from "@/components/Work";
-import { getAllWorkEntries } from "@/lib/utils";
+import { getAllWorkEntries } from "@/lib/content";
 
 const Home = async () => {
   const workEntries = await getAllWorkEntries();
@@ -16,15 +16,16 @@ const Home = async () => {
             <span className="text-rose-400">Michael</span>
           </h2>
           <p className="m-0 italic font-serif">
-            Associate Technology Manager at Maxxton
+            {mostRecentWorkEntry &&
+              `${mostRecentWorkEntry.role} at ${mostRecentWorkEntry.company}`}
           </p>
         </div>
         <div>
           <Image
             src="/luffy-wano-avatar.jpg"
             priority={true}
-            alt="avatar"
-            className={`h-32 w-32 m-0 rounded-full shadow-xl md:not-hover:grayscale transition duration-300 ease-in-out`}
+            alt="Portrait of Jason Michael"
+            className="h-32 w-32 m-0 rounded-full shadow-xl md:not-hover:grayscale transition duration-300 ease-in-out"
             width={280}
             height={280}
           />
@@ -66,7 +67,9 @@ const Home = async () => {
           Always me.
         </p>
       </section>
-      <Work workEntries={[mostRecentWorkEntry]} showDetails={false} />
+      {mostRecentWorkEntry && (
+        <Work workEntries={[mostRecentWorkEntry]} showDetails={false} />
+      )}
       <Connect />
     </>
   );

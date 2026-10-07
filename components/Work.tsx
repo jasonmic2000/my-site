@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { HOVER_TRANSITION_CLASS } from "@/lib/consts";
-import type { WorkEntryMeta } from "@/lib/utils";
+import type { WorkEntry } from "@/lib/content";
+import { formatMonth } from "@/lib/dates";
 
 export const Work = ({
   workEntries,
   showDetails = false,
 }: {
-  workEntries: WorkEntryMeta[];
+  workEntries: WorkEntry[];
   showDetails: boolean;
 }) => {
   return (
@@ -23,14 +24,14 @@ export const Work = ({
         )}
       </div>
       <ul className="flex flex-col">
-        {workEntries.map((entry: WorkEntryMeta) => (
-          <li key={entry.startDate}>
+        {workEntries.map((entry) => (
+          <li key={`${entry.company}-${entry.startDate}`}>
             <p className="font-semibold">{entry.company}</p>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
               {entry.role}
             </p>
             <span className="text-sm text-zinc-600 dark:text-zinc-400">
-              {`${entry.startDate} - ${entry.endDate}`}
+              {`${formatMonth(entry.startDate)} - ${entry.endDate ? formatMonth(entry.endDate) : "Current"}`}
             </span>
             <article className="pt-4 font-serif">
               {entry.initialDetails && <p>{entry.initialDetails}</p>}

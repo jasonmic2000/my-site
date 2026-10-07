@@ -27,8 +27,10 @@ Flat, one folder per route; no dynamic routes, API routes, middleware/proxy or r
 Flat: `Navbar` (client; theme toggle + links), `Footer`, `Work`, `Connect`, `AnimatedArrow` (unused, intentional).
 
 ## Content layer
-`content/work/*.mdx` (frontmatter: `company`, `role`, `startDate`, `endDate`, `initialDetails`) →
-`lib/utils.ts#getAllWorkEntries()`: `fs` read → `gray-matter` → `remark().use(html)` → sort by `startDate` desc.
+`content/work/*.mdx` (frontmatter: `company`, `role`, `startDate` and optional `endDate` as ISO `YYYY-MM`,
+`initialDetails`) → `lib/content.ts#getAllWorkEntries()`: `fs` read → `gray-matter` → validated (throws at build
+on bad frontmatter) → `remark().use(html)` → sort by `startDate` desc. Omit `endDate` for the current role.
+`lib/dates.ts#formatMonth` renders ISO months for display.
 Build/server-side only, called from async Server Components. No client fetching, no external services.
 `@next/mdx` is deliberately not used; the blog will use `next-mdx-remote-client` (see BLOG-PLAN.md).
 

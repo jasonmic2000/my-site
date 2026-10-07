@@ -13,10 +13,7 @@ Re-verify with: `npm outdated`, `npm audit`, `npm run lint`, `npx tsc --noEmit`,
 ## P2 — Dead / misleading config
 
 ## P3 — Code quality
-- [ ] Guard `workEntries[0]` in `app/page.tsx` (renders `[undefined]` if empty)
-- [ ] Rename `lib/utils.ts` → `lib/content.ts`; validate frontmatter; add shared `getContentEntries(dir)`
-- [ ] ISO dates in frontmatter, formatted at render; unique keys in `Work.tsx` (not `startDate` alone)
-- [ ] Homepage hero role text duplicates content; avatar `alt="avatar"`; needless template-literal `className`
+- [ ] Generalize `lib/content.ts` (`readContentDir` + validators) into a shared `getContentEntries` when the blog lands
 - [ ] Extract `ThemeToggle` so `Navbar` isn't a client component; add `<nav aria-label>` + `aria-current`; remove unused `id`
 - [ ] Revisit site-wide `<h1>` on the logo (each page should own its `<h1>`)
 - [ ] `sitemap.ts`: real `lastModified`; add `alternates.canonical`; per-page OG overrides
