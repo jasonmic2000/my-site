@@ -20,7 +20,8 @@ Flat, one folder per route; no dynamic routes, API routes, middleware/proxy or r
 - `layout.tsx` — root layout: fonts, global metadata (title template, OG/Twitter from `lib/consts.ts`), `Providers` (theme), `Navbar`/`Footer`, `max-w-[640px]` shell
 - `page.tsx` (`/`) — bio + most recent work entry + `Connect`
 - `work/page.tsx` (`/work`) — full history via `getAllWorkEntries()`
-- `blog/page.tsx` (`/blog`) — placeholder ("under construction")
+- `blog/page.tsx` (`/blog`) — post listing; `blog/[slug]/page.tsx` — statically generated posts (`dynamicParams = false`)
+- `feed.xml`, `atom.xml`, `feed.json` — static Route Handlers (`force-static`) built from `lib/feed.ts`
 - Per-page metadata goes through `lib/metadata.ts#pageMetadata` (canonical + OG/Twitter incl. image; page-level `openGraph` replaces the root one, so it must repeat shared fields)
 - Metadata file conventions: `opengraph-image.tsx`, `apple-icon.tsx` (both `ImageResponse`), `manifest.ts`, `robots.ts`, `sitemap.ts` (site URL from `DEFAULT_METADATA`)
 
@@ -34,6 +35,14 @@ on bad frontmatter) → `remark().use(html)` → sort by `startDate` desc. Omit 
 `lib/dates.ts#formatMonth` renders ISO months for display.
 Build/server-side only, called from async Server Components. No client fetching, no external services.
 `@next/mdx` is deliberately not used; the blog will use `next-mdx-remote-client` (see BLOG-PLAN.md).
+
+## Blog
+`content/blog/<slug>.mdx`; slug = filename. Frontmatter: `title`, `date` (ISO), `description`, optional `tags`, `draft`.
+`lib/blog.ts` validates and sorts; **drafts show in `next dev` only** (excluded from listing, post routes, sitemap and feeds in
+production). Posts compile with `next-mdx-remote-client`'s `evaluate` (RSC) using `lib/mdx.ts` (remark-gfm, smartypants,
+rehype-slug → autolink-headings, rehype-pretty-code/shiki dual theme; imports disabled; MDX errors fail the build).
+Embeddable components and link handling live in `components/mdx-components.tsx` (`Callout`, `a` → `next/link`/external-safe).
+Body styles are the `.post` block in `styles/globals.css`. Feeds carry excerpt + link. `@vercel/analytics` is in the root layout.
 
 ## State
 Only theme (`next-themes`, read via `useTheme()` in `Navbar`). No context, store or forms.

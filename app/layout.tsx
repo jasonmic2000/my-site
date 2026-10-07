@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { DEFAULT_METADATA } from "@/lib/consts";
 import "@/styles/globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
@@ -56,6 +57,7 @@ export default function RootLayout({
           <main className="max-w-2xl space-y-20 px-4 pb-24">{children}</main>
           <Footer />
         </Providers>
+        <Analytics />
         <SpeedInsights />
       </body>
     </html>

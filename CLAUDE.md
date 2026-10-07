@@ -27,7 +27,7 @@ Verify with lint + typecheck + build. No test suite yet.
 - `components/AnimatedArrow.tsx` is unused on purpose — keep it.
 - `productionBrowserSourceMaps: true` is intentional.
 - TypeScript stays on 5.x (TS 7 is the native rewrite; tooling not ready). `@types/node` stays on 22.x to match Vercel.
-- Blog (planned, see `docs/BLOG-PLAN.md`): MDX via `next-mdx-remote-client`, not `@next/mdx`.
+- Blog: MDX via `next-mdx-remote-client` (`evaluate`), not `@next/mdx`. Drafts are dev-only. See `docs/ARCHITECTURE.md` (Blog) and `docs/BLOG-PLAN.md`.
 
 ## Gotchas
 - `npm audit` / `npm outdated` results rot; re-run them before trusting `docs/`.
