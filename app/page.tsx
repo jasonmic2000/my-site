@@ -73,7 +73,7 @@ const Home = async () => {
           as a hobby, but as something that’s shaped my curiosity, creativity,
           and how I think about systems. I’m a sucker for a good world, an
           interesting story, and the kind of lore that makes you want to keep
-          digging, whether that’s in games, anime, movies, books, or at a
+          digging, whether that’s in games, anime, movies, books, or around a
           tabletop. I have a soft spot for the strange and unknown, cosmic
           horror especially, and I get invested pretty easily, so there’s always
           some new world, story, or idea pulling me in.
