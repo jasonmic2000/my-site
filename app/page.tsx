@@ -19,7 +19,7 @@ const Home = async () => {
         <div>
           <h1 className="mt-2 font-extrabold text-[2rem] md:m-0">
             <span>Jason </span>
-            <span className="text-rose-400">Michael</span>
+            <span className="text-accent">Michael</span>
           </h1>
           <p className="m-0 font-serif italic">
             {mostRecentWorkEntry &&

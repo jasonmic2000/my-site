@@ -17,6 +17,7 @@ Verify with lint + typecheck + build. No test suite yet.
 - Imports use the `@/*` alias (repo root). Named exports for components (`export const Foo`); default exports only where Next requires (pages, layouts, route files).
 - Server Components by default; add `"use client"` only for leaf interactivity. Never import `lib/content.ts` (Node `fs`) from a client component — shared constants live in `lib/consts.ts`.
 - Styling: Tailwind utilities, zinc palette, dark mode via `class` + `next-themes`. Shared class fragments are plain string constants (`HOVER_TRANSITION_CLASS`); no `clsx`/`cn()`.
+- Accent colour: use the `accent` utilities (`text-accent`, `border-accent`, `outline-accent`) backed by `--accent` in `styles/globals.css`; never hard-code rose classes. Large text/graphics only. See `docs/DECISIONS.md`.
 - Motion/decoration: every animation respects `prefers-reduced-motion`; ambient motion (e.g. background parallax) also needs a user toggle. Text contrast must stay WCAG AA. See `docs/DECISIONS.md` (Design principles).
 - Content: `content/<type>/*.mdx` + frontmatter, read at build time via helpers in `lib/` (no external data source).
 - Commits: Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`, `chore(deps):`). After any major, self-contained implementation (lint + typecheck + build passing), commit it with a conventional-commit message. **Never push** — no `git push`, ever, unless explicitly asked in that moment. Keep commits atomic (one concern each); don't bundle unrelated changes.

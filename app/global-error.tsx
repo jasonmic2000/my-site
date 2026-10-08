@@ -15,7 +15,7 @@ const GlobalError = ({ retry }: { retry: () => void }) => {
         <main className="w-full max-w-2xl space-y-6 px-4 py-24">
           <p
             aria-hidden="true"
-            className="font-extrabold text-[2rem] text-rose-600 [@media(prefers-color-scheme:dark)]:text-rose-400"
+            className="font-extrabold text-(--accent-light) text-[2rem] [@media(prefers-color-scheme:dark)]:text-(--accent-dark)"
           >
             Oops
           </p>

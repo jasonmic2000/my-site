@@ -10,10 +10,7 @@ const LINKS = [
 const NotFound = () => {
   return (
     <section className="space-y-6">
-      <p
-        aria-hidden="true"
-        className="font-extrabold text-[2rem] text-rose-600 dark:text-rose-400"
-      >
+      <p aria-hidden="true" className="font-extrabold text-[2rem] text-accent">
         404
       </p>
       <h1 className="font-semibold text-black dark:text-white">

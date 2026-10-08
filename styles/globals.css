@@ -7,6 +7,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-accent: var(--accent);
 }
 
 /* Reserve scrollbar space on every page so short pages (e.g. /blog) don't
@@ -15,21 +16,30 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* Accent: one hue, two lightness steps. Light mode needs a darker value to hold
+   >= 3:1 against the page (large text, outlines and borders only; do not use
+   for small text, which needs 4.5:1). Dark mode keeps the softer rose-400.
+   The two raw values are defined once here; global-error.tsx reads them directly
+   because it follows the OS colour scheme, not the .dark class. */
 :root {
+  --accent-light: #eb506d; /* 3.24:1 on zinc-100 */
+  --accent-dark: #fb7185; /* rose-400, 6.58:1 on zinc-900 */
+  --accent: var(--accent-light);
   --background: var(--color-zinc-100);
   --foreground: var(--color-zinc-700);
 }
 
 .dark {
+  --accent: var(--accent-dark);
   --background: var(--color-zinc-900);
   --foreground: var(--color-zinc-300);
 }
 
 /* Visible keyboard focus everywhere (mouse clicks don't trigger :focus-visible).
-   rose-600 / rose-400 keep >= 3:1 against the zinc page backgrounds. */
+   The accent keeps >= 3:1 against the page background in both themes. */
 @layer base {
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-rose-600 dark:outline-rose-400;
+    @apply outline-2 outline-offset-2 outline-accent;
   }
 }
 
