@@ -28,7 +28,7 @@ Flat, one folder per route; no dynamic routes, API routes, middleware/proxy or r
 - Metadata file conventions: `opengraph-image.tsx`, `apple-icon.tsx` (both `ImageResponse`), `manifest.ts`, `robots.ts`, `sitemap.ts` (site URL from `DEFAULT_METADATA`)
 
 ## Components (`components/`)
-Flat: `Navbar` (server) composed of `NavLink` (client, `aria-current` via `usePathname`) and `ThemeToggle` (client); `Footer`, `Work`, `Connect`, `AnimatedArrow` (unused, intentional).
+Flat: `Navbar` (server) composed of `NavLink` (client, `aria-current` via `usePathname`) and `ThemeToggle` (client; moon/sun both rendered and swapped with CSS `dark:` variants so there is no hydration mismatch, the accessible name describes the action and flips the same way, and the turn/scale transition inherits the global reduced-motion rule); `Footer`, `Work`, `Connect`, `AnimatedArrow` (unused, intentional).
 
 ## Content layer
 `content/work/*.mdx` (frontmatter: `company`, `role`, `startDate` and optional `endDate` as ISO `YYYY-MM`,

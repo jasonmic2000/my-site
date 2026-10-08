@@ -34,7 +34,7 @@ Raised by the owner 2026-10-08: hover and "selected" are too subtle to tell what
 ## Suggested order
 1. **Content refresh** (home bio; work entries are done) — unblocks everything that shows real content. Needs owner input.
 2. **Logo** — feeds the favicon, Apple icon, OG images, manifest and navbar, so do it before those.
-3. **Navbar theme toggle** and **home Posts section** — small, self-contained.
+3. ~~**Navbar theme toggle**~~ — done; **home Posts section** next.
 4. ~~**Essentials**~~ — done (404/error pages, skip link, focus styles, reduced motion, JSON-LD, theme-color, description, audit + automated checks).
 5. **Background texture** — after reduced-motion handling exists, since it depends on it.
 6. **Command palette (Ctrl/Cmd+K)** — after the theme toggle, motion toggle and Posts section, since its actions and results come from them.
@@ -51,11 +51,6 @@ Raised by the owner 2026-10-08: hover and "selected" are too subtle to tell what
   - Show the 2 most recent posts (title, date, description) in the same format as the `/blog` list, with a "See all posts" link like Work's "See all work".
   - Extract the list item from `app/blog/page.tsx` into a shared component (e.g. `components/PostList.tsx`) used by both, instead of duplicating markup. Home renders it with `h2`; `/blog` keeps its `h1`.
   - Reuse `getAllPosts()` (drafts already excluded in production). Render nothing if there are no posts.
-- [ ] **Navbar theme toggle: swap icons per theme, with a small SVG transition.**
-  - Today it always shows the moon (`FiMoon`). Show a sun in dark mode (action: switch to light) and a moon in light mode.
-  - Render both icons and switch with CSS `dark:` variants instead of reading `resolvedTheme` in JS. That avoids a hydration mismatch/flash, since the theme class is set before paint.
-  - Animate with a CSS-driven SVG morph/rotate (sun rays scale out, moon mask slides in); ~200–300ms. Must be disabled under `prefers-reduced-motion`.
-  - Make the `aria-label` reflect the action ("Switch to light theme"). Consider a third "system" state, since the provider already supports it.
 - [ ] **Logo.** Design needed (**[needs input]**): wordmark/monogram or a tiny mascot. The current logo is the text `¯\_(ツ)_/¯` in `Navbar`. Deliver as SVG (single colour using `currentColor` so it follows the theme). Once chosen, update together: navbar, `public/favicon.ico` plus an SVG favicon, `app/apple-icon.tsx`, `app/opengraph-image.tsx`, `app/manifest.ts` icons.
 - [ ] **Subtle background texture / grid, optionally with parallax.** Adds depth without hurting readability. Guardrails (these are requirements, not suggestions):
   - Purely decorative: a fixed, `aria-hidden`, `pointer-events-none` layer behind content; no content depends on it.

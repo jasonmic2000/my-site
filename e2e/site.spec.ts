@@ -68,15 +68,56 @@ test("skip link is the first tab stop and moves focus to main content", async ({
   await expect(page.locator("#main-content")).toBeFocused();
 });
 
-test("theme toggle switches between light and dark", async ({ page }) => {
+test("theme toggle switches theme, icon and accessible name", async ({
+  page,
+}) => {
   await page.emulateMedia({ colorScheme: "light" });
   await page.goto("/");
   const html = page.locator("html");
+  const toggle = page.getByRole("button", {
+    name: /switch to (dark|light) theme/i,
+  });
+  const moon = toggle.locator("svg").nth(0);
+  const sun = toggle.locator("svg").nth(1);
+
+  // Light: the button offers dark, and the moon is the visible icon.
   await expect(html).not.toHaveClass(/dark/);
-  await page.getByRole("button", { name: "Toggle theme" }).click();
+  await expect(toggle).toHaveAccessibleName("Switch to dark theme");
+  await expect(moon).toHaveCSS("opacity", "1");
+  await expect(sun).toHaveCSS("opacity", "0");
+
+  await toggle.click();
+
+  // Dark: the sun shows, and the button now offers light.
   await expect(html).toHaveClass(/dark/);
-  await page.getByRole("button", { name: "Toggle theme" }).click();
+  await expect(toggle).toHaveAccessibleName("Switch to light theme");
+  await expect(sun).toHaveCSS("opacity", "1");
+  await expect(moon).toHaveCSS("opacity", "0");
+
+  await toggle.click();
   await expect(html).not.toHaveClass(/dark/);
+  await expect(moon).toHaveCSS("opacity", "1");
+});
+
+test("the theme icon transition is disabled for reduced motion", async ({
+  page,
+}) => {
+  const icon = () =>
+    page
+      .getByRole("button", { name: /switch to (dark|light) theme/i })
+      .locator("svg")
+      .first();
+  const seconds = () =>
+    icon().evaluate((el) =>
+      Number.parseFloat(getComputedStyle(el).transitionDuration),
+    );
+
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  expect(await seconds()).toBeGreaterThanOrEqual(0.3);
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  expect(await seconds()).toBeLessThan(0.001);
 });
 
 test("roles at the same company are grouped under one company heading", async ({
