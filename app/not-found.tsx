@@ -17,7 +17,7 @@ const NotFound = () => {
         Page not found
       </h1>
       <p className="font-serif">
-        This page doesn&apos;t exist, or it has moved. Try one of these instead:
+        This page doesn’t exist, or it has moved. Try one of these instead:
       </p>
       <ul className="flex flex-wrap gap-4">
         {LINKS.map(({ href, label }) => (

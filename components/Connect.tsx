@@ -10,7 +10,7 @@ export const Connect = () => {
   return (
     <section className="space-y-6">
       <h2 className="font-semibold text-black dark:text-white">
-        Let&apos;s Connect
+        Let’s Connect
       </h2>
       <article>
         <p className="font-serif">
