@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { evaluate } from "next-mdx-remote-client/rsc";
+import { JsonLd } from "@/components/JsonLd";
 import { mdxComponents } from "@/components/mdx-components";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { HOVER_TRANSITION_CLASS } from "@/lib/consts";
 import { formatDate } from "@/lib/dates";
+import { blogPostingJsonLd } from "@/lib/jsonld";
 import { mdxOptions } from "@/lib/mdx";
 import { pageMetadata } from "@/lib/metadata";
 
@@ -48,6 +50,7 @@ const PostPage = async ({ params }: { params: Params }) => {
 
   return (
     <article className="space-y-8">
+      <JsonLd data={blogPostingJsonLd(post)} />
       <header className="space-y-2">
         <h1 className="font-extrabold text-[2rem] text-black leading-tight dark:text-white">
           {post.title}

@@ -24,6 +24,7 @@ Flat, one folder per route; no dynamic routes, API routes, middleware/proxy or r
 - `feed.xml`, `atom.xml`, `feed.json` — static Route Handlers (`force-static`) built from `lib/feed.ts`
 - Per-page metadata goes through `lib/metadata.ts#pageMetadata` (canonical + OG/Twitter incl. image; page-level `openGraph` replaces the root one, so it must repeat shared fields)
 - `not-found.tsx`, `error.tsx` (client; uses the `retry` prop, stable since Next 16.3) and `global-error.tsx` (replaces the root layout, so it re-imports global CSS/fonts from `fonts.ts` and follows the OS colour scheme instead of the class-based theme) all match the site design
+- Structured data: `components/JsonLd.tsx` renders JSON-LD (escapes `<`); `lib/jsonld.ts` builds `WebSite` + `Person` (home) and `BlogPosting` (posts) from site constants
 - Metadata file conventions: `opengraph-image.tsx`, `apple-icon.tsx` (both `ImageResponse`), `manifest.ts`, `robots.ts`, `sitemap.ts` (site URL from `DEFAULT_METADATA`)
 
 ## Components (`components/`)

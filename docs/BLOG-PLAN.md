@@ -42,7 +42,7 @@ right `Content-Type` (`application/rss+xml`, `application/atom+xml`, `applicatio
 - `sitemap.ts` generates per-post entries; `@vercel/analytics` added
 
 ## v2 backlog (confirmed by the owner, 2026-10-07; tracked in `docs/TODO.md`)
-- Per-post OG images (`app/blog/[slug]/opengraph-image.tsx`, reuse the `ImageResponse` pattern; pick up the new logo once it exists)
+- Per-post OG images (`app/blog/[slug]/opengraph-image.tsx`, reuse the `ImageResponse` pattern; pick up the new logo once it exists). When added, also set `image` in `blogPostingJsonLd` (`lib/jsonld.ts`)
 - Reading time, table of contents (heading ids already exist via `rehype-slug`)
 - Tag pages, full-content feeds
 - Code block niceties via `rehype-pretty-code`: copy button, optional title/filename, line highlighting

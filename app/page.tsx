@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Connect } from "@/components/Connect";
+import { JsonLd } from "@/components/JsonLd";
 import { Work } from "@/components/Work";
 import { getAllWorkEntries } from "@/lib/content";
+import { homeJsonLd } from "@/lib/jsonld";
 import { FEED_TYPES } from "@/lib/metadata";
 
 export const metadata: Metadata = {
@@ -15,6 +17,8 @@ const Home = async () => {
 
   return (
     <>
+      {/* First child on purpose: main's space-y would otherwise add a gap after a trailing script. */}
+      <JsonLd data={homeJsonLd()} />
       <section className="flex flex-col-reverse items-start md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="mt-2 font-extrabold text-[2rem] md:m-0">

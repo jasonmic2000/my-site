@@ -65,7 +65,6 @@ All of these are in [BLOG-PLAN.md](BLOG-PLAN.md) (details and rationale there).
 
 ## Essentials (suggested)
 Things most polished personal sites have and this one currently lacks.
-- [ ] **Structured data (JSON-LD)**: `Person` on the home page, `BlogPosting` on posts, per the Next JSON-LD guide (`node_modules/next/dist/docs/01-app/02-guides/json-ld.md`).
 - [ ] **Accessibility/performance re-audit**: re-run Lighthouse (never re-run since the h1/contrast/metadata fixes) and add an automated check (e.g. axe via Playwright) to CI so regressions are caught. A small Playwright smoke test (routes load, feed valid, theme toggle works) is the natural first test suite.
 
 ## Nice-to-haves (suggested)
