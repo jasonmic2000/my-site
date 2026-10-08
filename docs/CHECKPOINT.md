@@ -1,0 +1,64 @@
+# Checkpoint - start here when resuming
+
+Written 2026-10-09 at the end of a long working session, so the next session does not depend on remembered
+context. Read this first, then `docs/TODO.md` (open items), `docs/DECISIONS.md` (do not re-litigate) and
+`docs/ARCHITECTURE.md` (how it works). `CLAUDE.md` loads automatically and points here.
+
+## State at this checkpoint
+- `main` was in sync with `origin/main` at `08d9713` (this checkpoint's own commit may be ahead; run
+  `git status -sb` and `git log --oneline -5`). Working tree clean. CI green (lint, typecheck, build,
+  19 Playwright/axe tests, `npm audit`). Deployed on Vercel.
+- Stack: Next.js 16.4, React 19.3, Tailwind v4, Biome, Node 24, TypeScript 5.9 (held for 7.1).
+  `npm outdated` shows only `typescript` and `@types/node`, both held on purpose.
+
+## Done so far (all in `git log`)
+Security and dependency work (RCE patch, 0 audit findings, Node 24), Biome rules, CI plus Dependabot,
+MDX blog (listing, posts, RSS/Atom/JSON feeds, JSON-LD, sitemap, analytics), accessibility baseline (skip
+link, focus styles, reduced motion, custom 404/error pages), single accent token, theme toggle with
+moon/sun transition, home "Posts" section, Playwright + axe suite, and the content refresh (grouped
+work history, bio, Connect copy).
+
+## Next, in this order
+1. **Background texture.** Show the owner 3-4 *static* options (fine grid, dot grid, subtle noise) on a
+   local comparison page, light and dark, before building. Guardrails are in TODO.md (WCAG AA contrast
+   against the worst pixel, reduced-motion respected, visible persisted user toggle, parallax only if
+   the static version feels flat).
+2. Ctrl/Cmd+K command palette (spec in TODO.md; native `<dialog>` by default).
+3. Blog v2, then the first real post (replace the `hello-world` placeholder).
+4. Logo (deferred by the owner), then the **parked design polish** (interaction states, typography,
+   colour/type scale), done last as one pass. Font comparison page: `docs/design/font-pairings.html`.
+
+## Waiting on the owner
+- Set the Vercel project's Node.js Version to 24.x (unconfirmed; removes the override warning).
+- The first real blog post, and a logo direction (later).
+- A choice among the background options once shown.
+- Worth a look after each deploy: work history layout, bio, theme toggle in both themes.
+
+## How we work (owner preferences)
+- Commit each self-contained piece with a Conventional Commit and the Co-Authored-By trailer; **push only
+  when the owner asks in that moment**. Keep commits atomic.
+- Verify before committing: `npm run check`, `npm run test:e2e` for UI changes, and look at screenshots
+  for anything visual. Report mistakes plainly (including ones caught before committing).
+- For design choices, build a local comparison page and let the owner pick; do not decide for them.
+- Content is the owner's voice: apply their text, normalise punctuation, then offer feedback separately.
+- Copy rule: plain hyphens only, no en/em dashes, curly apostrophes (see DECISIONS.md).
+- The owner is on Windows 11, 1440p IPS at 100% scaling; text fringing there is ClearType, not the site.
+
+## Tooling recipes (Windows)
+- **Visual check:** `npm run build`, then `npx next start -p <port>` (background), then PowerShell:
+  `& "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless=new --disable-gpu
+  --hide-scrollbars --window-size=W,H --virtual-time-budget=8000 --screenshot=<file.png> <url>`.
+  It sometimes does not write the file: retry up to 3 times. Headless Edge follows the OS colour scheme;
+  to see light mode temporarily set `defaultTheme="light"` in `app/providers.tsx`, then `git checkout` it.
+- **Measuring layout:** a throwaway Node script that does `require("@playwright/test")` with
+  `chromium.launch({ channel: "msedge" })`, run from the repo root, deleted afterwards.
+- **Stop servers by port**, never by killing all Node processes:
+  `Get-NetTCPConnection -LocalPort <n> -State Listen | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }`.
+- **Stale types** after deleting a route: `rm -rf .next`.
+- **Lighthouse locally:** start Edge with `--remote-debugging-port=9333`, then
+  `npx lighthouse <url> --port=9333`. Best-practices scores ~92 locally only because `/_vercel/*` scripts 404.
+- **Pitfalls:** scripted edits on Windows must write with `newline="\n"` (CRLF breaks Biome); never run
+  `biome check --write --unsafe` on a tree with parse errors; Biome reflows long JSX text so exact
+  one-line string matches fail (rewrite the whole block instead). See DECISIONS.md for details.
+- Throwaway files (screenshots, scratch pages) live in the session scratchpad and are not kept; anything
+  worth keeping goes under `docs/` (for example `docs/design/`).

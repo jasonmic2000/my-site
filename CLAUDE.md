@@ -1,5 +1,7 @@
 @AGENTS.md
 
+**Resuming work? Read `docs/CHECKPOINT.md` first** (current state, exact next step, how we work, tooling recipes), then `docs/TODO.md`.
+
 # my-site
 
 Personal portfolio (dev.jasonjmichael.com). Next.js 16 App Router, React 19, TypeScript strict, Tailwind v4, Biome. Fully static; deployed on Vercel (Node 24).
