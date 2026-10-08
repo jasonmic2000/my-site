@@ -1,22 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { DEFAULT_METADATA } from "@/lib/consts";
 import "@/styles/globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
+import { geistMono, geistSans } from "./fonts";
 import { Providers } from "./providers";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(DEFAULT_METADATA.url),
@@ -52,9 +42,19 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} mx-auto mt-2 flex w-full min-w-0 max-w-[640px] flex-col items-center justify-center bg-background text-foreground antialiased md:mt-6`}
       >
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-4 focus:z-50 focus:rounded-md focus:bg-zinc-900 focus:px-3 focus:py-2 focus:text-sm focus:text-zinc-100 dark:focus:bg-zinc-100 dark:focus:text-zinc-900"
+        >
+          Skip to content
+        </a>
         <Providers>
           <Navbar />
-          <main className="w-full max-w-2xl space-y-20 px-4 pb-24">
+          <main
+            id="main-content"
+            tabIndex={-1}
+            className="w-full max-w-2xl space-y-20 px-4 pb-24 focus:outline-none"
+          >
             {children}
           </main>
           <Footer />

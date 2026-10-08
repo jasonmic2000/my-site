@@ -25,6 +25,32 @@ html {
   --foreground: var(--color-zinc-300);
 }
 
+/* Visible keyboard focus everywhere (mouse clicks don't trigger :focus-visible).
+   rose-600 / rose-400 keep >= 3:1 against the zinc page backgrounds. */
+@layer base {
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-rose-600 dark:outline-rose-400;
+  }
+}
+
+/* Shared reduced-motion rule: any animation or transition, existing or added
+   later, is effectively disabled for users who ask for less motion. Ambient
+   effects (e.g. background parallax) also need their own user toggle. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    /* biome-ignore lint/complexity/noImportantStyles: must override Tailwind utility classes */
+    animation-duration: 0.01ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: must override Tailwind utility classes */
+    animation-iteration-count: 1 !important;
+    /* biome-ignore lint/complexity/noImportantStyles: must override Tailwind utility classes */
+    transition-duration: 0.01ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: must override Tailwind utility classes */
+    scroll-behavior: auto !important;
+  }
+}
+
 .markdown-list {
   ul,
   ol {

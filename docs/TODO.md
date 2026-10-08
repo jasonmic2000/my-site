@@ -15,7 +15,7 @@ Re-verify with: `npm outdated`, `npm audit`, `npm run check`.
 1. **Content refresh** (home copy + work entries) — unblocks everything that shows real content. Needs owner input.
 2. **Logo** — feeds the favicon, Apple icon, OG images, manifest and navbar, so do it before those.
 3. **Navbar theme toggle** and **home Posts section** — small, self-contained.
-4. **Essentials** (404/error pages, skip link, focus styles, reduced motion, JSON-LD).
+4. **Essentials** — 404/error pages, skip link, focus styles and the shared reduced-motion rule are done; JSON-LD, `theme-color` and the audit remain.
 5. **Background texture** — after reduced-motion handling exists, since it depends on it.
 6. **Command palette (Ctrl/Cmd+K)** — after the theme toggle, motion toggle and Posts section, since its actions and results come from them.
 7. **Blog v2**, then the **first real post** last, so it can describe the site as it actually ended up.
@@ -65,9 +65,6 @@ All of these are in [BLOG-PLAN.md](BLOG-PLAN.md) (details and rationale there).
 
 ## Essentials (suggested)
 Things most polished personal sites have and this one currently lacks.
-- [ ] **Custom `not-found.tsx` and `error.tsx`** matching the site style (today `/404` is Next's default).
-- [ ] **Skip-to-content link** and visible **`:focus-visible` styles** (keyboard accessibility; the nav and toggle currently rely on browser defaults).
-- [ ] **Global `prefers-reduced-motion` handling.** Existing hover transitions are mild, but new animations (theme icon, background) need a single shared rule. Prerequisite for the background item.
 - [ ] **Structured data (JSON-LD)**: `Person` on the home page, `BlogPosting` on posts, per the Next JSON-LD guide (`node_modules/next/dist/docs/01-app/02-guides/json-ld.md`).
 - [ ] **`theme-color` per colour scheme** via the `viewport` export (browser UI colour follows light/dark).
 - [ ] **Accessibility/performance re-audit**: re-run Lighthouse (never re-run since the h1/contrast/metadata fixes) and add an automated check (e.g. axe via Playwright) to CI so regressions are caught. A small Playwright smoke test (routes load, feed valid, theme toggle works) is the natural first test suite.
