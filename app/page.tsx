@@ -47,9 +47,9 @@ const Home = async () => {
       </section>
       <section className="mx-auto font-serif">
         <p className="mb-4">
-          I’m a <em>software engineer</em>, <em>manager</em>, <em>mentor</em>,{" "}
-          <em>problem solver</em>, <em>lifelong student</em>, <em>gamer</em>,
-          and full-time <em>geek</em>.
+          I’m a <em>software engineer</em>, <em>problem solver</em>,{" "}
+          <em>lifelong tinkerer</em>, <em>gamer</em>, <em>music nerd</em>, and
+          full-time <em>geek</em>.
         </p>
         <p className="mb-4">
           My first brush with code was in the 7th grade, guiding a little
@@ -57,28 +57,37 @@ const Home = async () => {
           didn’t know it then, but that triangle sparked a curiosity that’s
           still going strong. Since then, I’ve explored everything from HTML and
           Java in school to PHP and C++ in college - eventually finding my way
-          back to the web, where I now build clean, accessible interfaces (and
-          occasionally break things just to learn how they work).
+          to the web, where I now build software and occasionally break things
+          just to learn how they work.
         </p>
         <p className="mb-4">
-          These days, I focus on thoughtful engineering - whether it’s crafting
-          intuitive, accessible UIs, improving performance, or running
-          self-hosted experiments on my home server. I’ve also found myself
-          mentoring more lately - not necessarily in a formal way, but by
-          helping teammates debug tricky problems, reviewing code, and
-          supporting where I can.
+          These days, I spend most of my working hours building software,
+          thinking about systems, and figuring out how to make things work a
+          little better. That curiosity doesn’t stop at software either. I’ve
+          always enjoyed taking things apart and tinkering with them, whether
+          that’s setting up something at home, building or modifying hardware,
+          or just getting distracted by something completely unrelated and
+          deciding I need to understand how it works.
         </p>
         <p className="mb-4">
-          Outside work, video games have been a constant in my life - not just
-          as a hobby, but as a space that’s shaped my curiosity, creativity, and
-          the way I think about systems. I also spend time on board games,
-          productivity experiments, and occasionally fall down rabbit holes
-          about hardware, workflows, or terminal customization.
+          Outside work, video games have been a constant in my life - and
+          probably will be for a long time. I’m a sucker for a good world, an
+          interesting story, and the kind of lore that makes you want to keep
+          digging. That applies to games, anime, manga, books, tabletop worlds,
+          and the occasional rabbit hole into cosmic horror. I tend to get
+          invested in things pretty easily, and there’s always some new world,
+          story, or idea I’m currently obsessing over.
+        </p>
+        <p className="mb-4">That’s more or less what this website is for.</p>
+        <p className="mb-4">
+          It’s my little corner of the internet - somewhere to keep the things
+          I’m building, learning, thinking about, or currently obsessed with.
+          Some of it will be technical. Some of it probably won’t be. There
+          might be a project here, a game-related rabbit hole there, or
+          something I decided was worth writing down at 2 a.m.
         </p>
         <p>
-          This site is my digital playground - a space to share what I’m working
-          on, learning, or obsessed with. Sometimes code, sometimes ideas.
-          Always me.
+          <strong>Sometimes code, sometimes ideas. Always me.</strong>
         </p>
       </section>
       {mostRecentWorkEntry && (

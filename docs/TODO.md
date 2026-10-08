@@ -32,7 +32,7 @@ Raised by the owner 2026-10-08: hover and "selected" are too subtle to tell what
 - **To resume:** pick a pairing, load it with `next/font` (bundled at build time, no external requests, ~20-40KB per family), apply it by role instead of one global serif, then review at the owner's real display in both themes and re-run the axe suite.
 
 ## Suggested order
-1. **Content refresh** (home bio; work entries are done) — unblocks everything that shows real content. Needs owner input.
+1. ~~**Content refresh**~~ — done (home bio and work entries).
 2. **Logo** — deferred by the owner (2026-10-08); do it later. It feeds the favicon, Apple icon, OG images, manifest and navbar, so do it before those.
 3. ~~**Navbar theme toggle** and **home Posts section**~~ — done.
 4. ~~**Essentials**~~ — done (404/error pages, skip link, focus styles, reduced motion, JSON-LD, theme-color, description, audit + automated checks).
@@ -42,7 +42,7 @@ Raised by the owner 2026-10-08: hover and "selected" are too subtle to tell what
 8. **Design polish** (parked section above: interaction states, typography, colour/type scale): last, deliberately, and as one pass. It may change how some earlier items look, which is fine.
 
 ## Content (owner-supplied)
-- [ ] **[needs input] Refresh the home page bio**  (`app/page.tsx`). It is over a year old and predates the job changes (the hero line is already updated: it derives "role at company" from the newest work entry). Needed: the new bio text, or key points to draft from.
+- [x] ~~Home bio refreshed~~ (2026-10-08). Flow edits suggested by the assistant are pending the owner's decision.
 - [x] ~~Work section refreshed~~ (2026-10-08): Deloitte USI, Jebi Softech and both Maxxton roles loaded; consecutive roles at one company are grouped under a single heading (`lib/work.ts`).
 - [ ] Replace the placeholder `content/blog/hello-world.mdx` with a real first post (see Blog below).
 
