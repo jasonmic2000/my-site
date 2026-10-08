@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DEFAULT_METADATA } from "@/lib/consts";
 import "@/styles/globals.css";
 import { Analytics } from "@vercel/analytics/next";
@@ -30,6 +30,15 @@ export const metadata: Metadata = {
     site: DEFAULT_METADATA.twitterHandle,
     creator: DEFAULT_METADATA.twitterHandle,
   },
+};
+
+// Browser UI colour (mobile address bar etc.) matches the page background.
+// This follows the OS colour scheme; it can't see the site's class-based toggle.
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f4f4f5" },
+    { media: "(prefers-color-scheme: dark)", color: "#18181b" },
+  ],
 };
 
 export default function RootLayout({

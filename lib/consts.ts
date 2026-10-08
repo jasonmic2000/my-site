@@ -5,7 +5,8 @@ export const HOVER_TRANSITION_CLASS =
 
 export const DEFAULT_METADATA = {
   title: "Jason Michael",
-  description: "Jason Michael's Website",
+  description:
+    "Personal site of Jason Michael: work experience, and writing on software and the web.",
   url: "https://dev.jasonjmichael.com",
   siteName: "Jason Michael",
   locale: "en_US",
