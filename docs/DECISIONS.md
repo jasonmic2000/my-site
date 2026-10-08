@@ -27,4 +27,5 @@ Decisions already made. Don't reverse without asking. Newest context first withi
 - Biome suppression comments must sit directly above the flagged JSX attribute, not the enclosing element, or they silently do nothing.
 - Biome's CSS parser needs `css.parser.tailwindDirectives: true` for `@apply`/`@theme`/`@custom-variant`.
 - `ImageResponse` RCE (GHSA-vcvr-r3jv-pc5j) affected Next 16.2.0–16.3.5, fixed in 16.3.6; now on ≥16.4.0.
+- Code-block light theme is `github-light-high-contrast`: the standard `github-light` colours are tuned for white and failed axe `color-contrast` on our zinc-200 block background (found by the Playwright/axe suite; Lighthouse did not flag it). Dark uses `github-dark`.
 - Next.js re-adds `allowJs: true` to `tsconfig.json` on build if it's removed, so leave it in (harmless).

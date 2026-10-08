@@ -20,7 +20,7 @@ export const mdxOptions: EvaluateOptions = {
       [
         rehypePrettyCode,
         {
-          theme: { light: "github-light", dark: "github-dark" },
+          theme: { light: "github-light-high-contrast", dark: "github-dark" },
           keepBackground: false,
         },
       ],
