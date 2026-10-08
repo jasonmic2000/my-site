@@ -79,13 +79,11 @@ const Home = async () => {
           some new world, story, or idea pulling me in.
         </p>
         <p className="mb-4">That’s more or less what this website is for.</p>
-        <p className="mb-4">
+        <p>
           It’s my little corner of the internet - somewhere to share what I’m
-          working on, learning, or obsessed with. There might be a project here,
-          a game-related rabbit hole there, or something I decided was worth
-          writing down at 2 a.m.
+          working on, learning, or obsessed with. Sometimes code, sometimes
+          ideas. Always me.
         </p>
-        <p>Sometimes code, sometimes ideas. Always me.</p>
       </section>
       {mostRecentWorkEntry && (
         <Work workEntries={[mostRecentWorkEntry]} showDetails={false} />
