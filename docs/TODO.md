@@ -13,15 +13,17 @@ Re-verify with: `npm outdated`, `npm audit`, `npm run check`.
 - Lighthouse (2026-10-08, production build, mobile emulation, local): performance 97–99, accessibility 100, SEO 100, CLS 0 on home, work, blog and a post. Best practices 92 *locally only*: `/_vercel/*` analytics scripts 404 off Vercel; re-check against the live site.
 - Playwright + axe suite (16 tests) passes locally and runs in CI.
 
-## IMMEDIATE PRIORITY: interactive states (navbar and links)
-Raised by the owner 2026-10-08: hover and "selected" are too subtle to tell what is active. (Typography and the colour/type scale were split out and parked, see below.)
+## PARKED: design polish - typography, colour/type scale, interaction states (revisit after ALL other work)
+Owner decision 2026-10-08: deliberately parked, together with the other design nitpicks, to avoid sinking time into them now. Do not start any of this until the rest of the roadmap is done; then take it slowly and do it as one pass so the pieces fit together.
+
+### A. Interaction states (navbar and links)
+Raised by the owner 2026-10-08: hover and "selected" are too subtle to tell what is active. Parked with the fonts because the hover/active language should be designed together with the type and colour scale.
 - **Current behaviour:** every link uses `HOVER_TRANSITION_CLASS`, which only fades the text from zinc-700/300 to black/white. The active nav link (`aria-current="page"`) gets the same black/white, so hover, active and normal are almost indistinguishable. The theme toggle and Connect icons behave the same way.
 - **Requirements:** state must not rely on colour alone (WCAG 1.4.1), so use a visible non-colour cue such as an underline; active, hover and keyboard focus must each look different and clear; one consistent interaction language across the navbar, logo, theme toggle, "See all work", Connect icons, footer and blog titles.
 - **Proposal to review:** active = accent underline (2px, offset) and stronger weight; hover = neutral underline plus full-contrast text; toggle/icons = subtle background pill on hover. Add an e2e assertion for the active state.
 - **Done when:** the owner signs off on screenshots in both themes (hover, active, focus), the axe checks stay green, and there is no layout shift when the active style applies.
 
-## PARKED: typography and the colour/type scale (revisit after ALL other work)
-Owner decision 2026-10-08: deliberately parked to avoid sinking time into fonts now. Do not start this until the rest of the roadmap is done; then take it slowly.
+### B. Typography and the colour/type scale
 - **Fringing is a system issue, not a site bug.** Owner's setup: Windows 11, 1440p IPS monitor, 100% scaling; all text shows some colour fringing there, but not on an iPad Pro or phone. That points to Windows ClearType on this panel (try "Adjust ClearType text" in Windows). The site can only influence it through font choice: bundled fonts render more consistently than OS fonts, and thin strokes, light weights, hairline serifs and small italics fringe most.
 - **Where serif is used today:** home hero role line (italic), the whole home bio, Work summaries and bullets, Connect copy, blog listing descriptions, post bodies, and the 404/error pages. Headings, labels, dates and nav are sans (Geist); code is Geist Mono. The serif came from the original homepage design and was later extended to the blog and error pages. `font-serif` is Tailwind's OS stack (Georgia on Windows).
 - **Style cues for a "personal digital corner":** at most two families plus a mono; mono as a personality accent for dates, tags and the Ctrl+K hint; keep serif only where long reading happens (blog, maybe the bio); avoid weights below 400, hairline display serifs and small italics. Geist has no true italic (the browser fakes it), so sans-only designs should drop the italic role line.
@@ -30,7 +32,6 @@ Owner decision 2026-10-08: deliberately parked to avoid sinking time into fonts 
 - **To resume:** pick a pairing, load it with `next/font` (bundled at build time, no external requests, ~20-40KB per family), apply it by role instead of one global serif, then review at the owner's real display in both themes and re-run the axe suite.
 
 ## Suggested order
-0. **Interactive states** (above): immediate priority, before everything else.
 1. **Content refresh** (home bio; work entries are done) — unblocks everything that shows real content. Needs owner input.
 2. **Logo** — feeds the favicon, Apple icon, OG images, manifest and navbar, so do it before those.
 3. **Navbar theme toggle** and **home Posts section** — small, self-contained.
@@ -38,10 +39,10 @@ Owner decision 2026-10-08: deliberately parked to avoid sinking time into fonts 
 5. **Background texture** — after reduced-motion handling exists, since it depends on it.
 6. **Command palette (Ctrl/Cmd+K)** — after the theme toggle, motion toggle and Posts section, since its actions and results come from them.
 7. **Blog v2**, then the **first real post** last, so it can describe the site as it actually ended up.
-8. **Typography and colour scale** (parked section above): last, deliberately, and slowly. It may change how some earlier items look, which is fine.
+8. **Design polish** (parked section above: interaction states, typography, colour/type scale): last, deliberately, and as one pass. It may change how some earlier items look, which is fine.
 
 ## Content (owner-supplied)
-- [ ] **[needs input] Refresh the home page bio** (after the interactive-states fix) (`app/page.tsx`). It is over a year old and predates the job changes (the hero line is already updated: it derives "role at company" from the newest work entry). Needed: the new bio text, or key points to draft from.
+- [ ] **[needs input] Refresh the home page bio**  (`app/page.tsx`). It is over a year old and predates the job changes (the hero line is already updated: it derives "role at company" from the newest work entry). Needed: the new bio text, or key points to draft from.
 - [x] ~~Work section refreshed~~ (2026-10-08): Deloitte USI, Jebi Softech and both Maxxton roles loaded; consecutive roles at one company are grouped under a single heading (`lib/work.ts`).
 - [ ] Replace the placeholder `content/blog/hello-world.mdx` with a real first post (see Blog below).
 

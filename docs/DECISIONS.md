@@ -3,7 +3,7 @@
 Decisions already made. Don't reverse without asking. Newest context first within each group.
 
 ## Kept on purpose
-- **Typography is parked until all other work is done** (owner, 2026-10-08). No font changes in the meantime. The fringing the owner sees is a Windows/ClearType display effect, not a site bug. Findings and the candidate comparison are in `docs/TODO.md` (Parked) and `docs/design/font-pairings.html`.
+- **Design polish is parked until all other work is done** (owner, 2026-10-08): typography, the colour/type scale and navbar/link interaction states, to be done together as one pass. No font or hover-style changes in the meantime. The fringing the owner sees is a Windows/ClearType display effect, not a site bug. Findings and the candidate comparison are in `docs/TODO.md` (Parked) and `docs/design/font-pairings.html`.
 - **`components/AnimatedArrow.tsx` stays**, though unused (user decision 2026-08-30). Its `<svg>` has a `biome-ignore` for `noSvgWithoutTitle`; the real fix is `aria-hidden="true"` when it's wired in.
 - **`productionBrowserSourceMaps: true`** (user decision 2026-08-23): personal site, visible source is fine.
 - **TypeScript stays on 5.x until 7.1** (user decision 2026-10-07). TS 7.0 (GA 2026-07-08) trialled clean here: `tsc` 0 errors, build type-check ~1.8s -> ~0.4s, lint fine. Waiting because 7.0 has no stable programmatic API (due in 7.1) and the `next` tsconfig editor plugin may not load on the native compiler. Dependabot ignores TS majors.
