@@ -54,36 +54,40 @@ const Home = async () => {
         <p className="mb-4">
           My first brush with code was in the 7th grade, guiding a little
           triangle called the “Turtle” across the screen with BASIC and Logo. I
-          didn’t know it then, but that triangle sparked a curiosity that’s
+          didn’t know it then, but that triangle sparked an interest that’s
           still going strong. Since then, I’ve explored everything from HTML and
           Java in school to PHP and C++ in college - eventually finding my way
           to the web, where I’ve been building ever since.
         </p>
         <p className="mb-4">
-          These days, I focus on thoughtful engineering - whether that’s
-          crafting intuitive, accessible UIs, improving performance, figuring
-          out how to make things work a little better, or occasionally breaking
-          things just to learn how they work. That curiosity doesn’t stop at
-          software either. I’ve always enjoyed taking things apart and
-          tinkering, from self-hosted experiments, building or modifying
-          hardware, to just getting distracted by something completely unrelated
-          and needing to understand how it works.
+          These days, I focus on thoughtful engineering - crafting intuitive,
+          accessible UIs, improving performance, figuring out how to make things
+          work a little better, and occasionally breaking things just to learn
+          how they work. That instinct doesn’t stop at software either. I’ve
+          always enjoyed taking things apart and tinkering, from self-hosted
+          experiments and hardware projects to getting distracted by something
+          completely unrelated and needing to understand how it works.
         </p>
         <p className="mb-4">
           Outside work, video games have been a constant in my life - not just
-          as a hobby, but as a space that’s shaped my curiosity, creativity, and
-          how I think about systems. I’m a sucker for a good world, an
-          interesting story, and the kind of lore that makes you want to keep
-          digging, whether that’s in games, anime, movies, books, or at a
-          tabletop. I tend to get invested in things pretty easily, and there’s
+          as a hobby, but as something that’s shaped my creativity and how I
+          think about systems. I’m a sucker for a good world, an interesting
+          story, and the kind of lore that makes you want to keep digging,
+          whether that’s in games, anime, movies, books, or at a tabletop. I’m
+          especially fond of things that lean into the strange and unknown, and
+          have a particular soft spot for cosmic horror and sprawling fictional
+          universes. I tend to get invested in things pretty easily, and there’s
           always some new world, story, or idea pulling me in.
         </p>
         <p className="mb-4">That’s more or less what this website is for.</p>
-        <p>
-          It’s my little corner of the internet - a space to share what I’m
-          working on, learning, or obsessed with. Sometimes code, sometimes
-          ideas. Always me.
+        <p className="mb-4">
+          It’s my little corner of the internet - somewhere to share what I’m
+          working on, learning, or obsessed with. Some of it will be technical.
+          Some of it probably won’t be. There might be a project here, a
+          game-related rabbit hole there, or something I decided was worth
+          writing down at 2 a.m.
         </p>
+        <p>Sometimes code, sometimes ideas. Always me.</p>
       </section>
       {mostRecentWorkEntry && (
         <Work workEntries={[mostRecentWorkEntry]} showDetails={false} />
