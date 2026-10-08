@@ -41,3 +41,7 @@ yarn-error.log*
 next-env.d.ts
 # next-agents-md
 .next-docs/
+
+# playwright
+/test-results/
+/playwright-report/

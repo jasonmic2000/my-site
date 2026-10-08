@@ -21,5 +21,8 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
+      # Accessibility (axe), headers, feeds and key interactions against the production build.
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
       # Fail on high/critical advisories; moderates are reviewed manually via Dependabot.
       - run: npm audit --audit-level=high

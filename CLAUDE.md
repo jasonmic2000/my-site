@@ -11,7 +11,9 @@ Personal portfolio (dev.jasonjmichael.com). Next.js 16 App Router, React 19, Typ
 - `npm run check` — lint + typecheck + build (same as CI)
 - `npm run build` — must pass before finishing any change; all routes must stay statically prerendered
 
-Verify with lint + typecheck + build. No test suite yet.
+- `npm run test:e2e` — Playwright + axe against the production build (run `npm run build` first; locally uses installed Edge, CI installs Chromium)
+
+Verify with lint + typecheck + build, plus `test:e2e` for UI changes (it is part of CI).
 
 ## Conventions
 - Imports use the `@/*` alias (repo root). Named exports for components (`export const Foo`); default exports only where Next requires (pages, layouts, route files).

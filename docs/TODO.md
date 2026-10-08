@@ -10,12 +10,14 @@ Re-verify with: `npm outdated`, `npm audit`, `npm run check`.
 - `npm audit`: 0 vulnerabilities. Dependabot runs weekly.
 - Next 16.4.0, React 19.3, Biome 2.5.15, Node 24 (Vercel project setting must also be 24.x).
 - Deployed on Vercel; security headers, `/blog`, `/feed.xml` and `@vercel/analytics` verified live.
+- Lighthouse (2026-10-08, production build, mobile emulation, local): performance 97–99, accessibility 100, SEO 100, CLS 0 on home, work, blog and a post. Best practices 92 *locally only*: `/_vercel/*` analytics scripts 404 off Vercel; re-check against the live site.
+- Playwright + axe suite (16 tests) passes locally and runs in CI.
 
 ## Suggested order
 1. **Content refresh** (home copy + work entries) — unblocks everything that shows real content. Needs owner input.
 2. **Logo** — feeds the favicon, Apple icon, OG images, manifest and navbar, so do it before those.
 3. **Navbar theme toggle** and **home Posts section** — small, self-contained.
-4. **Essentials** — 404/error pages, skip link, focus styles and the shared reduced-motion rule are done; JSON-LD, `theme-color` and the audit remain.
+4. ~~**Essentials**~~ — done (404/error pages, skip link, focus styles, reduced motion, JSON-LD, theme-color, description, audit + automated checks).
 5. **Background texture** — after reduced-motion handling exists, since it depends on it.
 6. **Command palette (Ctrl/Cmd+K)** — after the theme toggle, motion toggle and Posts section, since its actions and results come from them.
 7. **Blog v2**, then the **first real post** last, so it can describe the site as it actually ended up.
@@ -62,10 +64,6 @@ All of these are in [BLOG-PLAN.md](BLOG-PLAN.md) (details and rationale there).
 - [ ] Code block niceties: copy button, optional filename/title, line highlighting (supported by `rehype-pretty-code`)
 - [ ] Full-content feeds (currently excerpt + link)
 - [ ] **First real post**: a detailed write-up of this site's tech stack and design decisions, including *why* each choice was made. Source material already exists in `docs/DECISIONS.md` and `docs/ARCHITECTURE.md` (Biome vs ESLint, static-only/no Cache Components, MDX pipeline choice, no CSP trade-off, Node/TypeScript pinning, accessibility fixes, the scrollbar-gutter layout-shift bug, etc.). Write it last so it reflects the finished site. Good candidates for live `<Callout>`/demo components.
-
-## Essentials (suggested)
-Things most polished personal sites have and this one currently lacks.
-- [ ] **Accessibility/performance re-audit**: re-run Lighthouse (never re-run since the h1/contrast/metadata fixes) and add an automated check (e.g. axe via Playwright) to CI so regressions are caught. A small Playwright smoke test (routes load, feed valid, theme toggle works) is the natural first test suite.
 
 ## Nice-to-haves (suggested)
 Optional polish; none are required.

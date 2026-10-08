@@ -46,6 +46,12 @@ rehype-slug → autolink-headings, rehype-pretty-code/shiki dual theme; imports 
 Embeddable components and link handling live in `components/mdx-components.tsx` (`Callout`, `a` → `next/link`/external-safe).
 Body styles are the `.post` block in `styles/globals.css`. Feeds carry excerpt + link. `@vercel/analytics` is in the root layout.
 
+## Testing
+`e2e/site.spec.ts` (Playwright + `@axe-core/playwright`, config in `playwright.config.ts`) runs against the production build
+(`next start`, port 3100): axe WCAG 2.0/2.1/2.2 A+AA on every route, a blog post and the 404, in light *and* dark; exactly one `<h1>` per
+page; skip link, theme toggle and `aria-current`; security headers; feeds/sitemap/robots; JSON-LD. Post tests find the first post
+from `/blog`, so they don't depend on a slug. CI runs it after the build. No unit tests yet.
+
 ## State
 Only theme (`next-themes`, read via `useTheme()` in `Navbar`). No context, store or forms.
 
