@@ -70,21 +70,19 @@ const Home = async () => {
         </p>
         <p className="mb-4">
           Outside work, video games have been a constant in my life - not just
-          as a hobby, but as something that’s shaped my creativity and how I
-          think about systems. I’m a sucker for a good world, an interesting
-          story, and the kind of lore that makes you want to keep digging,
-          whether that’s in games, anime, movies, books, or at a tabletop. I’m
-          especially fond of things that lean into the strange and unknown, and
-          have a particular soft spot for cosmic horror and sprawling fictional
-          universes. I tend to get invested in things pretty easily, and there’s
-          always some new world, story, or idea pulling me in.
+          as a hobby, but as something that’s shaped my curiosity, creativity,
+          and how I think about systems. I’m a sucker for a good world, an
+          interesting story, and the kind of lore that makes you want to keep
+          digging, whether that’s in games, anime, movies, books, or at a
+          tabletop. I have a soft spot for the strange and unknown, cosmic
+          horror especially, and I get invested pretty easily, so there’s always
+          some new world, story, or idea pulling me in.
         </p>
         <p className="mb-4">That’s more or less what this website is for.</p>
         <p className="mb-4">
           It’s my little corner of the internet - somewhere to share what I’m
-          working on, learning, or obsessed with. Some of it will be technical.
-          Some of it probably won’t be. There might be a project here, a
-          game-related rabbit hole there, or something I decided was worth
+          working on, learning, or obsessed with. There might be a project here,
+          a game-related rabbit hole there, or something I decided was worth
           writing down at 2 a.m.
         </p>
         <p>Sometimes code, sometimes ideas. Always me.</p>
