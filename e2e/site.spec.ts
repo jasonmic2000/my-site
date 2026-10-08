@@ -135,6 +135,23 @@ test("roles at the same company are grouped under one company heading", async ({
   await expect(page.locator("h1 + p")).toContainText(" at ");
 });
 
+test("the home page lists the newest posts and links to all posts", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const section = page.locator("section", {
+    has: page.getByRole("heading", { name: "Posts", level: 2 }),
+  });
+  await expect(
+    section.getByRole("link", { name: "See all posts" }),
+  ).toHaveAttribute("href", "/blog");
+  const postLinks = section.locator('a[href^="/blog/"]');
+  expect(await postLinks.count()).toBeGreaterThan(0);
+  expect(await postLinks.count()).toBeLessThanOrEqual(2);
+  // Same format as /blog: title, date and description.
+  await expect(section.locator("time").first()).toBeVisible();
+});
+
 test("the active nav link is marked with aria-current", async ({ page }) => {
   await page.goto("/work");
   await expect(

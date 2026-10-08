@@ -18,7 +18,7 @@ Why things are the way they are: [DECISIONS.md](DECISIONS.md).
 ## Routing (`app/`)
 Flat, one folder per route; no dynamic routes, API routes, middleware/proxy or route groups yet.
 - `layout.tsx` — root layout: fonts, global metadata (title template, OG/Twitter from `lib/consts.ts`), `Providers` (theme), `Navbar`/`Footer`, `max-w-[640px]` shell
-- `page.tsx` (`/`) — bio + most recent work entry + `Connect`
+- `page.tsx` (`/`) — bio + most recent work entry + `Posts` (the 2 newest, `HOME_POST_COUNT`; hidden when there are none) + `Connect`
 - `work/page.tsx` (`/work`) — full history via `getAllWorkEntries()`
 - `blog/page.tsx` (`/blog`) — post listing; `blog/[slug]/page.tsx` — statically generated posts (`dynamicParams = false`)
 - `feed.xml`, `atom.xml`, `feed.json` — static Route Handlers (`force-static`) built from `lib/feed.ts`
@@ -28,6 +28,7 @@ Flat, one folder per route; no dynamic routes, API routes, middleware/proxy or r
 - Metadata file conventions: `opengraph-image.tsx`, `apple-icon.tsx` (both `ImageResponse`), `manifest.ts`, `robots.ts`, `sitemap.ts` (site URL from `DEFAULT_METADATA`)
 
 ## Components (`components/`)
+`PostList` (title, date, description) is shared by `/blog` and the home `Posts` section.
 Flat: `Navbar` (server) composed of `NavLink` (client, `aria-current` via `usePathname`) and `ThemeToggle` (client; moon/sun both rendered and swapped with CSS `dark:` variants so there is no hydration mismatch, the accessible name describes the action and flips the same way, and the turn/scale transition inherits the global reduced-motion rule); `Footer`, `Work`, `Connect`, `AnimatedArrow` (unused, intentional).
 
 ## Content layer

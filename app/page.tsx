@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Connect } from "@/components/Connect";
 import { JsonLd } from "@/components/JsonLd";
+import { Posts } from "@/components/Posts";
 import { Work } from "@/components/Work";
+import { getAllPosts } from "@/lib/blog";
+import { HOME_POST_COUNT } from "@/lib/consts";
 import { getAllWorkEntries } from "@/lib/content";
 import { homeJsonLd } from "@/lib/jsonld";
 import { FEED_TYPES } from "@/lib/metadata";
@@ -14,6 +17,7 @@ export const metadata: Metadata = {
 const Home = async () => {
   const workEntries = await getAllWorkEntries();
   const mostRecentWorkEntry = workEntries[0];
+  const recentPosts = getAllPosts().slice(0, HOME_POST_COUNT);
 
   return (
     <>
@@ -80,6 +84,7 @@ const Home = async () => {
       {mostRecentWorkEntry && (
         <Work workEntries={[mostRecentWorkEntry]} showDetails={false} />
       )}
+      <Posts posts={recentPosts} />
       <Connect />
     </>
   );

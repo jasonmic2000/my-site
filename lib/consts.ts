@@ -1,5 +1,8 @@
 import { FaGithub, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
 
+/** How many of the newest posts the home page shows. */
+export const HOME_POST_COUNT = 2;
+
 export const HOVER_TRANSITION_CLASS =
   "transition duration-300 ease-in-out hover:text-black dark:hover:text-white";
 
