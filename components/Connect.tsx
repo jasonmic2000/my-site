@@ -14,8 +14,8 @@ export const Connect = () => {
       </h2>
       <article>
         <p className="font-serif">
-          If you want to get in touch with me about something or just to say hi,
-          reach out on social media or send me an email.
+          If something on this site caught your attention, or you just want to
+          say hi, feel free to reach out on social media or send me an email.
         </p>
       </article>
       <ul className="mt-8 mb-2 flex flex-wrap">
