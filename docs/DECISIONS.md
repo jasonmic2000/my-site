@@ -15,6 +15,7 @@ Decisions already made. Don't reverse without asking. Newest context first withi
 - **Readability and accessibility come first.** Decorative effects (background texture, parallax, icon animations) must never reduce text contrast below WCAG AA, interfere with keyboard/screen-reader use, or hurt performance.
 - **Motion must be opt-out-able.** Every animation respects `prefers-reduced-motion`, and any ambient/scroll-linked motion (e.g. background parallax) additionally gets a visible user toggle, persisted and applied before paint. Avoid anything that could trigger vestibular discomfort: small, slow, scroll-linked, transform-only; no autoplay or looping movement.
 - **One accent colour, defined once (`--accent` in `styles/globals.css`, 2026-10-08).** Light `#eb506d` (3.24:1 on the light page), dark `#fb7185` (rose-400, 6.58:1). It is rose-400's hue and intensity, only darker in light mode, because rose-500 was too saturated/pink and rose-400 (2.45:1) fails the 3:1 minimum for large text and UI on light. Use the `text-accent` / `border-accent` / `outline-accent` utilities, never hard-coded rose classes. **Large text, outlines and borders only**: small text needs 4.5:1, so a small accent-coloured link on light would need a darker step (rose-600/700). We stay in the rose family (not true red) because it matches the playful tone and red reads as "error"; the OG image and Apple icon use the dark accent literally since they are dark-background images.
+- **Copy style: plain hyphens only** (owner, 2026-10-08). No en or em dashes in site copy, titles, metadata, feeds or posts (use " - " and "7-8"). Blog smart punctuation keeps quotes and ellipses but `dashes: false`.
 - **Stay fully static.** New features should not force dynamic rendering (see the CSP decision) unless there is a strong reason.
 
 ## Removed / not adopted
@@ -28,4 +29,8 @@ Decisions already made. Don't reverse without asking. Newest context first withi
 - Biome's CSS parser needs `css.parser.tailwindDirectives: true` for `@apply`/`@theme`/`@custom-variant`.
 - `ImageResponse` RCE (GHSA-vcvr-r3jv-pc5j) affected Next 16.2.0–16.3.5, fixed in 16.3.6; now on ≥16.4.0.
 - Code-block light theme is `github-light-high-contrast`: the standard `github-light` colours are tuned for white and failed axe `color-contrast` on our zinc-200 block background (found by the Playwright/axe suite; Lighthouse did not flag it). Dark uses `github-dark`.
+- Python (and some other scripts) on Windows write `
+` as CRLF in text mode; Biome's formatter rejects CRLF. When scripting edits use `newline="
+"`, or run `npx biome format --write` on the file.
+- Never run `biome check --write --unsafe` on a tree that has parse errors: it treats imports as unused and renames them (`<Footer />` became `<_Footer />`). Fix the syntax first; restore with `git checkout <file>` if it happens.
 - Next.js re-adds `allowJs: true` to `tsconfig.json` on build if it's removed, so leave it in (harmless).
