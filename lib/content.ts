@@ -66,13 +66,21 @@ export function requireIsoDate(entry: RawEntry, key: string): string {
 
 export interface WorkEntry {
   company: string;
+  /** Shorter company name for tight spots (e.g. the hero line). Defaults to `company`. */
+  shortCompany?: string;
   role: string;
+  /** Employer-internal job title, shown as a note when it differs from `role`. */
+  internalTitle?: string;
   /** ISO month, e.g. "2022-03". */
   startDate: string;
   /** ISO month; absent for the current role. */
   endDate?: string;
   initialDetails: string;
   detailsHtml: string;
+}
+
+function optionalString(entry: RawEntry, key: string): string | undefined {
+  return entry.data[key] === undefined ? undefined : requireString(entry, key);
 }
 
 async function toHtml(markdown: string): Promise<string> {
@@ -85,7 +93,9 @@ export async function getAllWorkEntries(): Promise<WorkEntry[]> {
       const endDate = raw.data.endDate;
       return {
         company: requireString(raw, "company"),
+        shortCompany: optionalString(raw, "shortCompany"),
         role: requireString(raw, "role"),
+        internalTitle: optionalString(raw, "internalTitle"),
         startDate: requireMonth(raw, "startDate"),
         endDate:
           endDate === undefined ? undefined : requireMonth(raw, "endDate"),

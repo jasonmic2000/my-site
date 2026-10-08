@@ -27,7 +27,7 @@ const Home = async () => {
           </h1>
           <p className="m-0 font-serif italic">
             {mostRecentWorkEntry &&
-              `${mostRecentWorkEntry.role} at ${mostRecentWorkEntry.company}`}
+              `${mostRecentWorkEntry.role} at ${mostRecentWorkEntry.shortCompany ?? mostRecentWorkEntry.company}`}
           </p>
         </div>
         <div>

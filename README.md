@@ -43,16 +43,19 @@ Work history entries live in `content/work/*.mdx`, one file per role, with front
 ```md
 ---
 company: "Company Name"
+shortCompany: "Company" # optional: shorter name for the home page hero line
 role: "Job Title"
-startDate: "Month Year"
-endDate: "Month Year"
-initialDetails: "One-line summary shown on the homepage."
+internalTitle: "Title used internally" # optional: shown as a note
+startDate: "2024-03" # ISO year-month
+endDate: "2025-11" # ISO year-month; omit for the current role
+initialDetails: "Short summary shown on the homepage and /work."
 ---
 
 - Bullet points with more detail, shown on the /work page.
 ```
 
-Entries are sorted by `startDate` automatically — no other registration needed.
+Entries are sorted by `startDate` automatically — no other registration needed. Consecutive roles at the same
+company are grouped under one company heading. Frontmatter is validated at build time.
 
 ## License
 

@@ -79,6 +79,21 @@ test("theme toggle switches between light and dark", async ({ page }) => {
   await expect(html).not.toHaveClass(/dark/);
 });
 
+test("roles at the same company are grouped under one company heading", async ({
+  page,
+}) => {
+  await page.goto("/work");
+  // Each company name appears once as a heading, even with several roles there.
+  const companies = await page
+    .locator("main > section > ul > li > p.font-semibold")
+    .allTextContents();
+  expect(new Set(companies).size).toBe(companies.length);
+  expect(companies).toContain("Maxxton");
+  // The home hero line is derived from the newest role.
+  await page.goto("/");
+  await expect(page.locator("h1 + p")).toContainText(" at ");
+});
+
 test("the active nav link is marked with aria-current", async ({ page }) => {
   await page.goto("/work");
   await expect(

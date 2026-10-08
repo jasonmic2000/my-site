@@ -23,8 +23,8 @@ Re-verify with: `npm outdated`, `npm audit`, `npm run check`.
 7. **Blog v2**, then the **first real post** last, so it can describe the site as it actually ended up.
 
 ## Content (owner-supplied)
-- [ ] **[needs input] Refresh the home page copy** (`app/page.tsx`). The bio is over a year old and predates two job changes. Needed: the new bio text (or key points to rework), current title/employer for the hero line (the hero already derives "role at company" from the latest work entry, so that part follows the work data).
-- [ ] **[needs input] Work section: add two new entries and update the existing Maxxton entries.** Per entry, `content/work/<slug>.mdx` needs `company`, `role`, `startDate` (ISO `YYYY-MM`), `endDate` (ISO `YYYY-MM`, omit for the current role), `initialDetails` (optional blurb) and bullet points. Also confirm the end date of the current Maxxton entry (it is currently `Current`/no end date) and whether Maxxton should stay as two entries. Frontmatter is validated at build time, so mistakes fail the build with the file name. Note the home page shows only the most recent entry.
+- [ ] **[needs input] Refresh the home page bio** (`app/page.tsx`). It is over a year old and predates the job changes (the hero line is already updated: it derives "role at company" from the newest work entry). Needed: the new bio text, or key points to draft from.
+- [x] ~~Work section refreshed~~ (2026-10-08): Deloitte USI, Jebi Softech and both Maxxton roles loaded; consecutive roles at one company are grouped under a single heading (`lib/work.ts`).
 - [ ] Replace the placeholder `content/blog/hello-world.mdx` with a real first post (see Blog below).
 
 ## Features

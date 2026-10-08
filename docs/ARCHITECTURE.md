@@ -32,8 +32,9 @@ Flat: `Navbar` (server) composed of `NavLink` (client, `aria-current` via `usePa
 
 ## Content layer
 `content/work/*.mdx` (frontmatter: `company`, `role`, `startDate` and optional `endDate` as ISO `YYYY-MM`,
-`initialDetails`) → `lib/content.ts#getAllWorkEntries()`: `fs` read → `vfile-matter` (frontmatter) → validated (throws at build
+`initialDetails`, optional `shortCompany` and `internalTitle`) → `lib/content.ts#getAllWorkEntries()`: `fs` read → `vfile-matter` (frontmatter) → validated (throws at build
 on bad frontmatter) → `remark().use(html)` → sort by `startDate` desc. Omit `endDate` for the current role.
+`lib/work.ts#groupWorkEntries` groups *consecutive* entries at the same company so `Work` shows the company once with its span and each role beneath (a single role keeps the compact layout; the home page shows only the newest entry).
 `lib/dates.ts#formatMonth` renders ISO months for display.
 Build/server-side only, called from async Server Components. No client fetching, no external services.
 `@next/mdx` is deliberately not used; the blog will use `next-mdx-remote-client` (see BLOG-PLAN.md).
