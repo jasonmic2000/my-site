@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Font pairings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,800;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Geist:wght@400;500;600;800&family=Geist+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#f4f4f5; --fg:#3f3f46; --head:#000; --muted:#52525b; --accent:#eb506d; --line:#d4d4d8; --code:#e4e4e7; }
+  body.dark { --bg:#18181b; --fg:#d4d4d8; --head:#fff; --muted:#a1a1aa; --accent:#fb7185; --line:#3f3f46; --code:#27272a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font-family: Geist, system-ui, sans-serif; }
+  .bar { position: sticky; top: 0; z-index: 5; display: flex; gap: 12px; align-items: center; padding: 10px 24px; background: var(--bg); border-bottom: 1px solid var(--line); font: 500 13px Geist, sans-serif; }
+  .bar button { font: inherit; padding: 5px 12px; border-radius: 6px; border: 1px solid var(--line); background: transparent; color: var(--fg); cursor: pointer; }
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 8px 24px 80px; display: grid; grid-template-columns: repeat(auto-fit, minmax(560px, 1fr)); gap: 0 40px; }
+  section.opt { padding: 28px 0 36px; border-bottom: 1px solid var(--line); }
+  .tag { font: 600 12px Geist, sans-serif; color: var(--accent); letter-spacing: .04em; text-transform: uppercase; }
+  .desc { font: 400 13px/1.5 Geist, sans-serif; color: var(--muted); margin: 4px 0 18px; max-width: 560px; }
+  .page { max-width: 560px; }
+  .nav { display: flex; justify-content: space-between; margin-bottom: 26px; font-size: 15px; }
+  .nav span { margin-left: 16px; }
+  .name { font-size: 2rem; font-weight: 800; line-height: 1.15; margin: 0; color: var(--fg); }
+  .name b { color: var(--accent); font-weight: inherit; }
+  .role { margin: 2px 0 20px; font-style: italic; }
+  .prose { font-size: 16px; line-height: 1.65; margin: 0 0 14px; }
+  .h2 { font-weight: 600; color: var(--head); margin: 26px 0 10px; font-size: 1rem; }
+  .co { font-weight: 600; margin: 0; }
+  .sub { font-size: 14px; color: var(--muted); margin: 0; }
+  ul { margin: 10px 0 0; padding-left: 1rem; list-style: disc; }
+  li { margin-bottom: 2px; }
+  .post-title { font-size: 1.6rem; font-weight: 800; line-height: 1.2; color: var(--head); margin: 22px 0 4px; }
+  code { font-size: .875em; background: var(--code); padding: 1px 6px; border-radius: 4px; }
+  pre { background: var(--code); padding: 12px 14px; border-radius: 8px; font-size: 13.5px; line-height: 1.6; overflow: auto; margin: 10px 0 0; }
+  pre code { background: none; padding: 0; }
+  kbd { font-size: 12px; border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; }
+
+  /* 1 baseline */
+  .o1 { --ui: Geist, sans-serif; --prose: ui-serif, Georgia, Cambria, "Times New Roman", serif; --meta: Geist, sans-serif; --display: Geist, sans-serif; --mono: "Geist Mono", monospace; }
+  /* 2 all geist */
+  .o2 { --ui: Geist, sans-serif; --prose: Geist, sans-serif; --meta: "Geist Mono", monospace; --display: Geist, sans-serif; --mono: "Geist Mono", monospace; }
+  /* 3 geist + newsreader */
+  .o3 { --ui: Geist, sans-serif; --prose: Newsreader, Georgia, serif; --meta: "Geist Mono", monospace; --display: Geist, sans-serif; --mono: "Geist Mono", monospace; }
+  /* 4 geist + source serif */
+  .o4 { --ui: Geist, sans-serif; --prose: "Source Serif 4", Georgia, serif; --meta: "Geist Mono", monospace; --display: Geist, sans-serif; --mono: "Geist Mono", monospace; }
+  /* 5 atkinson */
+  .o5 { --ui: "Atkinson Hyperlegible Next", sans-serif; --prose: "Atkinson Hyperlegible Next", sans-serif; --meta: "JetBrains Mono", monospace; --display: "Atkinson Hyperlegible Next", sans-serif; --mono: "JetBrains Mono", monospace; }
+  /* 6 bricolage */
+  .o6 { --ui: Geist, sans-serif; --prose: Geist, sans-serif; --meta: "Geist Mono", monospace; --display: "Bricolage Grotesque", sans-serif; --mono: "Geist Mono", monospace; }
+  /* 7 fraunces */
+  .o7 { --ui: Geist, sans-serif; --prose: Geist, sans-serif; --meta: "Geist Mono", monospace; --display: Fraunces, Georgia, serif; --mono: "Geist Mono", monospace; }
+
+  .opt .nav, .opt .co, .opt .h2 { font-family: var(--ui); }
+  .opt .name, .opt .post-title { font-family: var(--display); }
+  .opt .role, .opt .prose, .opt li { font-family: var(--prose); }
+  .opt .sub, .opt .date { font-family: var(--meta); }
+  .opt code, .opt pre, .opt kbd { font-family: var(--mono); }
+  .o3 .prose, .o3 li, .o3 .role { font-size: 17.5px; }
+  .o4 .prose, .o4 li, .o4 .role { font-size: 17px; }
+  .o6 .name, .o6 .post-title { font-weight: 800; letter-spacing: -.01em; }
+  .o7 .name, .o7 .post-title { font-weight: 700; }
+  .o2 .sub, .o3 .sub, .o4 .sub, .o5 .sub, .o6 .sub, .o7 .sub, .opt .date { font-size: 12.5px; }
+  .date { font-size: 13px; color: var(--muted); margin: 0 0 12px; }
+</style>
+</head>
+<body>
+<div class="bar"><b>Font pairings</b> <span>Look at the body text, the dates and the name. Open this on your own monitor.</span> <button id="t">Toggle light / dark</button></div>
+<div class="wrap">
+
+<section class="opt o1"><div class="tag">1 - Today (baseline)</div><p class="desc">Geist for UI and headings, your operating system's serif (Georgia on Windows) for reading text.</p>
+<div class="page" id="p1"></div></section>
+
+<section class="opt o2"><div class="tag">2 - One family</div><p class="desc">Geist everywhere, Geist Mono for dates and meta. Cohesive and technical; least personality, least risk.</p>
+<div class="page" id="p2"></div></section>
+
+<section class="opt o3"><div class="tag">3 - Geist + Newsreader (recommended)</div><p class="desc">Sans for UI, work and headings; a warm bundled serif (Newsreader) reserved for the bio and blog posts. Mono for meta.</p>
+<div class="page" id="p3"></div></section>
+
+<section class="opt o4"><div class="tag">4 - Geist + Source Serif 4</div><p class="desc">Same idea, sturdier serif designed for screens. Slightly more neutral than Newsreader.</p>
+<div class="page" id="p4"></div></section>
+
+<section class="opt o5"><div class="tag">5 - Atkinson Hyperlegible + JetBrains Mono</div><p class="desc">Built for legibility (fits your accessibility principle): distinct letterforms, sturdy strokes. Friendlier and a bit quirky.</p>
+<div class="page" id="p5"></div></section>
+
+<section class="opt o6"><div class="tag">6 - Bricolage Grotesque headings</div><p class="desc">A characterful grotesque for the name and post titles only; Geist for everything you read.</p>
+<div class="page" id="p6"></div></section>
+
+<section class="opt o7"><div class="tag">7 - Fraunces headings</div><p class="desc">A soft, slightly wonky serif for the name and post titles; the most playful, heaviest personality.</p>
+<div class="page" id="p7"></div></section>
+</div>
+
+<script>
+  const tpl = `
+  <div class="nav"><span style="margin:0">¯\\_(ツ)_/¯</span><div><span>blog</span><span>work</span> <kbd>Ctrl K</kbd></div></div>
+  <h1 class="name">Jason <b>Michael</b></h1>
+  <p class="role">Consultant, Software Engineer - React &amp; Next.js at Deloitte</p>
+  <p class="prose">I'm a software engineer, manager, mentor, problem solver, lifelong student, gamer, and full-time geek. My first brush with code was in the 7th grade, guiding a little triangle called the "Turtle" across the screen with BASIC and Logo.</p>
+  <div class="h2">Work</div>
+  <p class="co">Deloitte USI</p>
+  <p class="sub">Consultant, Software Engineer - React &amp; Next.js</p>
+  <p class="sub">August 2026 - Current</p>
+  <ul><li>Building AI-powered conversational workflows using agents and MCPs.</li><li>Developing across the full stack with React, Node.js, TypeScript, and Python.</li></ul>
+  <div class="post-title">Hello, world</div>
+  <p class="date">October 7, 2026</p>
+  <p class="prose">A placeholder post that exercises the blog pipeline: <code>code</code>, tables, and a live component.</p>
+  <pre><code>export const greet = (name: string) =&gt; \`Hello, \${name}!\`;</code></pre>`;
+  for (let i = 1; i <= 7; i++) document.getElementById('p' + i).innerHTML = tpl;
+  document.getElementById('t').onclick = () => document.body.classList.toggle('dark');
+  if (location.hash === '#dark') document.body.classList.add('dark');
+</script>
+</body>
+</html>

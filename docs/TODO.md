@@ -13,29 +13,24 @@ Re-verify with: `npm outdated`, `npm audit`, `npm run check`.
 - Lighthouse (2026-10-08, production build, mobile emulation, local): performance 97–99, accessibility 100, SEO 100, CLS 0 on home, work, blog and a post. Best practices 92 *locally only*: `/_vercel/*` analytics scripts 404 off Vercel; re-check against the live site.
 - Playwright + axe suite (16 tests) passes locally and runs in CI.
 
-## IMMEDIATE PRIORITY: UI polish pass (do this before the home bio and everything else)
-Raised by the owner 2026-10-08. Typography, colour and interactive states feel off and unclear. Not fixed yet; this is the next piece of work. Review with screenshots at 100%, 125% and 150% display scaling, light and dark, before deciding.
-
-### 1. Typography: serif overuse and text fringing
-- **Where serif is used today:** home hero role line (italic), the whole home bio, Work summaries and bullets, Connect copy, blog listing descriptions, blog post bodies, and the 404/error pages. Headings, labels, dates and nav are sans (Geist); code is Geist Mono.
-- **History:** the serif came from the original homepage design ("rebuild new homepage with about section": hero line, bio, Work details, Connect). It was later *extended* to blog descriptions, post bodies and the 404/error pages, so the effect now spans most of the reading text.
-- **Fringing is not reproduced yet; needs from the owner:** OS, browser, display scaling %, and whether it is the serif only or all text. Hypotheses to test: (a) Tailwind's `font-serif` is an OS font stack (`ui-serif, Georgia, Cambria, "Times New Roman"`) so on Windows it renders in Georgia, whose hinting/ClearType can show colour fringes at fractional scaling (125%/150%), while Geist is a bundled webfont and renders consistently; (b) LCD sub-pixel anti-aliasing interacting with the page's layers; (c) `antialiased` (`-webkit-font-smoothing`) does nothing on Windows.
-- **Options to compare (build a local comparison page like the accent swatches):** A) Geist Sans for all reading text, serif only for small accents (hero line, blockquotes); B) bundle a webfont serif via `next/font` (e.g. Source Serif 4, Newsreader, Literata) so rendering is identical everywhere; C) drop serif entirely. Decide with the owner.
-
-### 2. Colour and type scale audit
-- **What actually changed:** the core palette is the same hex values as the original (page `#f4f4f5`/`#18181b`, text `#3f3f46`/`#d4d4d8`), now exposed as `--background`/`--foreground` tokens. Changes since: muted text became `zinc-600`/`zinc-400` instead of `opacity-75` (contrast fix, Aug 2026) and the rose accent moved to the `--accent` token (light `#eb506d`, dark `#fb7185`, Oct 2026). Headings use pure black/white, body text zinc-700/300, muted zinc-600/400.
-- **Task:** write down the current type and colour roles in one place, then settle a small, deliberate scale (heading, body, secondary/muted, accent; sans vs serif vs mono; sizes) as tokens and apply it consistently. Keep text at WCAG AA (see DECISIONS.md).
-
-### 3. Interactive states: navbar and links are too subtle
+## IMMEDIATE PRIORITY: interactive states (navbar and links)
+Raised by the owner 2026-10-08: hover and "selected" are too subtle to tell what is active. (Typography and the colour/type scale were split out and parked, see below.)
 - **Current behaviour:** every link uses `HOVER_TRANSITION_CLASS`, which only fades the text from zinc-700/300 to black/white. The active nav link (`aria-current="page"`) gets the same black/white, so hover, active and normal are almost indistinguishable. The theme toggle and Connect icons behave the same way.
 - **Requirements:** state must not rely on colour alone (WCAG 1.4.1), so use a visible non-colour cue such as an underline; active, hover and keyboard focus must each look different and clear; one consistent interaction language across the navbar, logo, theme toggle, "See all work", Connect icons, footer and blog titles.
 - **Proposal to review:** active = accent underline (2px, offset) and stronger weight; hover = neutral underline plus full-contrast text; toggle/icons = subtle background pill on hover. Add an e2e assertion for the active state.
+- **Done when:** the owner signs off on screenshots in both themes (hover, active, focus), the axe checks stay green, and there is no layout shift when the active style applies.
 
-### Done when
-The owner signs off on screenshots at 100/125/150% in both themes; the axe checks stay green; no layout shift; DECISIONS.md records the final type and colour scale.
+## PARKED: typography and the colour/type scale (revisit after ALL other work)
+Owner decision 2026-10-08: deliberately parked to avoid sinking time into fonts now. Do not start this until the rest of the roadmap is done; then take it slowly.
+- **Fringing is a system issue, not a site bug.** Owner's setup: Windows 11, 1440p IPS monitor, 100% scaling; all text shows some colour fringing there, but not on an iPad Pro or phone. That points to Windows ClearType on this panel (try "Adjust ClearType text" in Windows). The site can only influence it through font choice: bundled fonts render more consistently than OS fonts, and thin strokes, light weights, hairline serifs and small italics fringe most.
+- **Where serif is used today:** home hero role line (italic), the whole home bio, Work summaries and bullets, Connect copy, blog listing descriptions, post bodies, and the 404/error pages. Headings, labels, dates and nav are sans (Geist); code is Geist Mono. The serif came from the original homepage design and was later extended to the blog and error pages. `font-serif` is Tailwind's OS stack (Georgia on Windows).
+- **Style cues for a "personal digital corner":** at most two families plus a mono; mono as a personality accent for dates, tags and the Ctrl+K hint; keep serif only where long reading happens (blog, maybe the bio); avoid weights below 400, hairline display serifs and small italics. Geist has no true italic (the browser fakes it), so sans-only designs should drop the italic role line.
+- **Candidates already compared** (open `docs/design/font-pairings.html` in a browser on the owner's monitor; it loads Google Fonts and has a light/dark toggle): 1 today (Geist + Georgia); 2 Geist only + Geist Mono; **3 Geist + Newsreader for bio/posts (my recommendation)**; 4 Geist + Source Serif 4; 5 Atkinson Hyperlegible + JetBrains Mono; 6 Bricolage Grotesque headings; 7 Fraunces headings. No choice made yet.
+- **Colour/type scale audit (same session):** the core palette is the original hex values (page `#f4f4f5`/`#18181b`, text `#3f3f46`/`#d4d4d8`), now `--background`/`--foreground` tokens. Changes since: muted text `zinc-600`/`zinc-400` instead of `opacity-75` (Aug 2026 contrast fix) and the `--accent` token (Oct 2026). Headings are pure black/white, body zinc-700/300. When resumed: write down the type and colour roles in one place, settle a small deliberate scale as tokens and apply it consistently, keep WCAG AA, and record the result in `DECISIONS.md`.
+- **To resume:** pick a pairing, load it with `next/font` (bundled at build time, no external requests, ~20-40KB per family), apply it by role instead of one global serif, then review at the owner's real display in both themes and re-run the axe suite.
 
 ## Suggested order
-0. **UI polish pass** (above): immediate priority, before everything else.
+0. **Interactive states** (above): immediate priority, before everything else.
 1. **Content refresh** (home bio; work entries are done) — unblocks everything that shows real content. Needs owner input.
 2. **Logo** — feeds the favicon, Apple icon, OG images, manifest and navbar, so do it before those.
 3. **Navbar theme toggle** and **home Posts section** — small, self-contained.
@@ -43,9 +38,10 @@ The owner signs off on screenshots at 100/125/150% in both themes; the axe check
 5. **Background texture** — after reduced-motion handling exists, since it depends on it.
 6. **Command palette (Ctrl/Cmd+K)** — after the theme toggle, motion toggle and Posts section, since its actions and results come from them.
 7. **Blog v2**, then the **first real post** last, so it can describe the site as it actually ended up.
+8. **Typography and colour scale** (parked section above): last, deliberately, and slowly. It may change how some earlier items look, which is fine.
 
 ## Content (owner-supplied)
-- [ ] **[needs input] Refresh the home page bio** (after the UI polish pass) (`app/page.tsx`). It is over a year old and predates the job changes (the hero line is already updated: it derives "role at company" from the newest work entry). Needed: the new bio text, or key points to draft from.
+- [ ] **[needs input] Refresh the home page bio** (after the interactive-states fix) (`app/page.tsx`). It is over a year old and predates the job changes (the hero line is already updated: it derives "role at company" from the newest work entry). Needed: the new bio text, or key points to draft from.
 - [x] ~~Work section refreshed~~ (2026-10-08): Deloitte USI, Jebi Softech and both Maxxton roles loaded; consecutive roles at one company are grouped under a single heading (`lib/work.ts`).
 - [ ] Replace the placeholder `content/blog/hello-world.mdx` with a real first post (see Blog below).
 
