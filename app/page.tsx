@@ -57,23 +57,22 @@ const Home = async () => {
           didn’t know it then, but that triangle sparked a curiosity that’s
           still going strong. Since then, I’ve explored everything from HTML and
           Java in school to PHP and C++ in college - eventually finding my way
-          to the web, where I now build clean, accessible interfaces (and
-          occasionally break things just to learn how they work).
+          to the web, where I’ve been building ever since.
         </p>
         <p className="mb-4">
-          These days, I focus on thoughtful engineering - whether it’s crafting
-          intuitive, accessible UIs, improving performance, thinking about
-          systems, or figuring out how to make things work a little better. That
-          curiosity doesn’t stop at software either. I’ve always enjoyed taking
-          things apart and tinkering, whether that’s with self-hosted
-          experiments, building or modifying something, or just getting
-          distracted by something completely unrelated and deciding I need to
-          understand how it works.
+          These days, I focus on thoughtful engineering - whether that’s
+          crafting intuitive, accessible UIs, improving performance, figuring
+          out how to make things work a little better, or occasionally breaking
+          things just to learn how they work. That curiosity doesn’t stop at
+          software either. I’ve always enjoyed taking things apart and
+          tinkering, from self-hosted experiments, building or modifying
+          hardware, to just getting distracted by something completely unrelated
+          and needing to understand how it works.
         </p>
         <p className="mb-4">
           Outside work, video games have been a constant in my life - not just
           as a hobby, but as a space that’s shaped my curiosity, creativity, and
-          the way I think about systems. I’m a sucker for a good world, an
+          how I think about systems. I’m a sucker for a good world, an
           interesting story, and the kind of lore that makes you want to keep
           digging, whether that’s in games, anime, movies, books, or at a
           tabletop. I tend to get invested in things pretty easily, and there’s
