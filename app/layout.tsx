@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(DEFAULT_METADATA.url),
   title: {
     default: DEFAULT_METADATA.title,
-    template: `%s – ${DEFAULT_METADATA.siteName}`,
+    template: `%s - ${DEFAULT_METADATA.siteName}`,
   },
   description: DEFAULT_METADATA.description,
   openGraph: {

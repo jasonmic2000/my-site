@@ -13,7 +13,8 @@ export const mdxOptions: EvaluateOptions = {
   // Posts are self-authored, but there is no reason to allow arbitrary imports.
   disableImports: true,
   mdxOptions: {
-    remarkPlugins: [remarkGfm, remarkSmartypants],
+    // Smart quotes and ellipses only; dashes stay as typed (plain hyphens).
+    remarkPlugins: [remarkGfm, [remarkSmartypants, { dashes: false }]],
     rehypePlugins: [
       rehypeSlug,
       [rehypeAutolinkHeadings, { behavior: "wrap" }],

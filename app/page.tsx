@@ -52,27 +52,27 @@ const Home = async () => {
           triangle called the “Turtle” across the screen with BASIC and Logo. I
           didn’t know it then, but that triangle sparked a curiosity that’s
           still going strong. Since then, I’ve explored everything from HTML and
-          Java in school to PHP and C++ in college — eventually finding my way
+          Java in school to PHP and C++ in college - eventually finding my way
           back to the web, where I now build clean, accessible interfaces (and
           occasionally break things just to learn how they work).
         </p>
         <p className="mb-4">
-          These days, I focus on thoughtful engineering — whether it’s crafting
+          These days, I focus on thoughtful engineering - whether it’s crafting
           intuitive, accessible UIs, improving performance, or running
           self-hosted experiments on my home server. I’ve also found myself
-          mentoring more lately — not necessarily in a formal way, but by
+          mentoring more lately - not necessarily in a formal way, but by
           helping teammates debug tricky problems, reviewing code, and
           supporting where I can.
         </p>
         <p className="mb-4">
-          Outside work, video games have been a constant in my life — not just
+          Outside work, video games have been a constant in my life - not just
           as a hobby, but as a space that’s shaped my curiosity, creativity, and
           the way I think about systems. I also spend time on board games,
           productivity experiments, and occasionally fall down rabbit holes
           about hardware, workflows, or terminal customization.
         </p>
         <p>
-          This site is my digital playground — a space to share what I’m working
+          This site is my digital playground - a space to share what I’m working
           on, learning, or obsessed with. Sometimes code, sometimes ideas.
           Always me.
         </p>

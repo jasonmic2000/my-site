@@ -6,7 +6,7 @@ import { DEFAULT_METADATA } from "@/lib/consts";
 export function buildFeed(): Feed {
   const posts = getAllPosts();
   const feed = new Feed({
-    title: `${DEFAULT_METADATA.siteName} – Blog`,
+    title: `${DEFAULT_METADATA.siteName} - Blog`,
     description: "Writings on things I care about.",
     id: `${DEFAULT_METADATA.url}/blog`,
     link: `${DEFAULT_METADATA.url}/blog`,

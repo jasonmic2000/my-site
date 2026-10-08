@@ -25,7 +25,7 @@ export function pageMetadata({
   description: string;
   path: string;
 }): Metadata {
-  const fullTitle = `${title} – ${DEFAULT_METADATA.siteName}`;
+  const fullTitle = `${title} - ${DEFAULT_METADATA.siteName}`;
   return {
     title,
     description,

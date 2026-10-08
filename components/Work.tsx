@@ -86,7 +86,8 @@ export const Work = ({
               <span className={MUTED}>
                 {dateRange(group.startDate, group.endDate)}
               </span>
-              <ul className="mt-4 flex flex-col gap-8 border-zinc-300 border-l-2 pl-4 dark:border-zinc-700">
+              {/* The rail hangs in the left gutter (md+) so role text stays on the content's left edge; 2px border + 14px padding = the 16px it is pulled out by. No rail on small screens, where there is no gutter. */}
+              <ul className="mt-4 flex flex-col gap-8 md:-ml-4 md:border-zinc-300 md:border-l-2 md:pl-3.5 dark:md:border-zinc-700">
                 {group.entries.map((entry) => (
                   <li key={entry.startDate}>
                     <p className="font-medium text-black dark:text-white">
