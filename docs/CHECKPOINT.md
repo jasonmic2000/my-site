@@ -19,24 +19,18 @@ moon/sun transition, home "Posts" section, Playwright + axe suite, and the conte
 work history, bio, Connect copy).
 
 ## Next, in this order
-1. **Background texture.** The comparison page is built: `docs/design/background-options.html` (see the TODO
-   findings: light mode needs white highlight lines because the accent has almost no contrast headroom).
-   Owner narrowed to dots or fine grid, no fade, 24px unit; light accent deepened to `#e5456a` (done). Second page
-   `docs/design/background-options-v2.html` compares A (dots), B (grid), C (grid, old accent). Round 3 added `docs/design/background-options-v3.html` (palettes, knockout, snap; see TODO findings). **Waiting on the owner's
-   palette / dots-or-grid / knockout decision**, then implement it (reduced motion, user toggle, hidden from AT). Notebook text alignment is deferred
-   to the design polish pass (details in TODO.md).
-   Original brief: show 3-4 *static* options before building. Guardrails are in TODO.md (WCAG AA contrast
-   against the worst pixel, reduced-motion respected, visible persisted user toggle, parallax only if
-   the static version feels flat).
-2. Ctrl/Cmd+K command palette (spec in TODO.md; native `<dialog>` by default).
-3. Blog v2, then the first real post (replace the `hello-world` placeholder).
-4. Logo (deferred by the owner), then the **parked design polish** (interaction states, typography,
-   colour/type scale), done last as one pass. Font comparison page: `docs/design/font-pairings.html`.
+1. **Ctrl/Cmd+K command palette** (spec in TODO.md; native `<dialog>` by default).
+2. **Blog v2**, then the **first real post** (replace the `hello-world` placeholder).
+3. Logo (deferred by the owner).
+4. **Parked design polish, done last as one pass** (owner decision 2026-10-10): interaction states, typography,
+   colour/type scale, and the **background texture** (palette, dots vs grid, knockout, notebook alignment). Comparison
+   pages: `docs/design/font-pairings.html`, `background-options.html`, `-v2.html`, `-v3.html`. The owner keeps
+   revisiting these and will say when decided; do not push for a decision. Already applied: light accent `#e5456a`.
 
 ## Waiting on the owner
 - Set the Vercel project's Node.js Version to 24.x (unconfirmed; removes the override warning).
 - The first real blog post, and a logo direction (later).
-- A choice among the background options once shown.
+- The design-polish decisions (fonts, palette, dots vs grid, knockout), whenever they are ready.
 - Worth a look after each deploy: work history layout, bio, theme toggle in both themes.
 
 ## How we work (owner preferences)

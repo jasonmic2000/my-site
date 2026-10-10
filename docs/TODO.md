@@ -31,24 +31,8 @@ Raised by the owner 2026-10-08: hover and "selected" are too subtle to tell what
 - **Colour/type scale audit (same session):** the core palette is the original hex values (page `#f4f4f5`/`#18181b`, text `#3f3f46`/`#d4d4d8`), now `--background`/`--foreground` tokens. Changes since: muted text `zinc-600`/`zinc-400` instead of `opacity-75` (Aug 2026 contrast fix) and the `--accent` token (Oct 2026). Headings are pure black/white, body zinc-700/300. When resumed: write down the type and colour roles in one place, settle a small deliberate scale as tokens and apply it consistently, keep WCAG AA, and record the result in `DECISIONS.md`.
 - **To resume:** pick a pairing, load it with `next/font` (bundled at build time, no external requests, ~20-40KB per family), apply it by role instead of one global serif, then review at the owner's real display in both themes and re-run the axe suite.
 
-## Suggested order
-1. ~~**Content refresh**~~ — done (home bio and work entries).
-2. **Logo** — deferred by the owner (2026-10-08); do it later. It feeds the favicon, Apple icon, OG images, manifest and navbar, so do it before those.
-3. ~~**Navbar theme toggle** and **home Posts section**~~ — done.
-4. ~~**Essentials**~~ — done (404/error pages, skip link, focus styles, reduced motion, JSON-LD, theme-color, description, audit + automated checks).
-5. **Background texture** — after reduced-motion handling exists, since it depends on it.
-6. **Command palette (Ctrl/Cmd+K)** — after the theme toggle, motion toggle and Posts section, since its actions and results come from them.
-7. **Blog v2**, then the **first real post** last, so it can describe the site as it actually ended up.
-8. **Design polish** (parked section above: interaction states, typography, colour/type scale): last, deliberately, and as one pass. It may change how some earlier items look, which is fine.
-
-## Content (owner-supplied)
-- [x] ~~Home bio refreshed~~ (2026-10-08). Flow edits suggested by the assistant are pending the owner's decision.
-- [x] ~~Work section refreshed~~ (2026-10-08): Deloitte USI, Jebi Softech and both Maxxton roles loaded; consecutive roles at one company are grouped under a single heading (`lib/work.ts`).
-- [ ] Replace the placeholder `content/blog/hello-world.mdx` with a real first post (see Blog below).
-
-## Features
-- [ ] **Logo** (deferred, owner 2026-10-08). Design needed (**[needs input]**): wordmark/monogram or a tiny mascot. The current logo is the text `¯\_(ツ)_/¯` in `Navbar`. Deliver as SVG (single colour using `currentColor` so it follows the theme). Once chosen, update together: navbar, `public/favicon.ico` plus an SVG favicon, `app/apple-icon.tsx`, `app/opengraph-image.tsx`, `app/manifest.ts` icons.
-- [ ] **Subtle background texture / grid, optionally with parallax.** Adds depth without hurting readability. Guardrails (these are requirements, not suggestions):
+### C. Background texture, palette and notebook alignment
+Owner decision 2026-10-10: **parked with the fonts**; do not spend time here until the rest of the roadmap is done. The owner will keep revisiting the comparison pages in `docs/design/` (`background-options.html`, `-v2.html`, `-v3.html`) and will say when decided. Open decisions: palette (zinc / stone / cream / ivory / custom hex), dots or fine grid, text knockout yes/no and when. Already done: light accent deepened to `#e5456a`; 24px unit chosen. Subtle background texture / grid, optionally with parallax. Adds depth without hurting readability. Guardrails (these are requirements, not suggestions):
   - **Comparison page built (2026-10-10):** `docs/design/background-options.html` (open in a browser; URL hash options `#dark`, `#k=1.5`, `#ink`). Six options: none, fine grid, fine grid fading out, dot grid, graph paper, paper grain; strength slider; live WCAG numbers per option. **Owner has not chosen yet.**
   - **Key finding:** in light mode the accent (`#eb506d`) has only 0.24 of headroom over 3:1, so *dark* lines darker than about 3.8% opacity (less where lines cross) push it below AA; at just 2% the grid already fails at crossings (2.99:1) and graph paper fails (2.77:1). Dark mode has ample room (grid/dots pass at 7.5%). Light-mode fix: **white "highlight" lines** (lighter than the page; can never lower contrast, accent stays 3.24:1). Graph paper's heavier overlapping lines fail muted text in dark above about 7%; paper grain is nearly invisible at contrast-safe strengths.
   - **Owner narrowed it (2026-10-10):** dot grid or fine grid, **no fade**. Light accent deepened to `#e5456a` (done). Unit is **24px** (matches the 24px body line height) so later notebook alignment needs no rework. Second comparison page: `docs/design/background-options-v2.html` (A dots + deeper accent, B fine grid + deeper accent, C fine grid + today's accent with white highlight lines; light and dark shown together, strength slider, optional accent margin line). **Waiting on the owner's pick among A/B/C.** Safe light-mode strengths with the deeper accent: dots up to about 8% per mark, grid up to about 4% per line (crossings overlap).
@@ -66,13 +50,30 @@ Raised by the owner 2026-10-08: hover and "selected" are too subtle to tell what
   - Verify on mobile/low-end devices; consider disabling parallax on touch/small screens.
   - Try a static texture first; add parallax only if it still feels flat.
 
+
+## Suggested order
+1. ~~**Content refresh**~~ — done (home bio and work entries).
+2. **Logo** — deferred by the owner (2026-10-08); do it later. It feeds the favicon, Apple icon, OG images, manifest and navbar, so do it before those.
+3. ~~**Navbar theme toggle** and **home Posts section**~~ — done.
+4. ~~**Essentials**~~ — done (404/error pages, skip link, focus styles, reduced motion, JSON-LD, theme-color, description, audit + automated checks).
+5. **Command palette (Ctrl/Cmd+K)** — after the theme toggle and Posts section, since its actions and results come from them.
+6. **Blog v2**, then the **first real post** last, so it can describe the site as it actually ended up.
+7. **Design polish** (parked section above: interaction states, typography, colour/type scale, background texture and palette): last, deliberately, and as one pass. It may change how some earlier items look, which is fine.
+
+## Content (owner-supplied)
+- [x] ~~Home bio refreshed~~ (2026-10-08). Flow edits suggested by the assistant are pending the owner's decision.
+- [x] ~~Work section refreshed~~ (2026-10-08): Deloitte USI, Jebi Softech and both Maxxton roles loaded; consecutive roles at one company are grouped under a single heading (`lib/work.ts`).
+- [ ] Replace the placeholder `content/blog/hello-world.mdx` with a real first post (see Blog below).
+
+## Features
+- [ ] **Logo** (deferred, owner 2026-10-08). Design needed (**[needs input]**): wordmark/monogram or a tiny mascot. The current logo is the text `¯\_(ツ)_/¯` in `Navbar`. Deliver as SVG (single colour using `currentColor` so it follows the theme). Once chosen, update together: navbar, `public/favicon.ico` plus an SVG favicon, `app/apple-icon.tsx`, `app/opengraph-image.tsx`, `app/manifest.ts` icons.
 - [ ] **Command palette, opened with Ctrl+K / Cmd+K.**
-  - **What it offers:** navigate (Home, Work, Blog, individual posts, and later tag pages); actions (toggle theme, toggle background motion, copy email, open GitHub/LinkedIn/X, open the RSS feed). Typing filters results; Enter runs the highlighted one.
+  - **What it offers:** navigate (Home, Work, Blog, individual posts, and later tag pages); actions (toggle theme, copy email, open GitHub/LinkedIn/X, open the RSS feed). Typing filters results; Enter runs the highlighted one.
   - **Discoverability:** a visible trigger button in the navbar showing the shortcut hint (`⌘K` on macOS, `Ctrl K` elsewhere), since touch devices have no keyboard shortcut and most visitors won't guess it. Also works from the keyboard (`/` is a common secondary shortcut).
   - **Accessibility (requirements):** modal dialog with focus trapped inside and restored to the trigger on close; Esc closes; combobox/listbox semantics (`aria-activedescendant`, `aria-selected`, live result count for screen readers); fully usable without a mouse; visible focus; no animation under `prefers-reduced-motion`. Don't intercept the shortcut while typing in a text field.
   - **Stay static and light:** build the post/page index at build time on the server and pass it as props to a client component; lazy-load that component (dynamic import on first open or idle) so it doesn't add to first-load JS. Simple substring/fuzzy filter is enough at this scale. No search service.
   - **Decision to make when starting:** hand-roll it on the native `<dialog>` element (zero dependencies, good built-in focus handling) vs the `cmdk` library (less code, but a dependency plus Radix pieces). Default: native `<dialog>` unless `cmdk` turns out to save real effort.
-  - **Depends on:** theme toggle and motion toggle (actions), shared post list/`getAllPosts()` (results), the logo/mascot (empty state, optional), and ideally the Playwright smoke test (open, filter, run an action).
+  - **Depends on:** theme toggle (action; a background/motion toggle action can be added once the parked background exists), shared post list/`getAllPosts()` (results), the logo/mascot (empty state, optional), and ideally the Playwright smoke test (open, filter, run an action).
 
 ## Blog v2
 All of these are in [BLOG-PLAN.md](BLOG-PLAN.md) (details and rationale there).
