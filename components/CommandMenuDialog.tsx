@@ -52,6 +52,8 @@ const SOCIAL_LABELS: Record<string, string> = {
 
 /** Posts shown before the visitor types anything. */
 const EMPTY_QUERY_POST_LIMIT = 5;
+/** Most posts shown once the visitor types; the rest are summarised (keep typing to narrow). */
+const SEARCH_POST_LIMIT = 8;
 
 /** Every token must appear; earlier and label matches rank higher. -1 = no match. */
 function score(item: Item, tokens: string[]): number {
@@ -198,24 +200,27 @@ const CommandMenuDialog = ({ open, onClose, returnFocusTo }: Props) => {
     ];
   }, [index, onClose, resolvedTheme, router, setTheme]);
 
-  const results = useMemo(() => {
+  const { results, hiddenPosts } = useMemo(() => {
     const tokens = query.toLowerCase().split(/\s+/).filter(Boolean);
-    if (tokens.length === 0) {
-      return GROUPS.flatMap(({ kind }) => {
-        const ofKind = items.filter((item) => item.kind === kind);
-        return kind === "Post"
-          ? ofKind.slice(0, EMPTY_QUERY_POST_LIMIT)
-          : ofKind;
-      });
-    }
-    return GROUPS.flatMap(({ kind }) =>
-      items
-        .filter((item) => item.kind === kind)
+    let hidden = 0;
+    const list = GROUPS.flatMap(({ kind }) => {
+      const ofKind = items.filter((item) => item.kind === kind);
+      if (tokens.length === 0) {
+        // No query: a short, fixed overview.
+        if (kind !== "Post") return ofKind;
+        hidden = Math.max(0, ofKind.length - EMPTY_QUERY_POST_LIMIT);
+        return ofKind.slice(0, EMPTY_QUERY_POST_LIMIT);
+      }
+      const ranked = ofKind
         .map((item) => ({ item, rank: score(item, tokens) }))
         .filter(({ rank }) => rank >= 0)
         .sort((a, b) => b.rank - a.rank)
-        .map(({ item }) => item),
-    );
+        .map(({ item }) => item);
+      if (kind !== "Post") return ranked;
+      hidden = Math.max(0, ranked.length - SEARCH_POST_LIMIT);
+      return ranked.slice(0, SEARCH_POST_LIMIT);
+    });
+    return { results: list, hiddenPosts: hidden };
   }, [items, query]);
 
   const position = useMemo(
@@ -238,7 +243,7 @@ const CommandMenuDialog = ({ open, onClose, returnFocusTo }: Props) => {
     (query.trim()
       ? results.length === 0
         ? "No results"
-        : `${results.length} result${results.length === 1 ? "" : "s"}`
+        : `${results.length} result${results.length === 1 ? "" : "s"}${hiddenPosts ? `, ${hiddenPosts} more posts not shown` : ""}`
       : "");
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -292,7 +297,7 @@ const CommandMenuDialog = ({ open, onClose, returnFocusTo }: Props) => {
           setActive(0);
         }}
         onKeyDown={onKeyDown}
-        className="w-full border-zinc-300 border-b bg-transparent px-4 py-3 text-base outline-offset-[-2px] placeholder:text-zinc-600 dark:border-zinc-700 dark:placeholder:text-zinc-400"
+        className="w-full border-zinc-300 border-b bg-transparent px-4 py-3 text-base transition placeholder:text-zinc-600 focus:border-accent focus:bg-zinc-200/60 focus-visible:outline-hidden dark:border-zinc-700 dark:focus:border-accent dark:focus:bg-zinc-800/60 dark:placeholder:text-zinc-400"
       />
 
       <div
@@ -343,6 +348,15 @@ const CommandMenuDialog = ({ open, onClose, returnFocusTo }: Props) => {
                   </div>
                 );
               })}
+              {kind === "Post" && hiddenPosts > 0 && (
+                <div
+                  aria-hidden="true"
+                  className="px-3 py-1 text-xs text-zinc-600 dark:text-zinc-400"
+                >
+                  +{hiddenPosts} more {hiddenPosts === 1 ? "post" : "posts"},
+                  keep typing to narrow
+                </div>
+              )}
             </div>
           );
         })}

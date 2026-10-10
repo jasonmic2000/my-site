@@ -16,6 +16,14 @@ async function expectNoAxeViolations(page: Page) {
   ).toEqual([]);
 }
 
+/** Press the command-menu shortcut once the page has hydrated (the trigger flags it). */
+async function openWithShortcut(page: Page, key = "Control+KeyK") {
+  await page
+    .locator('button[data-ready="true"]')
+    .waitFor({ state: "attached" });
+  await page.keyboard.press(key);
+}
+
 /** First post link on /blog, so tests don't depend on a specific slug. */
 async function firstPostPath(page: Page): Promise<string> {
   await page.goto("/blog");
@@ -49,7 +57,7 @@ for (const scheme of SCHEMES) {
       page,
     }) => {
       await page.goto("/");
-      await page.keyboard.press("Control+KeyK");
+      await openWithShortcut(page);
       await expect(
         page.getByRole("dialog", { name: "Command menu" }),
       ).toBeVisible();
@@ -172,7 +180,7 @@ test.describe("command menu", () => {
     page,
   }) => {
     await page.goto("/");
-    await page.keyboard.press("Control+KeyK");
+    await openWithShortcut(page);
     await expect(dialog(page)).toBeVisible();
     await expect(search(page)).toBeFocused();
 
@@ -200,7 +208,7 @@ test.describe("command menu", () => {
 
   test("/ opens it when not typing in a field", async ({ page }) => {
     await page.goto("/work");
-    await page.keyboard.press("/");
+    await openWithShortcut(page, "/");
     await expect(dialog(page)).toBeVisible();
     // Typing a slash into the open menu must not be swallowed.
     await search(page).pressSequentially("a/b");
@@ -209,7 +217,7 @@ test.describe("command menu", () => {
 
   test("arrow keys move the highlighted option", async ({ page }) => {
     await page.goto("/");
-    await page.keyboard.press("Control+KeyK");
+    await openWithShortcut(page);
     const first = await search(page).getAttribute("aria-activedescendant");
     await page.keyboard.press("ArrowDown");
     const second = await search(page).getAttribute("aria-activedescendant");
@@ -222,7 +230,7 @@ test.describe("command menu", () => {
 
   test("finds blog posts from the static index", async ({ page }) => {
     await page.goto("/");
-    await page.keyboard.press("Control+KeyK");
+    await openWithShortcut(page);
     const { posts } = await (
       await page.request.get("/search-index.json")
     ).json();
@@ -238,7 +246,7 @@ test.describe("command menu", () => {
   test("the theme action toggles the theme", async ({ page }) => {
     await page.emulateMedia({ colorScheme: "light" });
     await page.goto("/");
-    await page.keyboard.press("Control+KeyK");
+    await openWithShortcut(page);
     await search(page).fill("theme");
     await page.keyboard.press("Enter");
     await expect(dialog(page)).toBeHidden();
@@ -251,7 +259,7 @@ test.describe("command menu", () => {
   }) => {
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await page.goto("/");
-    await page.keyboard.press("Control+KeyK");
+    await openWithShortcut(page);
     await search(page).fill("copy email");
     await page.keyboard.press("Enter");
     await expect(page.getByRole("status")).toContainText(/copied/i);
@@ -260,9 +268,53 @@ test.describe("command menu", () => {
     );
   });
 
+  test("caps how many posts are listed and says how many are hidden", async ({
+    page,
+  }) => {
+    const posts = Array.from({ length: 12 }, (_, i) => ({
+      slug: `post-${i}`,
+      title: `Test post ${i}`,
+      date: "2026-01-01",
+      description: "Stubbed",
+      tags: [],
+    }));
+    await page.route("**/search-index.json", (route) =>
+      route.fulfill({ json: { posts } }),
+    );
+    await page.goto("/");
+    await openWithShortcut(page);
+    const postOptions = page.getByRole("option", { name: /^Test post/ });
+
+    // No query: a short overview of 5.
+    await expect(postOptions).toHaveCount(5);
+    await expect(page.getByText("+7 more posts")).toBeVisible();
+
+    // Searching: top 8 of the 12 matches.
+    await search(page).fill("test post");
+    await expect(postOptions).toHaveCount(8);
+    await expect(page.getByText("+4 more posts")).toBeVisible();
+    await expect(page.getByRole("status")).toContainText(
+      "4 more posts not shown",
+    );
+  });
+
+  test("the search field shows focus with a background shade, not a ring", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await openWithShortcut(page);
+    await expect(search(page)).toBeFocused();
+    // No outline (Tailwind keeps one for forced-colors mode only) and a tinted background.
+    await expect(search(page)).toHaveCSS("outline-style", "none");
+    const bg = await search(page).evaluate(
+      (el) => getComputedStyle(el).backgroundColor,
+    );
+    expect(bg).not.toBe("rgba(0, 0, 0, 0)");
+  });
+
   test("shows an empty state when nothing matches", async ({ page }) => {
     await page.goto("/");
-    await page.keyboard.press("Control+KeyK");
+    await openWithShortcut(page);
     await search(page).fill("zzzzqq");
     await expect(page.getByText(/no results for/i)).toBeVisible();
     await expect(page.getByRole("status")).toHaveText("No results");

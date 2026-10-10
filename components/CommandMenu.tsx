@@ -37,6 +37,8 @@ const isTypingTarget = (target: EventTarget | null) =>
 export const CommandMenu = () => {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  // True once the keyboard listener is attached (tests wait for this before pressing keys).
+  const [ready, setReady] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const isMac = useIsMac();
   const shortcut = isMac ? "⌘ K" : "Ctrl K";
@@ -74,6 +76,7 @@ export const CommandMenu = () => {
       }
     };
     window.addEventListener("keydown", onKeyDown);
+    setReady(true);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [show]);
 
@@ -84,6 +87,7 @@ export const CommandMenu = () => {
         type="button"
         aria-label={`Open command menu (${shortcut})`}
         aria-keyshortcuts="Control+K Meta+K"
+        data-ready={ready ? "true" : undefined}
         onClick={show}
         onPointerEnter={loadDialog}
         onFocus={loadDialog}
