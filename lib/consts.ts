@@ -16,10 +16,6 @@ export const DEFAULT_METADATA = {
   twitterHandle: "@jasonmic2000",
 };
 
-export const SITE = {
-  EMAIL: "jasonmic2000@gmail.com",
-} as const;
-
 export const SOCIALS = [
   {
     ICON: FaXTwitter,

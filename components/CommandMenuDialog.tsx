@@ -10,8 +10,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { SITE, SOCIALS } from "@/lib/consts";
+import { SOCIALS } from "@/lib/consts";
 import { formatDate } from "@/lib/dates";
+import { getEmail } from "@/lib/email";
 import type { SearchIndex } from "@/lib/search-index";
 
 type Kind = "Page" | "Post" | "Action" | "Link";
@@ -138,10 +139,11 @@ const CommandMenuDialog = ({ open, onClose, returnFocusTo }: Props) => {
     };
     const copyEmail = async () => {
       try {
-        await navigator.clipboard.writeText(SITE.EMAIL);
+        await navigator.clipboard.writeText(getEmail());
         setNotice("Email address copied to clipboard");
       } catch {
-        setNotice(`Could not copy automatically: ${SITE.EMAIL}`);
+        // Only shown after the visitor asked to copy it, never on first render.
+        setNotice(`Could not copy automatically: ${getEmail()}`);
       }
       window.setTimeout(() => setNotice(""), 3000);
     };
@@ -177,7 +179,7 @@ const CommandMenuDialog = ({ open, onClose, returnFocusTo }: Props) => {
         id: "action-email",
         kind: "Action",
         label: "Copy email address",
-        hint: SITE.EMAIL,
+        hint: "Copies to clipboard",
         keywords: "contact mail clipboard",
         run: copyEmail,
       },

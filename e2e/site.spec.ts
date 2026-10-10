@@ -321,6 +321,43 @@ test.describe("command menu", () => {
   });
 });
 
+test.describe("email address", () => {
+  const EMAIL = /[\w.+-]+@[\w-]+\.[a-z]{2,}/i;
+
+  test("is not in the HTML or any script until revealed", async ({ page }) => {
+    const scripts: string[] = [];
+    page.on("response", async (response) => {
+      if (response.url().endsWith(".js")) scripts.push(await response.text());
+    });
+    await page.goto("/");
+    // Load the lazy command menu chunk too.
+    await openWithShortcut(page);
+    await expect(
+      page.getByRole("dialog", { name: "Command menu" }),
+    ).toBeVisible();
+
+    expect(await page.content()).not.toMatch(EMAIL);
+    expect(scripts.length).toBeGreaterThan(0);
+    for (const script of scripts) expect(script).not.toMatch(EMAIL);
+  });
+
+  test("is revealed by the button, as a mailto link that takes focus", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: "Show email address" }).click();
+    const link = page.getByRole("link", { name: EMAIL });
+    await expect(link).toBeFocused();
+    await expect(link).toHaveAttribute(
+      "href",
+      /^mailto:[^@\s]+@[^@\s]+\.[a-z]+$/i,
+    );
+    await expect(
+      page.getByRole("button", { name: "Show email address" }),
+    ).toHaveCount(0);
+  });
+});
+
 test("the active nav link is marked with aria-current", async ({ page }) => {
   await page.goto("/work");
   await expect(

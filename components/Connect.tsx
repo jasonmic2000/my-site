@@ -1,8 +1,8 @@
 import Link from "next/link";
+import { RevealEmail } from "@/components/RevealEmail";
 import {
   DEFAULT_METADATA,
   HOVER_TRANSITION_CLASS,
-  SITE,
   SOCIALS,
 } from "@/lib/consts";
 
@@ -35,13 +35,7 @@ export const Connect = () => {
           </li>
         ))}
       </ul>
-      <Link
-        href={`mailto:${SITE.EMAIL}`}
-        aria-label={`Email ${DEFAULT_METADATA.siteName}`}
-        className={`flex gap-2 ${HOVER_TRANSITION_CLASS}`}
-      >
-        {SITE.EMAIL}
-      </Link>
+      <RevealEmail />
     </section>
   );
 };
