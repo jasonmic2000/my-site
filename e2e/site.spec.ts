@@ -16,10 +16,10 @@ async function expectNoAxeViolations(page: Page) {
   ).toEqual([]);
 }
 
-/** Press the command-menu shortcut once the page has hydrated (the trigger flags it). */
+/** Press the command-menu shortcut once the page has hydrated (the menu trigger flags it). */
 async function openWithShortcut(page: Page, key = "Control+KeyK") {
   await page
-    .locator('button[data-ready="true"]')
+    .locator('button[aria-keyshortcuts][data-ready="true"]')
     .waitFor({ state: "attached" });
   await page.keyboard.press(key);
 }
@@ -262,7 +262,7 @@ test.describe("command menu", () => {
     await openWithShortcut(page);
     await search(page).fill("copy email");
     await page.keyboard.press("Enter");
-    await expect(page.getByRole("status")).toContainText(/copied/i);
+    await expect(dialog(page).getByRole("status")).toContainText(/copied/i);
     expect(await page.evaluate(() => navigator.clipboard.readText())).toContain(
       "@",
     );
@@ -293,7 +293,7 @@ test.describe("command menu", () => {
     await search(page).fill("test post");
     await expect(postOptions).toHaveCount(8);
     await expect(page.getByText("+4 more posts")).toBeVisible();
-    await expect(page.getByRole("status")).toContainText(
+    await expect(dialog(page).getByRole("status")).toContainText(
       "4 more posts not shown",
     );
   });
@@ -317,7 +317,7 @@ test.describe("command menu", () => {
     await openWithShortcut(page);
     await search(page).fill("zzzzqq");
     await expect(page.getByText(/no results for/i)).toBeVisible();
-    await expect(page.getByRole("status")).toHaveText("No results");
+    await expect(dialog(page).getByRole("status")).toHaveText("No results");
   });
 });
 
@@ -341,20 +341,26 @@ test.describe("email address", () => {
     for (const script of scripts) expect(script).not.toMatch(EMAIL);
   });
 
-  test("is revealed by the button, as a mailto link that takes focus", async ({
+  test("the envelope copies the address and shows it as a mailto link", async ({
     page,
+    context,
   }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await page.goto("/");
-    await page.getByRole("button", { name: "Show email address" }).click();
+    const envelope = page.locator(
+      'button[aria-label="Copy email address"][data-ready="true"]',
+    );
+    await envelope.click();
+
     const link = page.getByRole("link", { name: EMAIL });
-    await expect(link).toBeFocused();
+    await expect(link).toBeVisible();
     await expect(link).toHaveAttribute(
       "href",
       /^mailto:[^@\s]+@[^@\s]+\.[a-z]+$/i,
     );
-    await expect(
-      page.getByRole("button", { name: "Show email address" }),
-    ).toHaveCount(0);
+    await expect(page.getByText(/copied to clipboard/i).first()).toBeAttached();
+    const copied = await page.evaluate(() => navigator.clipboard.readText());
+    expect(copied).toBe(await link.innerText());
   });
 });
 

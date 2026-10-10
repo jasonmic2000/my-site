@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { RevealEmail } from "@/components/RevealEmail";
+import { EmailButton } from "@/components/EmailButton";
 import {
   DEFAULT_METADATA,
   HOVER_TRANSITION_CLASS,
@@ -34,8 +34,12 @@ export const Connect = () => {
             </Link>
           </li>
         ))}
+        <EmailButton />
       </ul>
-      <RevealEmail />
+      <noscript>
+        My email address needs JavaScript to appear. Please use one of the links
+        above instead.
+      </noscript>
     </section>
   );
 };
