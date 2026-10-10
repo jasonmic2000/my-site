@@ -1,19 +1,22 @@
 # Checkpoint - start here when resuming
 
-Written 2026-10-09 at the end of a long working session, so the next session does not depend on remembered
+Written 2026-10-10 at the end of a long working session, so the next session does not depend on remembered
 context. Read this first, then `docs/TODO.md` (open items), `docs/DECISIONS.md` (do not re-litigate) and
 `docs/ARCHITECTURE.md` (how it works). `CLAUDE.md` loads automatically and points here.
 
 ## State at this checkpoint
-- `main` was in sync with `origin/main` at `08d9713` (this checkpoint's own commit may be ahead; run
-  `git status -sb` and `git log --oneline -5`). Working tree clean. CI green (lint, typecheck, build,
-  19 Playwright/axe tests, `npm audit`). Deployed on Vercel.
+- `main` was pushed and in sync with `origin/main` at `b41078b` (this checkpoint's own commit may be ahead;
+  run `git status -sb` and `git log --oneline -5`). Working tree clean. Locally lint, typecheck, build and
+  50 Playwright/axe tests pass; CI also runs `npm audit`. Deployed on Vercel.
 - Stack: Next.js 16.4, React 19.3, Tailwind v4, Biome, Node 24, TypeScript 5.9 (held for 7.1).
   `npm outdated` shows only `typescript` and `@types/node`, both held on purpose.
 
 ## Done so far (all in `git log`)
 Security and dependency work (RCE patch, 0 audit findings, Node 24), Biome rules, CI plus Dependabot,
-MDX blog (listing, posts, RSS/Atom/JSON feeds, JSON-LD, sitemap, analytics), accessibility baseline (skip
+MDX blog (listing, posts, RSS/Atom/JSON feeds, JSON-LD, sitemap, analytics) and blog v2 (tag pages, reading
+time, per-post OG images, table of contents, code blocks with a hover-reveal copy button, titles and line
+highlighting; plain filled block, unframed icon, 1.5rem spacing, see DECISIONS.md), Ctrl/Cmd+K command menu,
+email behind an envelope button, accessibility baseline (skip
 link, focus styles, reduced motion, custom 404/error pages), single accent token, theme toggle with
 moon/sun transition, home "Posts" section, Playwright + axe suite, and the content refresh (grouped
 work history, bio, Connect copy).
