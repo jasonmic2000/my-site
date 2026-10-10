@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Background options v3 - palettes, knockout, snap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html { scrollbar-gutter: stable; }
+  body { margin:0; background:#fff; color:#222; font-family:Geist, system-ui, sans-serif; }
+  .bar { position:sticky; top:0; z-index:20; background:#fff; border-bottom:1px solid #ddd; padding:10px 24px; display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; font:500 13px Geist,sans-serif; }
+  .bar label { display:flex; align-items:center; gap:7px; white-space:nowrap; }
+  .bar input[type=range] { width:150px; }
+  .bar input[type=text] { width:84px; font:500 12px "Geist Mono",monospace; padding:3px 6px; border:1px solid #ccc; border-radius:4px; }
+  .seg { display:flex; border:1px solid #ccc; border-radius:6px; overflow:hidden; }
+  .seg label { padding:5px 12px; cursor:pointer; gap:0; }
+  .seg input { display:none; }
+  .seg label:has(input:checked) { background:#111; color:#fff; }
+  .hint { padding:12px 24px 0; font:400 13px/1.55 Geist,sans-serif; color:#555; max-width:1100px; }
+  .hint b { color:#111; font-weight:600; }
+  .cards { max-width:1560px; margin:0 auto; padding:6px 24px 70px; display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:22px 26px; }
+  .card h2 { font:600 14px Geist,sans-serif; margin:16px 0 1px; color:#111; }
+  .card .sub { font:400 12px/1.45 "Geist Mono",monospace; color:#777; margin:0 0 8px; }
+  .label { font:600 11px Geist,sans-serif; letter-spacing:.05em; text-transform:uppercase; color:#888; margin:10px 0 4px; }
+
+  .panel { position:relative; overflow:hidden; border:1px solid var(--rule); border-radius:8px; height:528px; background:var(--bg); color:var(--body); }
+  .pat { position:absolute; inset:0; pointer-events:none; }
+  .p-grid .pat { background-image: linear-gradient(to right,var(--line) 1px,transparent 1px), linear-gradient(to bottom,var(--line) 1px,transparent 1px); background-size:24px 24px; }
+  .p-dots .pat { background-image: radial-gradient(circle, var(--line) 1px, transparent 1.6px); background-size:24px 24px; background-position:12px 12px; }
+  .margin .pat::after { content:""; position:absolute; top:0; bottom:0; left:24px; width:1px; background:var(--accent); opacity:.45; }
+
+  .content { position:relative; z-index:1; padding:0 24px 0 48px; }
+  .unsnap .content { padding-top:11px; }
+  .gap { height:24px; } .unsnap .gap { height:16px; }
+  .nav { display:flex; justify-content:space-between; font-size:14px; line-height:24px; }
+  .nav .links span + span { margin-left:14px; }
+  .name { font-size:1.75rem; font-weight:800; margin:0; line-height:48px; color:var(--body); }
+  .name b { color:var(--accent); font-weight:inherit; }
+  .role { font:italic 400 14px/24px Georgia,serif; margin:0; }
+  .prose { font:400 15px/24px Georgia,serif; margin:0; }
+  .h2 { color:var(--head); font-weight:600; font-size:.95rem; line-height:24px; }
+  .co { font-weight:600; margin:0; line-height:24px; font-size:14.5px; }
+  .sub2 { font-size:13px; line-height:24px; color:var(--muted); margin:0; } .unsnap .sub2 { line-height:20px; }
+  .row { display:flex; align-items:center; gap:18px; height:48px; }
+  .big { font-size:1.75rem; font-weight:800; color:var(--accent); line-height:1; }
+  .ring { padding:5px 10px; font-size:12px; border-radius:6px; outline:2px solid var(--accent); outline-offset:2px; }
+
+  /* knockout: text blocks get the plain page colour, hiding the pattern behind them */
+  .ko-on .ko { background:var(--bg); width:fit-content; max-width:calc(100% + 16px); padding:0 8px; margin-left:-8px; }
+  .ko-on .nav .ko { margin:0 -8px; }
+  .ko-on .row .ko { padding:4px 8px; }
+
+  .metrics { margin-top:6px; font:400 11px/1.5 "Geist Mono",monospace; color:#555; }
+  .metrics table { border-collapse:collapse; width:100%; }
+  .metrics td { padding:1px 6px 1px 0; }
+  .ok { color:#16a34a; } .bad { color:#dc2626; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="bar">
+  <b>Background options v3</b>
+  <div class="seg" id="patSeg"><label><input type="radio" name="pat" value="dots" checked>Dots</label><label><input type="radio" name="pat" value="grid">Grid</label></div>
+  <label><input type="checkbox" id="ko" checked> Knock out text blocks</label>
+  <label><input type="checkbox" id="snap" checked> Text snapped to grid rows</label>
+  <label><input type="checkbox" id="mg"> Margin line</label>
+  <label>Strength <input type="range" id="k" min="0.5" max="3" step="0.1" value="1"> <span id="kv">1.0x</span></label>
+  <label>Custom light <input type="text" id="cl" value="#f2efe8"></label>
+  <label>Custom dark <input type="text" id="cd" value="#1a1917"></label>
+</div>
+<p class="hint"><b>What this tests:</b> five background palettes, each in light (top) and dark (bottom), with the pattern on a <b>24px</b> unit. <b>Knock out text blocks</b> gives every line of text a plain background that hides the pattern behind it (the approach on the site you found; its page is cream <b>#f3f0e6</b> with 1px tan lines <b>#e7e2d1</b> on a 24px pitch). <b>Snapped to grid rows</b> previews what the site would look like after the later rhythm pass: with it on, each text block sits exactly in whole grid cells, so the knockout edges follow the grid lines; turn it off to see how it looks today (cut edges land mid-cell). The accent is <b>#e5456a</b> in light and <b>#fb7185</b> in dark. The last column is yours: type any two hex colours. Palette names are my interpretation; the "ivory" one is a soft, slightly grey warm white, not a measured Edifier colour (retailers just say "white, matte").</p>
+<div class="cards" id="cards"></div>
+
+<script>
+const PAL = [
+  { id:'zinc',  name:'1 - Zinc (today)',        note:'cool-neutral grey-white',
+    L:{bg:'#f4f4f5',body:'#3f3f46',muted:'#52525b',head:'#000000'}, D:{bg:'#18181b',body:'#d4d4d8',muted:'#a1a1aa',head:'#ffffff'} },
+  { id:'stone', name:'2 - Stone (barely warm)', note:'Tailwind stone, the smallest warm step',
+    L:{bg:'#f5f5f4',body:'#44403c',muted:'#57534e',head:'#0c0a09'}, D:{bg:'#1c1917',body:'#d6d3d1',muted:'#a8a29e',head:'#fafaf9'} },
+  { id:'cream', name:'3 - Cream (like that site)', note:'warm paper white, light #f3f0e6',
+    L:{bg:'#f3f0e6',body:'#403c33',muted:'#5b564a',head:'#1c1a15'}, D:{bg:'#1b1915',body:'#dcd7c9',muted:'#a8a290',head:'#f3f0e6'} },
+  { id:'ivory', name:'4 - Ivory (speaker white)', note:'soft, slightly greyer warm white',
+    L:{bg:'#f1eee9',body:'#3f3c38',muted:'#58544e',head:'#181614'}, D:{bg:'#191816',body:'#d8d4cc',muted:'#a39e94',head:'#f1eee9'} },
+  { id:'custom',name:'5 - Custom',              note:'your two hex colours (top bar)',
+    L:{bg:'#f2efe8',body:'#3f3c38',muted:'#58544e',head:'#181614'}, D:{bg:'#1a1917',body:'#d8d4cc',muted:'#a39e94',head:'#f1eee9'} },
+];
+const ACCENT = { L:'#e5456a', D:'#fb7185' };
+const BASE = { dots:{L:0.07, D:0.07, layers:1}, grid:{L:0.04, D:0.05, layers:2} };
+
+const hex = h => [1,3,5].map(i => parseInt(h.slice(i,i+2),16));
+const lum = ([r,g,b]) => { const f=c=>{c/=255;return c<=.03928?c/12.92:((c+.055)/1.055)**2.4}; return .2126*f(r)+.7152*f(g)+.0722*f(b); };
+const cr = (a,b) => { const x=lum(a),y=lum(b); return (Math.max(x,y)+.05)/(Math.min(x,y)+.05); };
+const mix = (bg,fg,a) => bg.map((c,i)=>Math.round(c*(1-a)+fg[i]*a));
+const toHex = ([r,g,b]) => '#'+[r,g,b].map(c=>c.toString(16).padStart(2,'0')).join('');
+const validHex = h => /^#[0-9a-f]{6}$/i.test(h);
+
+const SAMPLE = `
+  <div class="nav"><span class="ko">&macr;\\_(&#12484;)_/&macr;</span><span class="links ko"><span>blog</span><span>work</span></span></div>
+  <div class="gap"></div>
+  <h1 class="name ko">Jason <b>Michael</b></h1>
+  <p class="role ko">Consultant, Software Engineer - React &amp; Next.js at Deloitte</p>
+  <div class="gap"></div>
+  <p class="prose ko">I&rsquo;m a software engineer, problem solver, tinkerer, gamer, lifelong student, and full-time geek.</p>
+  <div class="gap"></div>
+  <div class="h2 ko">Work</div>
+  <p class="co ko">Deloitte USI</p>
+  <p class="sub2 ko">Consultant, Software Engineer - React &amp; Next.js</p>
+  <p class="sub2 ko">August 2026 - Current</p>
+  <div class="gap"></div>
+  <div class="row"><span class="big ko">404</span><span class="ring">Keyboard focus</span></div>`;
+
+const cards = document.getElementById('cards');
+PAL.forEach(p => {
+  const d = document.createElement('div'); d.className='card';
+  d.innerHTML = `<h2>${p.name}</h2><p class="sub" id="s-${p.id}"></p>
+    ${['L','D'].map(m=>`<div class="label">${m==='L'?'light':'dark'} mode</div>
+      <div class="panel" id="p-${p.id}-${m}"><div class="pat"></div><div class="content">${SAMPLE}</div></div>
+      <div class="metrics" id="m-${p.id}-${m}"></div>`).join('')}`;
+  cards.appendChild(d);
+});
+
+function apply() {
+  const pat = document.querySelector('input[name=pat]:checked').value;
+  const ko = document.getElementById('ko').checked, snap = document.getElementById('snap').checked, mg = document.getElementById('mg').checked;
+  const k = parseFloat(document.getElementById('k').value);
+  document.getElementById('kv').textContent = k.toFixed(1)+'x';
+  const cl = document.getElementById('cl').value.trim(), cd = document.getElementById('cd').value.trim();
+  const custom = PAL.find(p=>p.id==='custom');
+  if (validHex(cl)) custom.L.bg = cl.toLowerCase(); if (validHex(cd)) custom.D.bg = cd.toLowerCase();
+
+  PAL.forEach(p => {
+    document.getElementById('s-'+p.id).textContent = `${p.note} | L ${p.L.bg}  D ${p.D.bg}`;
+    ['L','D'].forEach(m => {
+      const t = p[m], panel = document.getElementById(`p-${p.id}-${m}`);
+      const ink = m==='L' ? hex(t.head) : hex(t.head);      // pattern colour follows the heading colour
+      const a = Math.min(1, BASE[pat][m]*k);
+      const accent = ACCENT[m];
+      panel.className = `panel p-${pat}${ko?' ko-on':''}${snap?'':' unsnap'}${mg?' margin':''}`;
+      const set = (n,v)=>panel.style.setProperty(n,v);
+      set('--bg',t.bg); set('--body',t.body); set('--muted',t.muted); set('--head',t.head); set('--accent',accent);
+      set('--line',`rgb(${ink.join(' ')} / ${a})`);
+      set('--rule', toHex(mix(hex(t.bg), ink, 0.12)));
+      const bg = hex(t.bg), aEff = 1-Math.pow(1-a, BASE[pat].layers), over = mix(bg, ink, aEff);
+      const behindText = ko ? bg : over;                    // knockout: text sits on plain bg
+      const rows = [
+        ['body text', hex(t.body), 4.5, behindText], ['muted text', hex(t.muted), 4.5, behindText],
+        ['accent text', hex(accent), 3, behindText], ['accent ring over pattern', hex(accent), 3, over],
+      ];
+      let tr=''; rows.forEach(([n,col,min,px]) => { const r = Math.min(cr(col,bg), cr(col,px)); tr += `<tr><td>${n}</td><td>${r.toFixed(2)}:1</td><td>min ${min}</td><td class="${r>=min?'ok':'bad'}">${r>=min?'pass':'FAIL'}</td></tr>`; });
+      document.getElementById(`m-${p.id}-${m}`).innerHTML = `<div>mark alpha ${(a*100).toFixed(1)}% | pattern pixel ${toHex(over)}</div><table>${tr}</table>`;
+    });
+  });
+}
+document.querySelectorAll('.bar input').forEach(i => { i.addEventListener('input', apply); i.addEventListener('change', apply); });
+const h = location.hash;
+if (h.includes('grid')) document.querySelector('input[name=pat][value=grid]').checked = true;
+if (h.includes('noko')) document.getElementById('ko').checked = false;
+if (h.includes('unsnap')) document.getElementById('snap').checked = false;
+if (h.includes('margin')) document.getElementById('mg').checked = true;
+const km = h.match(/k=([\d.]+)/); if (km) document.getElementById('k').value = km[1];
+apply();
+</script>
+</body>
+</html>
