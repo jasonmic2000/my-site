@@ -19,8 +19,10 @@ moon/sun transition, home "Posts" section, Playwright + axe suite, and the conte
 work history, bio, Connect copy).
 
 ## Next, in this order
-1. **Background texture.** Show the owner 3-4 *static* options (fine grid, dot grid, subtle noise) on a
-   local comparison page, light and dark, before building. Guardrails are in TODO.md (WCAG AA contrast
+1. **Background texture.** The comparison page is built: `docs/design/background-options.html` (see the TODO
+   findings: light mode needs white highlight lines because the accent has almost no contrast headroom).
+   **Waiting on the owner's pick**, then implement it (reduced motion, user toggle, hidden from AT).
+   Original brief: show 3-4 *static* options before building. Guardrails are in TODO.md (WCAG AA contrast
    against the worst pixel, reduced-motion respected, visible persisted user toggle, parallax only if
    the static version feels flat).
 2. Ctrl/Cmd+K command palette (spec in TODO.md; native `<dialog>` by default).
