@@ -1,4 +1,4 @@
-import { getAllPosts } from "@/lib/blog";
+import { getAllPosts, getAllTags, type TagInfo } from "@/lib/blog";
 
 export interface SearchPost {
   slug: string;
@@ -9,8 +9,11 @@ export interface SearchPost {
   tags: string[];
 }
 
+export type SearchTag = TagInfo;
+
 export interface SearchIndex {
   posts: SearchPost[];
+  tags: SearchTag[];
 }
 
 /**
@@ -27,5 +30,6 @@ export function getSearchIndex(): SearchIndex {
       description,
       tags,
     })),
+    tags: getAllTags(),
   };
 }

@@ -28,7 +28,7 @@ async function openWithShortcut(page: Page, key = "Control+KeyK") {
 async function firstPostPath(page: Page): Promise<string> {
   await page.goto("/blog");
   const href = await page
-    .locator('main a[href^="/blog/"]')
+    .locator('main a[href^="/blog/"]:not([href^="/blog/tags/"])')
     .first()
     .getAttribute("href");
   expect(href, "expected at least one published post").toBeTruthy();
@@ -495,6 +495,64 @@ test("highlighted code lines and block titles are styled", async ({ page }) => {
   for (const el of await titles.all()) {
     await expect(el).not.toHaveText("");
   }
+});
+
+test.describe("tags", () => {
+  /** First tag of the first post that has one, found from the static index. */
+  async function aTag(page: Page) {
+    const { tags } = await (
+      await page.request.get("/search-index.json")
+    ).json();
+    return tags[0] as { slug: string; name: string; count: number } | undefined;
+  }
+
+  test("a tag page lists the posts that use it and is linked from /blog and posts", async ({
+    page,
+  }) => {
+    const tag = await aTag(page);
+    test.skip(!tag, "no post has a tag");
+    if (!tag) return;
+
+    await page.goto("/blog");
+    const link = page.getByRole("list", { name: "Tags" }).getByRole("link", {
+      name: new RegExp(`^${tag.name}`),
+    });
+    await link.click();
+    await expect(page).toHaveURL(new RegExp(`/blog/tags/${tag.slug}$`));
+    await expect(
+      page.getByRole("heading", { level: 1, name: new RegExp(tag.name) }),
+    ).toBeVisible();
+    await expect(page.locator("main li a[href^='/blog/']")).not.toHaveCount(0);
+  });
+
+  test("unknown tags are 404s and tag pages are in the sitemap", async ({
+    page,
+    request,
+  }) => {
+    const tag = await aTag(page);
+    const missing = await request.get("/blog/tags/not-a-real-tag");
+    expect(missing.status()).toBe(404);
+    if (tag) {
+      const sitemap = await (await request.get("/sitemap.xml")).text();
+      expect(sitemap).toContain(`/blog/tags/${tag.slug}`);
+    }
+  });
+
+  test("tags can be found and opened from the command menu", async ({
+    page,
+  }) => {
+    const tag = await aTag(page);
+    test.skip(!tag, "no post has a tag");
+    if (!tag) return;
+
+    await page.goto("/");
+    await openWithShortcut(page);
+    await page.getByRole("combobox").fill(tag.name);
+    await page
+      .getByRole("option", { name: new RegExp(`^${tag.name}`) })
+      .click();
+    await expect(page).toHaveURL(new RegExp(`/blog/tags/${tag.slug}$`));
+  });
 });
 
 test("the active nav link is marked with aria-current", async ({ page }) => {

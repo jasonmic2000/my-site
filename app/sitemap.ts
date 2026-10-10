@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllPosts } from "@/lib/blog";
+import { getAllPosts, getAllTags } from "@/lib/blog";
 import { DEFAULT_METADATA } from "@/lib/consts";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -12,5 +12,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(`${post.date}T00:00:00Z`),
   }));
 
-  return [...routes, ...posts];
+  const tags = getAllTags().map((tag) => ({
+    url: `${DEFAULT_METADATA.url}/blog/tags/${tag.slug}`,
+  }));
+
+  return [...routes, ...posts, ...tags];
 }

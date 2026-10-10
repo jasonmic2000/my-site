@@ -15,7 +15,7 @@ import { formatDate } from "@/lib/dates";
 import { getEmail } from "@/lib/email";
 import type { SearchIndex } from "@/lib/search-index";
 
-type Kind = "Page" | "Post" | "Action" | "Link";
+type Kind = "Page" | "Post" | "Tag" | "Action" | "Link";
 
 interface Item {
   id: string;
@@ -31,6 +31,7 @@ interface Item {
 const GROUPS: { kind: Kind; label: string }[] = [
   { kind: "Page", label: "Pages" },
   { kind: "Post", label: "Posts" },
+  { kind: "Tag", label: "Tags" },
   { kind: "Action", label: "Actions" },
   { kind: "Link", label: "Links" },
 ];
@@ -164,6 +165,14 @@ const CommandMenuDialog = ({ open, onClose, returnFocusTo }: Props) => {
         keywords: `${post.description} ${post.tags.join(" ")}`.toLowerCase(),
         run: go(`/blog/${post.slug}`),
       })),
+      ...(index?.tags ?? []).map<Item>((tag) => ({
+        id: `tag-${tag.slug}`,
+        kind: "Tag",
+        label: tag.name,
+        hint: `${tag.count} ${tag.count === 1 ? "post" : "posts"}`,
+        keywords: "tag topic",
+        run: go(`/blog/tags/${tag.slug}`),
+      })),
       {
         id: "action-theme",
         kind: "Action",
@@ -209,6 +218,7 @@ const CommandMenuDialog = ({ open, onClose, returnFocusTo }: Props) => {
       const ofKind = items.filter((item) => item.kind === kind);
       if (tokens.length === 0) {
         // No query: a short, fixed overview.
+        if (kind === "Tag") return [];
         if (kind !== "Post") return ofKind;
         hidden = Math.max(0, ofKind.length - EMPTY_QUERY_POST_LIMIT);
         return ofKind.slice(0, EMPTY_QUERY_POST_LIMIT);

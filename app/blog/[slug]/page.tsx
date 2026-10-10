@@ -5,7 +5,8 @@ import { evaluate } from "next-mdx-remote-client/rsc";
 import { JsonLd } from "@/components/JsonLd";
 import { mdxComponents } from "@/components/mdx-components";
 import { TableOfContents } from "@/components/TableOfContents";
-import { getAllPosts, getPostBySlug } from "@/lib/blog";
+import { TagList } from "@/components/TagList";
+import { getAllPosts, getPostBySlug, tagSlug } from "@/lib/blog";
 import { HOVER_TRANSITION_CLASS } from "@/lib/consts";
 import { formatDate, formatReadingTime } from "@/lib/dates";
 import { blogPostingJsonLd } from "@/lib/jsonld";
@@ -64,6 +65,9 @@ const PostPage = async ({ params }: { params: Params }) => {
           {" · "}
           {formatReadingTime(post.readingMinutes)}
         </p>
+        <TagList
+          tags={post.tags.map((name) => ({ slug: tagSlug(name), name }))}
+        />
       </header>
       <TableOfContents headings={headings} />
       <div className="post font-serif">{content}</div>
