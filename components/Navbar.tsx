@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CommandMenu } from "@/components/CommandMenu";
 import { NavLink } from "@/components/NavLink";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { HOVER_TRANSITION_CLASS } from "@/lib/consts";
@@ -35,6 +36,7 @@ export const Navbar = () => {
               {item.name}
             </NavLink>
           ))}
+          <CommandMenu />
           <ThemeToggle />
         </nav>
       </div>

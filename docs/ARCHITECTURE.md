@@ -28,6 +28,12 @@ Flat, one folder per route; no dynamic routes, API routes, middleware/proxy or r
 - Metadata file conventions: `opengraph-image.tsx`, `apple-icon.tsx` (both `ImageResponse`), `manifest.ts`, `robots.ts`, `sitemap.ts` (site URL from `DEFAULT_METADATA`)
 
 ## Components (`components/`)
+**Command menu** (`CommandMenu` trigger + `CommandMenuDialog`): opens with Ctrl/Cmd+K (or `/` when not typing in a field) from a navbar keycap
+(`Ctrl K` on Windows/Linux, `⌘ K` on Mac/iOS via `useSyncExternalStore`, fixed width so there is no shift; a search icon below `sm`). It is a native
+`<dialog>` opened with `showModal()` (focus trap, Esc, focus restore), with the ARIA combobox/listbox pattern (`aria-activedescendant`, live result
+count). The dialog is a separate lazy chunk (about 3KB gzipped) that loads on first open or on hover/focus of the trigger; posts come from the static
+`/search-index.json` route (`lib/search-index.ts`) fetched on first open, so ordinary pages carry no search data. Results: Pages, Posts, Actions
+(toggle theme, copy email, open RSS) and Links (GitHub, LinkedIn, X). To add an item, add it to `items` in `CommandMenuDialog.tsx`.
 `PostList` (title, date, description) is shared by `/blog` and the home `Posts` section.
 Flat: `Navbar` (server) composed of `NavLink` (client, `aria-current` via `usePathname`) and `ThemeToggle` (client; moon/sun both rendered and swapped with CSS `dark:` variants so there is no hydration mismatch, the accessible name describes the action and flips the same way, and the turn/scale transition inherits the global reduced-motion rule); `Footer`, `Work`, `Connect`, `AnimatedArrow` (unused, intentional).
 

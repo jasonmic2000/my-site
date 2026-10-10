@@ -19,13 +19,15 @@ moon/sun transition, home "Posts" section, Playwright + axe suite, and the conte
 work history, bio, Connect copy).
 
 ## Next, in this order
-1. **Ctrl/Cmd+K command palette** (spec in TODO.md; native `<dialog>` by default).
-2. **Blog v2**, then the **first real post** (replace the `hello-world` placeholder).
+1. **Blog v2:** per-post OG images (set `image` in `blogPostingJsonLd` too), reading time, table of contents, tag pages
+   (add as command-menu results), code-block niceties (copy button, titles, line highlighting).
+2. **The first real blog post** (tech stack and design decisions; replace the `hello-world` placeholder).
 3. Logo (deferred by the owner).
 4. **Parked design polish, done last as one pass** (owner decision 2026-10-10): interaction states, typography,
    colour/type scale, and the **background texture** (palette, dots vs grid, knockout, notebook alignment). Comparison
    pages: `docs/design/font-pairings.html`, `background-options.html`, `-v2.html`, `-v3.html`. The owner keeps
    revisiting these and will say when decided; do not push for a decision. Already applied: light accent `#e5456a`.
+   Done since the last checkpoint: the Ctrl/Cmd+K command menu.
 
 ## Waiting on the owner
 - Set the Vercel project's Node.js Version to 24.x (unconfirmed; removes the override warning).

@@ -56,7 +56,7 @@ Owner decision 2026-10-10: **parked with the fonts**; do not spend time here unt
 2. **Logo** — deferred by the owner (2026-10-08); do it later. It feeds the favicon, Apple icon, OG images, manifest and navbar, so do it before those.
 3. ~~**Navbar theme toggle** and **home Posts section**~~ — done.
 4. ~~**Essentials**~~ — done (404/error pages, skip link, focus styles, reduced motion, JSON-LD, theme-color, description, audit + automated checks).
-5. **Command palette (Ctrl/Cmd+K)** — after the theme toggle and Posts section, since its actions and results come from them.
+5. ~~**Command palette (Ctrl/Cmd+K)**~~ — done.
 6. **Blog v2**, then the **first real post** last, so it can describe the site as it actually ended up.
 7. **Design polish** (parked section above: interaction states, typography, colour/type scale, background texture and palette): last, deliberately, and as one pass. It may change how some earlier items look, which is fine.
 
@@ -67,13 +67,7 @@ Owner decision 2026-10-10: **parked with the fonts**; do not spend time here unt
 
 ## Features
 - [ ] **Logo** (deferred, owner 2026-10-08). Design needed (**[needs input]**): wordmark/monogram or a tiny mascot. The current logo is the text `¯\_(ツ)_/¯` in `Navbar`. Deliver as SVG (single colour using `currentColor` so it follows the theme). Once chosen, update together: navbar, `public/favicon.ico` plus an SVG favicon, `app/apple-icon.tsx`, `app/opengraph-image.tsx`, `app/manifest.ts` icons.
-- [ ] **Command palette, opened with Ctrl+K / Cmd+K.**
-  - **What it offers:** navigate (Home, Work, Blog, individual posts, and later tag pages); actions (toggle theme, copy email, open GitHub/LinkedIn/X, open the RSS feed). Typing filters results; Enter runs the highlighted one.
-  - **Discoverability:** a visible trigger button in the navbar showing the shortcut hint (`⌘K` on macOS, `Ctrl K` elsewhere), since touch devices have no keyboard shortcut and most visitors won't guess it. Also works from the keyboard (`/` is a common secondary shortcut).
-  - **Accessibility (requirements):** modal dialog with focus trapped inside and restored to the trigger on close; Esc closes; combobox/listbox semantics (`aria-activedescendant`, `aria-selected`, live result count for screen readers); fully usable without a mouse; visible focus; no animation under `prefers-reduced-motion`. Don't intercept the shortcut while typing in a text field.
-  - **Stay static and light:** build the post/page index at build time on the server and pass it as props to a client component; lazy-load that component (dynamic import on first open or idle) so it doesn't add to first-load JS. Simple substring/fuzzy filter is enough at this scale. No search service.
-  - **Decision to make when starting:** hand-roll it on the native `<dialog>` element (zero dependencies, good built-in focus handling) vs the `cmdk` library (less code, but a dependency plus Radix pieces). Default: native `<dialog>` unless `cmdk` turns out to save real effort.
-  - **Depends on:** theme toggle (action; a background/motion toggle action can be added once the parked background exists), shared post list/`getAllPosts()` (results), the logo/mascot (empty state, optional), and ideally the Playwright smoke test (open, filter, run an action).
+- [x] ~~**Command menu (Ctrl/Cmd+K)**~~ done 2026-10-10 (see ARCHITECTURE.md). Possible follow-ups: add tag pages as results once they exist, a background/motion toggle action once the parked background exists, a bio/recent-work search, and softening the rose focus ring on the search field when the interaction states are polished.
 
 ## Blog v2
 All of these are in [BLOG-PLAN.md](BLOG-PLAN.md) (details and rationale there).

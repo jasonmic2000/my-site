@@ -45,6 +45,17 @@ for (const scheme of SCHEMES) {
       await expectNoAxeViolations(page);
     });
 
+    test("the command menu has no axe violations when open", async ({
+      page,
+    }) => {
+      await page.goto("/");
+      await page.keyboard.press("Control+KeyK");
+      await expect(
+        page.getByRole("dialog", { name: "Command menu" }),
+      ).toBeVisible();
+      await expectNoAxeViolations(page);
+    });
+
     test("the 404 page has no axe violations", async ({ page }) => {
       const response = await page.goto("/does-not-exist");
       expect(response?.status()).toBe(404);
@@ -152,6 +163,112 @@ test("the home page lists the newest posts and links to all posts", async ({
   await expect(section.locator("time").first()).toBeVisible();
 });
 
+test.describe("command menu", () => {
+  const dialog = (page: Page) =>
+    page.getByRole("dialog", { name: "Command menu" });
+  const search = (page: Page) => page.getByRole("combobox");
+
+  test("opens with Ctrl+K, filters, and navigates with Enter", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.keyboard.press("Control+KeyK");
+    await expect(dialog(page)).toBeVisible();
+    await expect(search(page)).toBeFocused();
+
+    await search(page).fill("work");
+    await expect(page.getByRole("option", { name: /^Work/ })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/\/work$/);
+    await expect(dialog(page)).toBeHidden();
+  });
+
+  test("the trigger opens it and Esc returns focus to the trigger", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const trigger = page.getByRole("button", { name: /open command menu/i });
+    await trigger.click();
+    await expect(dialog(page)).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(dialog(page)).toBeHidden();
+    await expect(trigger).toBeFocused();
+  });
+
+  test("/ opens it when not typing in a field", async ({ page }) => {
+    await page.goto("/work");
+    await page.keyboard.press("/");
+    await expect(dialog(page)).toBeVisible();
+    // Typing a slash into the open menu must not be swallowed.
+    await search(page).pressSequentially("a/b");
+    await expect(search(page)).toHaveValue("a/b");
+  });
+
+  test("arrow keys move the highlighted option", async ({ page }) => {
+    await page.goto("/");
+    await page.keyboard.press("Control+KeyK");
+    const first = await search(page).getAttribute("aria-activedescendant");
+    await page.keyboard.press("ArrowDown");
+    const second = await search(page).getAttribute("aria-activedescendant");
+    expect(second).not.toBe(first);
+    await page.keyboard.press("ArrowUp");
+    expect(await search(page).getAttribute("aria-activedescendant")).toBe(
+      first,
+    );
+  });
+
+  test("finds blog posts from the static index", async ({ page }) => {
+    await page.goto("/");
+    await page.keyboard.press("Control+KeyK");
+    const { posts } = await (
+      await page.request.get("/search-index.json")
+    ).json();
+    const [post] = posts;
+    await search(page).fill(post.title);
+    await expect(
+      page.getByRole("option", { name: new RegExp(post.title) }),
+    ).toBeVisible();
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(new RegExp(`/blog/${post.slug}$`));
+  });
+
+  test("the theme action toggles the theme", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "light" });
+    await page.goto("/");
+    await page.keyboard.press("Control+KeyK");
+    await search(page).fill("theme");
+    await page.keyboard.press("Enter");
+    await expect(dialog(page)).toBeHidden();
+    await expect(page.locator("html")).toHaveClass(/dark/);
+  });
+
+  test("the copy email action copies the address", async ({
+    page,
+    context,
+  }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.goto("/");
+    await page.keyboard.press("Control+KeyK");
+    await search(page).fill("copy email");
+    await page.keyboard.press("Enter");
+    await expect(page.getByRole("status")).toContainText(/copied/i);
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toContain(
+      "@",
+    );
+  });
+
+  test("shows an empty state when nothing matches", async ({ page }) => {
+    await page.goto("/");
+    await page.keyboard.press("Control+KeyK");
+    await search(page).fill("zzzzqq");
+    await expect(page.getByText(/no results for/i)).toBeVisible();
+    await expect(page.getByRole("status")).toHaveText("No results");
+  });
+});
+
 test("the active nav link is marked with aria-current", async ({ page }) => {
   await page.goto("/work");
   await expect(
@@ -182,6 +299,11 @@ test("feeds, sitemap and robots are served", async ({ request }) => {
   const json = await request.get("/feed.json");
   expect(json.headers()["content-type"]).toContain("application/feed+json");
   expect((await json.json()).version).toContain("jsonfeed.org");
+
+  const searchIndex = await request.get("/search-index.json");
+  expect(searchIndex.headers()["content-type"]).toContain("application/json");
+  const { posts } = await searchIndex.json();
+  expect(Array.isArray(posts)).toBe(true);
 
   const sitemap = await request.get("/sitemap.xml");
   expect(await sitemap.text()).toContain("/blog");
