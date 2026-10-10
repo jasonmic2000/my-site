@@ -1,6 +1,6 @@
 "use client";
 import { type ComponentProps, useEffect, useRef, useState } from "react";
-import { FaCheck, FaRegClipboard } from "react-icons/fa6";
+import { FaCheck, FaRegCopy } from "react-icons/fa6";
 
 /** How long the check mark stays before the button settles back. */
 const RESET_MS = 2000;
@@ -13,7 +13,7 @@ const RESET_MS = 2000;
 // click does not pin it open), stays while confirming, and is always visible on
 // devices that cannot hover (touch).
 const BUTTON =
-  "group/copy absolute top-3 right-3 rounded-md border border-zinc-300 bg-zinc-100 p-2.5 text-lg text-zinc-600 opacity-0 transition-opacity duration-[120ms] ease-in dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-400 " +
+  "group/copy absolute top-2 right-2 rounded-md bg-zinc-200/90 p-2 text-sm text-zinc-600 opacity-0 transition-opacity duration-[120ms] ease-in dark:bg-zinc-800/90 dark:text-zinc-400 " +
   "group-hover/block:opacity-100 group-hover/block:duration-200 group-hover/block:ease-out " +
   "group-has-[:focus-visible]/block:opacity-100 group-has-[:focus-visible]/block:duration-200 group-has-[:focus-visible]/block:ease-out " +
   "data-[copied=true]:opacity-100 data-[copied=true]:duration-200 data-[copied=true]:ease-out " +
@@ -77,7 +77,7 @@ export const CodeBlock = ({ children, ...props }: ComponentProps<"pre">) => {
           aria-hidden="true"
           className="relative block size-[1em] transition-transform duration-100 ease-out group-active/copy:scale-90"
         >
-          <FaRegClipboard className={COPY_ICON} />
+          <FaRegCopy className={COPY_ICON} />
           <FaCheck className={CHECK_ICON} />
         </span>
       </button>

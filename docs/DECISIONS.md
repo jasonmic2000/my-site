@@ -27,6 +27,8 @@ Decisions already made. Don't reverse without asking. Newest context first withi
 - **Command menu lists are capped:** 5 posts with no query, the top 8 once typing, with a "+N more posts, keep typing to narrow" line. The post index is static JSON (about 200 bytes per post, fetched once on first open); at roughly 500+ posts trim `description` from the index or shard it.
 - **Search field focus is a background shade, not a ring** (darker in light mode, lighter in dark mode: surfaces move away from the page colour). A shade alone is only about 1.1:1, below WCAG's 3:1 for a focus indicator, so the field's divider also turns accent (about 3.5:1) and the text caret is visible; forced-colors mode keeps a real outline.
 
+- **Code blocks stay a plain filled block with an unframed copy icon** (owner, 2026-10-10). A bordered "card" variant (roomier padding, framed square clipboard button, inspired by another blog) was built and rejected as too much. The hover-reveal, easing and no-flash behaviour stay. Filename bar, highlighting and line numbers are opt-in per block.
+
 ## Removed / not adopted
 - **ESLint + Prettier → Biome only** (2026-08-30). Prettier was never installed. Biome's auto-detected Next domain replaced `eslint-config-next`. Motivated partly by the ESLint 10 incident: `eslint-plugin-react` (via `eslint-config-next`) crashed on ESLint 10's rule-context API change.
 - **No Cache Components.** The Next 16 upgrade codemod inserts `export const instant = false;`, which is invalid without `cacheComponents` and breaks the build. Remove it, don't opt in.

@@ -131,23 +131,24 @@ html:has(dialog.cmdk[open]) {
   :not(pre) > code {
     @apply rounded bg-zinc-200 px-1.5 py-0.5 font-mono text-sm dark:bg-zinc-800;
   }
-  /* A code block is one bordered card (title bar, if any, plus the code), with
-     generous padding and line height. Right padding leaves room for the copy button. */
-  figure[data-rehype-pretty-code-figure] {
-    @apply m-0 overflow-hidden rounded-lg border border-zinc-300 bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-800;
-  }
   pre {
-    @apply overflow-x-auto py-5 pr-16 pl-6 text-sm leading-[1.8];
+    @apply overflow-x-auto rounded-lg bg-zinc-200 p-4 text-sm leading-relaxed dark:bg-zinc-800;
   }
   pre code {
     @apply font-mono;
   }
-  /* rehype-pretty-code: optional title bar (title="file.ts"), highlighted lines, line numbers. */
+  /* rehype-pretty-code: optional title bar, line highlighting, line numbers. */
+  figure[data-rehype-pretty-code-figure] {
+    @apply m-0;
+  }
   [data-rehype-pretty-code-title] {
-    @apply border-zinc-300 border-b px-6 py-2 font-mono text-xs text-zinc-600 dark:border-zinc-700 dark:text-zinc-400;
+    @apply rounded-t-lg border-zinc-300 border-b bg-zinc-200 px-4 py-2 font-mono text-xs text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400;
+  }
+  [data-rehype-pretty-code-title] + div pre {
+    @apply rounded-t-none;
   }
   [data-line] {
-    @apply -ml-6 inline-block w-[calc(100%+5.5rem)] border-transparent border-l-2 pl-[1.375rem];
+    @apply -mx-4 inline-block w-[calc(100%+2rem)] border-transparent border-l-2 px-4;
   }
   [data-highlighted-line] {
     @apply border-accent bg-zinc-300/70 dark:bg-zinc-700/60;
