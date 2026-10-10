@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { MDXComponents } from "next-mdx-remote-client/rsc";
 import type { ComponentProps } from "react";
 import { Callout } from "@/components/Callout";
+import { CodeBlock } from "@/components/CodeBlock";
 
 const MdxLink = ({ href = "", children, ...props }: ComponentProps<"a">) => {
   if (href.startsWith("/")) {
@@ -28,5 +29,6 @@ const MdxLink = ({ href = "", children, ...props }: ComponentProps<"a">) => {
 /** Components available to every post. Add new embeddable components here. */
 export const mdxComponents: MDXComponents = {
   a: MdxLink,
+  pre: CodeBlock,
   Callout,
 };

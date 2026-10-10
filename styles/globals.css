@@ -137,6 +137,30 @@ html:has(dialog.cmdk[open]) {
   pre code {
     @apply font-mono;
   }
+  /* rehype-pretty-code: optional title bar, line highlighting, line numbers. */
+  figure[data-rehype-pretty-code-figure] {
+    @apply m-0;
+  }
+  [data-rehype-pretty-code-title] {
+    @apply rounded-t-lg border-zinc-300 border-b bg-zinc-200 px-4 py-2 font-mono text-xs text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400;
+  }
+  [data-rehype-pretty-code-title] + div pre {
+    @apply rounded-t-none;
+  }
+  [data-line] {
+    @apply -mx-4 inline-block w-[calc(100%+2rem)] border-transparent border-l-2 px-4;
+  }
+  [data-highlighted-line] {
+    @apply border-accent bg-zinc-300/70 dark:bg-zinc-700/60;
+  }
+  code[data-line-numbers] {
+    counter-reset: line;
+  }
+  code[data-line-numbers] > [data-line]::before {
+    @apply mr-4 inline-block w-4 text-right text-zinc-600 dark:text-zinc-400;
+    counter-increment: line;
+    content: counter(line);
+  }
   table {
     @apply w-full border-collapse text-sm;
   }

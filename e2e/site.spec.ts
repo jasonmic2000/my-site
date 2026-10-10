@@ -454,6 +454,49 @@ test("a post with three or more headings has a matching table of contents", asyn
   await expect(page).toHaveURL(new RegExp(`#${ids[0]}$`));
 });
 
+test("code blocks have a working copy button and are keyboard scrollable", async ({
+  page,
+  context,
+}) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.goto(await firstPostPath(page));
+  const blocks = page.locator(".post pre");
+  const count = await blocks.count();
+  test.skip(count === 0, "this post has no code blocks");
+
+  for (let i = 0; i < count; i++) {
+    await expect(blocks.nth(i)).toHaveAttribute("tabindex", "0");
+  }
+  const copyButton = page
+    .locator('.post button[aria-label="Copy code"][data-ready="true"]')
+    .first();
+  await copyButton.click();
+  const copied = await page.evaluate(() => navigator.clipboard.readText());
+  const shown = await blocks.first().evaluate((el) => el.textContent ?? "");
+  // Windows clipboards return CRLF line endings; compare on LF.
+  expect(copied.replace(/\r\n/g, "\n")).toBe(shown.replace(/\n$/, ""));
+  await expect(page.getByText("Code copied")).toBeAttached();
+});
+
+test("highlighted code lines and block titles are styled", async ({ page }) => {
+  await page.goto(await firstPostPath(page));
+  const highlighted = page.locator(".post [data-highlighted-line]");
+  const titles = page.locator(".post [data-rehype-pretty-code-title]");
+  test.skip(
+    (await highlighted.count()) + (await titles.count()) === 0,
+    "this post has no highlighted lines or titled blocks",
+  );
+  for (const el of await highlighted.all()) {
+    const bg = await el.evaluate(
+      (node) => getComputedStyle(node).backgroundColor,
+    );
+    expect(bg).not.toBe("rgba(0, 0, 0, 0)");
+  }
+  for (const el of await titles.all()) {
+    await expect(el).not.toHaveText("");
+  }
+});
+
 test("the active nav link is marked with aria-current", async ({ page }) => {
   await page.goto("/work");
   await expect(
