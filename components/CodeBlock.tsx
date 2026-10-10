@@ -1,9 +1,31 @@
 "use client";
 import { type ComponentProps, useEffect, useRef, useState } from "react";
 import { FaCheck, FaRegCopy } from "react-icons/fa6";
-import { ICON_PRESS_CLASS } from "@/lib/consts";
 
+/** How long the check mark stays before the button settles back. */
 const RESET_MS = 2000;
+
+// Easing: things arriving use ease-out (starts fast, settles), things leaving
+// use ease-in and a shorter time (clears out of the way). The timing sits on
+// the *destination* state, so entering and leaving can differ on one element.
+//
+// The button fades in on hover or keyboard focus (:focus-visible, so a mouse
+// click does not pin it open), stays while confirming, and is always visible on
+// devices that cannot hover (touch).
+const BUTTON =
+  "group/copy absolute top-2 right-2 rounded-md bg-zinc-200/90 p-2 text-sm text-zinc-600 opacity-0 transition-opacity duration-[120ms] ease-in dark:bg-zinc-800/90 dark:text-zinc-400 " +
+  "group-hover/block:opacity-100 group-hover/block:duration-200 group-hover/block:ease-out " +
+  "group-has-[:focus-visible]/block:opacity-100 group-has-[:focus-visible]/block:duration-200 group-has-[:focus-visible]/block:ease-out " +
+  "data-[copied=true]:opacity-100 data-[copied=true]:duration-200 data-[copied=true]:ease-out " +
+  "[@media(hover:none)]:opacity-100";
+
+// The two icons cross-fade and scale inside the button.
+const COPY_ICON =
+  "absolute inset-0 size-full scale-100 opacity-100 transition duration-200 ease-out " +
+  "group-data-[copied=true]/copy:scale-50 group-data-[copied=true]/copy:opacity-0 group-data-[copied=true]/copy:duration-[120ms] group-data-[copied=true]/copy:ease-in";
+const CHECK_ICON =
+  "absolute inset-0 size-full scale-50 text-accent opacity-0 transition duration-[120ms] ease-in " +
+  "group-data-[copied=true]/copy:scale-100 group-data-[copied=true]/copy:opacity-100 group-data-[copied=true]/copy:duration-200 group-data-[copied=true]/copy:ease-out";
 
 /**
  * Replaces `<pre>` in posts: adds a copy button, and makes the block
@@ -35,7 +57,7 @@ export const CodeBlock = ({ children, ...props }: ComponentProps<"pre">) => {
   };
 
   return (
-    <div className="relative">
+    <div className="group/block relative">
       {/* biome-ignore lint/a11y/noNoninteractiveTabindex: a horizontally scrollable code block must be reachable by keyboard so it can be scrolled. */}
       <pre ref={preRef} tabIndex={0} {...props}>
         {children}
@@ -44,14 +66,17 @@ export const CodeBlock = ({ children, ...props }: ComponentProps<"pre">) => {
         type="button"
         onClick={copy}
         aria-label="Copy code"
+        data-copied={copied ? "true" : "false"}
         data-ready={ready ? "true" : undefined}
-        className={`absolute top-2 right-2 rounded-md bg-zinc-200/90 p-2 text-sm text-zinc-600 dark:bg-zinc-800/90 dark:text-zinc-400 ${ICON_PRESS_CLASS}`}
+        className={BUTTON}
       >
-        {copied ? (
-          <FaCheck aria-hidden="true" className="text-accent" />
-        ) : (
-          <FaRegCopy aria-hidden="true" />
-        )}
+        <span
+          aria-hidden="true"
+          className="relative block size-[1em] transition-transform duration-100 ease-out group-active/copy:scale-90"
+        >
+          <FaRegCopy className={COPY_ICON} />
+          <FaCheck className={CHECK_ICON} />
+        </span>
       </button>
       <output className="sr-only">{copied ? "Code copied" : ""}</output>
     </div>

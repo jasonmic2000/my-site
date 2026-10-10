@@ -23,6 +23,7 @@ Verify with lint + typecheck + build, plus `test:e2e` for UI changes (it is part
 - Styling: Tailwind utilities, zinc palette, dark mode via `class` + `next-themes`. Shared class fragments are plain string constants (`HOVER_TRANSITION_CLASS`); no `clsx`/`cn()`.
 - Accent colour: use the `accent` utilities (`text-accent`, `border-accent`, `outline-accent`) backed by `--accent` in `styles/globals.css`; never hard-code rose classes. Large text/graphics only. See `docs/DECISIONS.md`.
 - Contact email: never write the address as a literal anywhere (code, docs, tests). It lives encoded in `lib/email.ts`; decode with `getEmail()` in the browser on a user action only.
+- Easing: enter = ease-out (about 200ms), exit = ease-in (about 120ms); put the timing on the destination state. Hover-revealed controls also show on `:focus-visible` and on touch. See `docs/DECISIONS.md`.
 - Copy: plain hyphens only; never en/em dashes in site text, titles or posts.
 - Motion/decoration: every animation respects `prefers-reduced-motion`; ambient motion (e.g. background parallax) also needs a user toggle. Text contrast must stay WCAG AA. See `docs/DECISIONS.md` (Design principles).
 - Content: `content/<type>/*.mdx` + frontmatter, read at build time via helpers in `lib/` (no external data source).

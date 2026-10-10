@@ -470,12 +470,120 @@ test("code blocks have a working copy button and are keyboard scrollable", async
   const copyButton = page
     .locator('.post button[aria-label="Copy code"][data-ready="true"]')
     .first();
+  await blocks.first().hover();
   await copyButton.click();
   const copied = await page.evaluate(() => navigator.clipboard.readText());
   const shown = await blocks.first().evaluate((el) => el.textContent ?? "");
   // Windows clipboards return CRLF line endings; compare on LF.
   expect(copied.replace(/\r\n/g, "\n")).toBe(shown.replace(/\n$/, ""));
   await expect(page.getByText("Code copied")).toBeAttached();
+});
+
+test.describe("code copy button visibility", () => {
+  const BUTTON = '.post button[aria-label="Copy code"][data-ready="true"]';
+
+  async function openPostWithCode(page: Page) {
+    await page.goto(await firstPostPath(page));
+    const block = page.locator(".post pre").first();
+    test.skip((await block.count()) === 0, "this post has no code blocks");
+    return { block, button: page.locator(BUTTON).first() };
+  }
+
+  test("is hidden at rest, fades in on hover, and out again on leave", async ({
+    page,
+  }) => {
+    const { block, button } = await openPostWithCode(page);
+    await page.mouse.move(0, 0);
+    await expect(button).toHaveCSS("opacity", "0");
+    await block.hover();
+    await expect(button).toHaveCSS("opacity", "1");
+    await page.mouse.move(0, 0);
+    await expect(button).toHaveCSS("opacity", "0");
+  });
+
+  test("after copying it shows a check, then returns to the copy button while hovered", async ({
+    page,
+    context,
+  }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    const { block, button } = await openPostWithCode(page);
+    await block.hover();
+    await button.click();
+    await expect(button).toHaveAttribute("data-copied", "true");
+    await expect(button).toHaveAttribute("data-copied", "false", {
+      timeout: 5000,
+    });
+    // Pointer is still inside the block: the copy button stays.
+    await expect(button).toHaveCSS("opacity", "1");
+  });
+
+  test("after copying it disappears once the check is done if the pointer left", async ({
+    page,
+    context,
+  }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    const { block, button } = await openPostWithCode(page);
+    await block.hover();
+    await button.click();
+    await page.mouse.move(0, 0);
+    // Still confirming, so still visible even though the pointer left.
+    await expect(button).toHaveAttribute("data-copied", "true");
+    await expect(button).toHaveCSS("opacity", "1");
+    await expect(button).toHaveAttribute("data-copied", "false", {
+      timeout: 5000,
+    });
+    await expect(button).toHaveCSS("opacity", "0");
+  });
+
+  test("keyboard focus on the block reveals it", async ({ page }) => {
+    const { button } = await openPostWithCode(page);
+    await page.mouse.move(0, 0);
+    await expect(button).toHaveCSS("opacity", "0");
+    // Tab through the page until a code block (tabindex=0) has focus.
+    for (let i = 0; i < 80; i++) {
+      await page.keyboard.press("Tab");
+      const onCode = await page.evaluate(
+        () => document.activeElement?.matches(".post pre") ?? false,
+      );
+      if (onCode) break;
+    }
+    await expect(button).toHaveCSS("opacity", "1");
+  });
+
+  test("a mouse click does not pin it open after the pointer leaves", async ({
+    page,
+    context,
+  }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    const { block, button } = await openPostWithCode(page);
+    await block.hover();
+    await button.click();
+    await page.mouse.move(0, 0);
+    await expect(button).toHaveAttribute("data-copied", "false", {
+      timeout: 5000,
+    });
+    await expect(button).toHaveCSS("opacity", "0");
+  });
+});
+
+test.describe("code copy button on touch devices", () => {
+  test.use({
+    isMobile: true,
+    hasTouch: true,
+    viewport: { width: 412, height: 915 },
+  });
+
+  test("devices that cannot hover always see it", async ({ page }) => {
+    await page.goto(await firstPostPath(page));
+    const button = page
+      .locator('.post button[aria-label="Copy code"][data-ready="true"]')
+      .first();
+    test.skip(
+      (await page.locator(".post pre").count()) === 0,
+      "this post has no code blocks",
+    );
+    await expect(button).toHaveCSS("opacity", "1");
+  });
 });
 
 test("highlighted code lines and block titles are styled", async ({ page }) => {
