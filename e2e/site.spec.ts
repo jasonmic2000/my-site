@@ -430,6 +430,30 @@ test("each post has its own share image, referenced in the page metadata", async
   expect(image.headers()["content-type"]).toContain("image/png");
 });
 
+test("a post with three or more headings has a matching table of contents", async ({
+  page,
+}) => {
+  await page.goto(await firstPostPath(page));
+  const headings = page.locator(".post h2, .post h3");
+  const ids = await headings.evaluateAll((els) => els.map((el) => el.id));
+  const toc = page.getByRole("navigation", { name: "Table of contents" });
+
+  if (ids.length < 3) {
+    await expect(toc).toHaveCount(0);
+    return;
+  }
+  // The list is inside a collapsed <details>; open it to read the links.
+  await page.getByText("On this page", { exact: true }).click();
+  const hrefs = await toc
+    .getByRole("link")
+    .evaluateAll((els) => els.map((el) => el.getAttribute("href")));
+  expect(hrefs).toEqual(ids.map((id) => `#${id}`));
+
+  // Following a link lands on the heading.
+  await toc.getByRole("link").first().click();
+  await expect(page).toHaveURL(new RegExp(`#${ids[0]}$`));
+});
+
 test("the active nav link is marked with aria-current", async ({ page }) => {
   await page.goto("/work");
   await expect(

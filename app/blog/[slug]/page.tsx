@@ -4,11 +4,12 @@ import { notFound } from "next/navigation";
 import { evaluate } from "next-mdx-remote-client/rsc";
 import { JsonLd } from "@/components/JsonLd";
 import { mdxComponents } from "@/components/mdx-components";
+import { TableOfContents } from "@/components/TableOfContents";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { HOVER_TRANSITION_CLASS } from "@/lib/consts";
 import { formatDate, formatReadingTime } from "@/lib/dates";
 import { blogPostingJsonLd } from "@/lib/jsonld";
-import { mdxOptions } from "@/lib/mdx";
+import { createMdxOptions, type Heading } from "@/lib/mdx";
 import { pageMetadata } from "@/lib/metadata";
 
 type Params = Promise<{ slug: string }>;
@@ -41,9 +42,11 @@ const PostPage = async ({ params }: { params: Params }) => {
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
+  // Filled with the post's headings while it compiles (see createMdxOptions).
+  const headings: Heading[] = [];
   const { content, error } = await evaluate({
     source: post.source,
-    options: mdxOptions,
+    options: createMdxOptions(headings),
     components: mdxComponents,
   });
   // Fail the build on MDX syntax errors rather than shipping a broken post.
@@ -62,6 +65,7 @@ const PostPage = async ({ params }: { params: Params }) => {
           {formatReadingTime(post.readingMinutes)}
         </p>
       </header>
+      <TableOfContents headings={headings} />
       <div className="post font-serif">{content}</div>
       <Link href="/blog" className={`text-sm ${HOVER_TRANSITION_CLASS}`}>
         ← All posts
