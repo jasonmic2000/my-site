@@ -6,7 +6,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { mdxComponents } from "@/components/mdx-components";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { HOVER_TRANSITION_CLASS } from "@/lib/consts";
-import { formatDate } from "@/lib/dates";
+import { formatDate, formatReadingTime } from "@/lib/dates";
 import { blogPostingJsonLd } from "@/lib/jsonld";
 import { mdxOptions } from "@/lib/mdx";
 import { pageMetadata } from "@/lib/metadata";
@@ -57,6 +57,8 @@ const PostPage = async ({ params }: { params: Params }) => {
         </h1>
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
           <time dateTime={post.date}>{formatDate(post.date)}</time>
+          {" · "}
+          {formatReadingTime(post.readingMinutes)}
         </p>
       </header>
       <div className="post font-serif">{content}</div>

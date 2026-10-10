@@ -16,3 +16,8 @@ export function formatDate(isoDate: string): string {
     timeZone: "UTC",
   });
 }
+
+/** "3 min read" */
+export function formatReadingTime(minutes: number): string {
+  return `${minutes} min read`;
+}

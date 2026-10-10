@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { PostMeta } from "@/lib/blog";
 import { HOVER_TRANSITION_CLASS } from "@/lib/consts";
-import { formatDate } from "@/lib/dates";
+import { formatDate, formatReadingTime } from "@/lib/dates";
 
 /** Title, date and description for each post; shared by /blog and the home page. */
 export const PostList = ({ posts }: { posts: PostMeta[] }) => {
@@ -17,6 +17,8 @@ export const PostList = ({ posts }: { posts: PostMeta[] }) => {
           </Link>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
             <time dateTime={post.date}>{formatDate(post.date)}</time>
+            {" · "}
+            {formatReadingTime(post.readingMinutes)}
             {post.draft && " · draft"}
           </p>
           <p className="pt-2 font-serif">{post.description}</p>

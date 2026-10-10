@@ -14,11 +14,25 @@ export interface PostMeta {
   description: string;
   tags: string[];
   draft: boolean;
+  /** Estimated minutes to read the prose (at least 1). */
+  readingMinutes: number;
 }
 
 export interface Post extends PostMeta {
   /** Raw MDX body (frontmatter stripped). */
   source: string;
+}
+
+const WORDS_PER_MINUTE = 200;
+
+/** Prose words only: code blocks are skimmed, and JSX/markdown syntax is not read. */
+export function estimateReadingMinutes(source: string): number {
+  const prose = source
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/[`*_#>|~-]/g, " ");
+  const words = prose.split(/\s+/).filter((word) => /\w/.test(word)).length;
+  return Math.max(1, Math.ceil(words / WORDS_PER_MINUTE));
 }
 
 function toPost(raw: RawEntry): Post {
@@ -38,6 +52,7 @@ function toPost(raw: RawEntry): Post {
     description: requireString(raw, "description"),
     tags: (tags as string[] | undefined) ?? [],
     draft: raw.data.draft === true,
+    readingMinutes: estimateReadingMinutes(raw.content),
     source: raw.content,
   };
 }

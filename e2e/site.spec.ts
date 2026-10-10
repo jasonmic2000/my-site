@@ -402,6 +402,15 @@ test.describe("email address", () => {
   });
 });
 
+test("posts show an estimated reading time in the list and on the post", async ({
+  page,
+}) => {
+  await page.goto("/blog");
+  await expect(page.getByText(/\d+ min read/).first()).toBeVisible();
+  await page.goto(await firstPostPath(page));
+  await expect(page.locator("header").getByText(/\d+ min read/)).toBeVisible();
+});
+
 test("the active nav link is marked with aria-current", async ({ page }) => {
   await page.goto("/work");
   await expect(
