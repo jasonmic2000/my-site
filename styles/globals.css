@@ -141,6 +141,16 @@ html:has(dialog.cmdk[open]) {
   figure[data-rehype-pretty-code-figure] {
     @apply m-0;
   }
+  /* Code blocks get more air than paragraphs. Placed on the direct children
+     (the figure for titled blocks, the wrapper div otherwise) so it beats the
+     sibling rule above. */
+  & > figure[data-rehype-pretty-code-figure],
+  & > div:has(> pre) {
+    @apply my-6;
+  }
+  p {
+    @apply leading-7;
+  }
   [data-rehype-pretty-code-title] {
     @apply rounded-t-lg border-zinc-300 border-b bg-zinc-200 px-4 py-2 font-mono text-xs text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400;
   }
