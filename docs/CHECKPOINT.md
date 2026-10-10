@@ -19,15 +19,13 @@ moon/sun transition, home "Posts" section, Playwright + axe suite, and the conte
 work history, bio, Connect copy).
 
 ## Next, in this order
-1. **Blog v2:** per-post OG images (set `image` in `blogPostingJsonLd` too), reading time, table of contents, tag pages
-   (add as command-menu results), code-block niceties (copy button, titles, line highlighting).
-2. **The first real blog post** (tech stack and design decisions; replace the `hello-world` placeholder).
-3. Logo (deferred by the owner).
-4. **Parked design polish, done last as one pass** (owner decision 2026-10-10): interaction states, typography,
+1. **The first real blog post** (tech stack and design decisions; replace the `hello-world` placeholder). Blog v2 is done.
+2. Logo (deferred by the owner).
+3. **Parked design polish, done last as one pass** (owner decision 2026-10-10): interaction states, typography,
    colour/type scale, and the **background texture** (palette, dots vs grid, knockout, notebook alignment). Comparison
    pages: `docs/design/font-pairings.html`, `background-options.html`, `-v2.html`, `-v3.html`. The owner keeps
    revisiting these and will say when decided; do not push for a decision. Already applied: light accent `#e5456a`.
-   Done since the last checkpoint: the Ctrl/Cmd+K command menu.
+   Done since the last checkpoint: Ctrl/Cmd+K menu, email hidden behind an envelope button with a popup, blog v2.
 
 ## Waiting on the owner
 - Set the Vercel project's Node.js Version to 24.x (unconfirmed; removes the override warning).

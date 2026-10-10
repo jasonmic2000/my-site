@@ -52,7 +52,8 @@ Build/server-side only, called from async Server Components. No client fetching,
 production). Posts compile with `next-mdx-remote-client`'s `evaluate` (RSC) using `lib/mdx.ts` (remark-gfm, smartypants,
 rehype-slug → autolink-headings, rehype-pretty-code/shiki dual theme; imports disabled; MDX errors fail the build).
 Embeddable components and link handling live in `components/mdx-components.tsx` (`Callout`, `a` → `next/link`/external-safe).
-Body styles are the `.post` block in `styles/globals.css`. Feeds carry excerpt + link. `@vercel/analytics` is in the root layout.
+Body styles are the `.post` block in `styles/globals.css`.
+Per post: **reading time** (`estimateReadingMinutes`, 200 wpm, code excluded); a **share image** (`app/blog/[slug]/opengraph-image.tsx`, passed explicitly via `pageMetadata({ image })` because a page-level `openGraph` replaces the file-convention image); a **table of contents** (`createMdxOptions(headings)` in `lib/mdx.ts` collects h2/h3 during compile; `TableOfContents` renders a `<details>` from three headings up); **code blocks** (`CodeBlock` replaces `<pre>` with a copy button and `tabIndex=0`; rehype-pretty-code meta: `title="file.ts"`, `{2}` or `{1,3-4}` highlights, `showLineNumbers`; styles in `.post`); and **tags** (`/blog/tags/[tag]`, `tagSlug`/`getAllTags`/`getPostsByTag` in `lib/blog.ts`, chips via `TagList`, tags also in the sitemap and `/search-index.json` for the menu). Feeds carry excerpt + link. `@vercel/analytics` is in the root layout.
 
 ## Testing
 `e2e/site.spec.ts` (Playwright + `@axe-core/playwright`, config in `playwright.config.ts`) runs against the production build

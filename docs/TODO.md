@@ -70,15 +70,12 @@ Owner decision 2026-10-10: **parked with the fonts**; do not spend time here unt
 - [ ] **Logo** (deferred, owner 2026-10-08). Design needed (**[needs input]**): wordmark/monogram or a tiny mascot. The current logo is the text `¯\_(ツ)_/¯` in `Navbar`. Deliver as SVG (single colour using `currentColor` so it follows the theme). Once chosen, update together: navbar, `public/favicon.ico` plus an SVG favicon, `app/apple-icon.tsx`, `app/opengraph-image.tsx`, `app/manifest.ts` icons.
 - [x] ~~**Command menu (Ctrl/Cmd+K)**~~ done 2026-10-10 (see ARCHITECTURE.md). Follow-ups: use the GitHub noreply address as the git author email for new commits (owner choice, see DECISIONS.md); add tag pages as results once they exist, a background/motion toggle action once the parked background exists, a bio/recent-work search, and softening the rose focus ring on the search field when the interaction states are polished.
 
-## Blog v2
-All of these are in [BLOG-PLAN.md](BLOG-PLAN.md) (details and rationale there).
-- [ ] Per-post Open Graph images (`app/blog/[slug]/opengraph-image.tsx`)
-- [ ] Reading time
-- [ ] Table of contents (heading ids already exist via `rehype-slug`)
-- [ ] Tag pages
-- [ ] Code block niceties: copy button, optional filename/title, line highlighting (supported by `rehype-pretty-code`)
-- [ ] Full-content feeds (currently excerpt + link)
+## Blog v2 (done 2026-10-10 except the items below)
+Shipped: per-post Open Graph images, reading time, collapsible table of contents (3+ headings), code-block copy button / titles / line highlighting / line numbers, tag pages (also in the sitemap and the Ctrl+K menu). See ARCHITECTURE.md (Blog).
 - [ ] **First real post**: a detailed write-up of this site's tech stack and design decisions, including *why* each choice was made. Source material already exists in `docs/DECISIONS.md` and `docs/ARCHITECTURE.md` (Biome vs ESLint, static-only/no Cache Components, MDX pipeline choice, no CSP trade-off, Node/TypeScript pinning, accessibility fixes, the scrollbar-gutter layout-shift bug, etc.). Write it last so it reflects the finished site. Good candidates for live `<Callout>`/demo components.
+- [ ] Full-content feeds (currently excerpt + link): deferred. It needs MDX rendered to static HTML for the feed (server rendering of the evaluated post), which is a lot of machinery for little benefit; revisit only if readers ask.
+- [ ] Share images use the default regular-weight font; load a bold font (e.g. a local Geist file) in the `ImageResponse` for bolder titles. Cosmetic.
+- [ ] Optional: a `/blog/tags` index page, tag descriptions, related posts.
 
 ## Nice-to-haves (suggested)
 Optional polish; none are required.
