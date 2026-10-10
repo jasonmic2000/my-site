@@ -341,26 +341,64 @@ test.describe("email address", () => {
     for (const script of scripts) expect(script).not.toMatch(EMAIL);
   });
 
-  test("the envelope copies the address and shows it as a mailto link", async ({
+  const envelope = (page: Page) =>
+    page.locator('button[aria-label="Copy email address"][data-ready="true"]');
+
+  test("the envelope copies the address and confirms with a popup that fades away", async ({
     page,
     context,
   }) => {
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await page.goto("/");
-    const envelope = page.locator(
-      'button[aria-label="Copy email address"][data-ready="true"]',
-    );
-    await envelope.click();
+    const popup = page.getByText("Email copied", { exact: true });
+    await expect(popup).toHaveCSS("opacity", "0");
 
+    await envelope(page).click();
+    await expect(popup).toHaveCSS("opacity", "1");
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toMatch(
+      EMAIL,
+    );
+    // The address is copied, never put on the page.
+    expect(await page.content()).not.toMatch(EMAIL);
+
+    // It dismisses itself.
+    await expect(popup).toHaveCSS("opacity", "0", { timeout: 5000 });
+  });
+
+  test("shows the address instead when copying is blocked", async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, "clipboard", {
+        value: { writeText: () => Promise.reject(new Error("blocked")) },
+      });
+    });
+    await page.goto("/");
+    await envelope(page).click();
     const link = page.getByRole("link", { name: EMAIL });
     await expect(link).toBeVisible();
     await expect(link).toHaveAttribute(
       "href",
       /^mailto:[^@\s]+@[^@\s]+\.[a-z]+$/i,
     );
-    await expect(page.getByText(/copied to clipboard/i).first()).toBeAttached();
-    const copied = await page.evaluate(() => navigator.clipboard.readText());
-    expect(copied).toBe(await link.innerText());
+  });
+
+  test("the contact icons press in while the mouse is down", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const github = page.getByRole("link", { name: /on github/i });
+    await github.hover();
+    expect(await github.evaluate((el) => getComputedStyle(el).scale)).toBe(
+      "none",
+    );
+    await page.mouse.down();
+    await expect
+      .poll(() => github.evaluate((el) => getComputedStyle(el).scale))
+      .not.toBe("none");
+    // Release away from the link so it does not open a new tab.
+    await page.mouse.move(0, 0);
+    await page.mouse.up();
   });
 });
 

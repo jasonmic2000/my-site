@@ -3,6 +3,7 @@ import { EmailButton } from "@/components/EmailButton";
 import {
   DEFAULT_METADATA,
   HOVER_TRANSITION_CLASS,
+  ICON_PRESS_CLASS,
   SOCIALS,
 } from "@/lib/consts";
 
@@ -26,6 +27,7 @@ export const Connect = () => {
           >
             <Link
               href={HREF}
+              className={ICON_PRESS_CLASS}
               rel="noopener noreferrer"
               target="_blank"
               aria-label={`${DEFAULT_METADATA.siteName} on ${NAME}`}

@@ -20,6 +20,7 @@ Owner decision 2026-10-08: deliberately parked, together with the other design n
 Raised by the owner 2026-10-08: hover and "selected" are too subtle to tell what is active. Parked with the fonts because the hover/active language should be designed together with the type and colour scale.
 - **Current behaviour:** every link uses `HOVER_TRANSITION_CLASS`, which only fades the text from zinc-700/300 to black/white. The active nav link (`aria-current="page"`) gets the same black/white, so hover, active and normal are almost indistinguishable. The theme toggle and Connect icons behave the same way.
 - **Requirements:** state must not rely on colour alone (WCAG 1.4.1), so use a visible non-colour cue such as an underline; active, hover and keyboard focus must each look different and clear; one consistent interaction language across the navbar, logo, theme toggle, "See all work", Connect icons, footer and blog titles.
+- **Already in place:** only the Connect icons have a press-in squish (`ICON_PRESS_CLASS`, `active:scale-90`); fold it into the final interaction language and decide whether the navbar links, theme toggle and menu trigger get it too.
 - **Proposal to review:** active = accent underline (2px, offset) and stronger weight; hover = neutral underline plus full-contrast text; toggle/icons = subtle background pill on hover. Add an e2e assertion for the active state.
 - **Done when:** the owner signs off on screenshots in both themes (hover, active, focus), the axe checks stay green, and there is no layout shift when the active style applies.
 

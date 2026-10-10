@@ -3,6 +3,10 @@ import { FaGithub, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
 /** How many of the newest posts the home page shows. */
 export const HOME_POST_COUNT = 2;
 
+/** Press-in feedback for icon links/buttons; the global reduced-motion rule makes it instant when asked. */
+export const ICON_PRESS_CLASS =
+  "transition-transform duration-100 ease-out active:scale-90";
+
 export const HOVER_TRANSITION_CLASS =
   "transition duration-300 ease-in-out hover:text-black dark:hover:text-white";
 
