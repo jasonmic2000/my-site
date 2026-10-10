@@ -22,7 +22,7 @@ html {
    The two raw values are defined once here; global-error.tsx reads them directly
    because it follows the OS colour scheme, not the .dark class. */
 :root {
-  --accent-light: #eb506d; /* 3.24:1 on zinc-100 */
+  --accent-light: #e5456a; /* 3.54:1 on zinc-100 */
   --accent-dark: #fb7185; /* rose-400, 6.58:1 on zinc-900 */
   --accent: var(--accent-light);
   --background: var(--color-zinc-100);
