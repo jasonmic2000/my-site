@@ -535,6 +535,54 @@ test.describe("code copy button visibility", () => {
     await expect(button).toHaveCSS("opacity", "0");
   });
 
+  test("the clipboard icon never flashes while the button fades out", async ({
+    page,
+    context,
+  }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    const { block, button } = await openPostWithCode(page);
+    await block.hover();
+    await button.click();
+    await page.mouse.move(0, 0);
+    await expect(button).toHaveAttribute("data-copied", "true");
+
+    // Watch the clipboard icon's effective opacity (its own x the button's)
+    // from the moment the check finishes until everything has settled.
+    const peak = await button.evaluate(
+      (el) =>
+        new Promise<number>((resolve) => {
+          const clipboard = el.querySelector("svg");
+          if (!clipboard) {
+            resolve(Number.POSITIVE_INFINITY);
+            return;
+          }
+          let max = 0;
+          const sample = () => {
+            const effective =
+              Number.parseFloat(getComputedStyle(el).opacity) *
+              Number.parseFloat(getComputedStyle(clipboard).opacity);
+            max = Math.max(max, effective);
+          };
+          const observer = new MutationObserver(() => {
+            if (el.getAttribute("data-copied") !== "false") return;
+            observer.disconnect();
+            const start = performance.now();
+            const tick = () => {
+              sample();
+              if (performance.now() - start < 700) requestAnimationFrame(tick);
+              else resolve(max);
+            };
+            tick();
+          });
+          observer.observe(el, {
+            attributes: true,
+            attributeFilter: ["data-copied"],
+          });
+        }),
+    );
+    expect(peak).toBeLessThan(0.08);
+  });
+
   test("keyboard focus on the block reveals it", async ({ page }) => {
     const { button } = await openPostWithCode(page);
     await page.mouse.move(0, 0);

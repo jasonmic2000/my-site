@@ -14,9 +14,17 @@ code, tables, and live components.
 
 ## Code
 
-```ts title="greet.ts" showLineNumbers {2}
+A block with a filename bar (`title="greet.ts"`) and a highlighted line (`{2}`):
+
+```ts title="greet.ts" {2}
 export const greet = (name: string) =>
   `Hello, ${name}!`;
+```
+
+Without a title there is no bar, and line numbers are off unless you add `showLineNumbers`:
+
+```bash
+npm install next-mdx-remote-client
 ```
 
 ## A table
