@@ -411,6 +411,25 @@ test("posts show an estimated reading time in the list and on the post", async (
   await expect(page.locator("header").getByText(/\d+ min read/)).toBeVisible();
 });
 
+test("each post has its own share image, referenced in the page metadata", async ({
+  page,
+  request,
+}) => {
+  const path = await firstPostPath(page);
+  await page.goto(path);
+  const og = await page
+    .locator('meta[property="og:image"]')
+    .getAttribute("content");
+  expect(og).toContain(`${path}/opengraph-image`);
+  expect(
+    await page.locator('meta[name="twitter:image"]').getAttribute("content"),
+  ).toBe(og);
+
+  const image = await request.get(`${path}/opengraph-image`);
+  expect(image.status()).toBe(200);
+  expect(image.headers()["content-type"]).toContain("image/png");
+});
+
 test("the active nav link is marked with aria-current", async ({ page }) => {
   await page.goto("/work");
   await expect(

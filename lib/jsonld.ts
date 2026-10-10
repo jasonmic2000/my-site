@@ -39,6 +39,7 @@ export function blogPostingJsonLd(post: Post): Record<string, unknown> {
     "@type": "BlogPosting",
     headline: post.title,
     description: post.description,
+    image: `${url}/opengraph-image`,
     timeRequired: `PT${post.readingMinutes}M`,
     datePublished: post.date,
     dateModified: post.date,
