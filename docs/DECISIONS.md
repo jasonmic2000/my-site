@@ -19,6 +19,12 @@ Decisions already made. Don't reverse without asking. Newest context first withi
 - **Copy style: plain hyphens only** (owner, 2026-10-08). No en or em dashes in site copy, titles, metadata, feeds or posts (use " - " and "7-8"). Blog smart punctuation keeps quotes and ellipses but `dashes: false`.
 - **Stay fully static.** New features should not force dynamic rendering (see the CSP decision) unless there is a strong reason.
 
+## Command menu and contact email (owner, 2026-10-10)
+- **The email address is hidden until revealed.** It is stored base64-encoded in `lib/email.ts` and decoded in the browser on a user action: the Connect section shows a "Show email address" button, and the command menu's "Copy email address" decodes at copy time and never displays it. A build scan and an e2e test confirm no address-like string is in the HTML, page data, scripts or source maps. **Never write the address as a literal** in code, docs or tests.
+- **Limits, stated honestly:** this is obfuscation against basic scrapers, not secrecy. The address is still in the public repo's git history (it is the author email on every commit) and anywhere else it has been published. To stop *new* commits exposing it, set `git config user.email` to the GitHub noreply address (`<id>+<username>@users.noreply.github.com`); rewriting history is not recommended. A contact form was considered and deferred (see TODO).
+- **Command menu lists are capped:** 5 posts with no query, the top 8 once typing, with a "+N more posts, keep typing to narrow" line. The post index is static JSON (about 200 bytes per post, fetched once on first open); at roughly 500+ posts trim `description` from the index or shard it.
+- **Search field focus is a background shade, not a ring** (darker in light mode, lighter in dark mode: surfaces move away from the page colour). A shade alone is only about 1.1:1, below WCAG's 3:1 for a focus indicator, so the field's divider also turns accent (about 3.5:1) and the text caret is visible; forced-colors mode keeps a real outline.
+
 ## Removed / not adopted
 - **ESLint + Prettier → Biome only** (2026-08-30). Prettier was never installed. Biome's auto-detected Next domain replaced `eslint-config-next`. Motivated partly by the ESLint 10 incident: `eslint-plugin-react` (via `eslint-config-next`) crashed on ESLint 10's rule-context API change.
 - **No Cache Components.** The Next 16 upgrade codemod inserts `export const instant = false;`, which is invalid without `cacheComponents` and breaks the build. Remove it, don't opt in.

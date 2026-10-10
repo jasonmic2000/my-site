@@ -67,7 +67,7 @@ Owner decision 2026-10-10: **parked with the fonts**; do not spend time here unt
 
 ## Features
 - [ ] **Logo** (deferred, owner 2026-10-08). Design needed (**[needs input]**): wordmark/monogram or a tiny mascot. The current logo is the text `¯\_(ツ)_/¯` in `Navbar`. Deliver as SVG (single colour using `currentColor` so it follows the theme). Once chosen, update together: navbar, `public/favicon.ico` plus an SVG favicon, `app/apple-icon.tsx`, `app/opengraph-image.tsx`, `app/manifest.ts` icons.
-- [x] ~~**Command menu (Ctrl/Cmd+K)**~~ done 2026-10-10 (see ARCHITECTURE.md). Possible follow-ups: add tag pages as results once they exist, a background/motion toggle action once the parked background exists, a bio/recent-work search, and softening the rose focus ring on the search field when the interaction states are polished.
+- [x] ~~**Command menu (Ctrl/Cmd+K)**~~ done 2026-10-10 (see ARCHITECTURE.md). Follow-ups: use the GitHub noreply address as the git author email for new commits (owner choice, see DECISIONS.md); add tag pages as results once they exist, a background/motion toggle action once the parked background exists, a bio/recent-work search, and softening the rose focus ring on the search field when the interaction states are polished.
 
 ## Blog v2
 All of these are in [BLOG-PLAN.md](BLOG-PLAN.md) (details and rationale there).
@@ -88,7 +88,6 @@ Optional polish; none are required.
 - [ ] **"Colophon"/"Uses" page or footer note**: link to the source repo, show the build's commit/date, link to the tech-stack post.
 - [ ] **Print stylesheet** for `/work` so it prints as a clean one-page résumé; optionally a downloadable PDF résumé link.
 - [ ] **Easter eggs** tied to the logo/mascot (keyboard shortcut for theme, hidden animation).
-- [ ] **Email address obfuscation** in `Connect` (the address is plain text in the HTML and scrapeable).
 - [ ] **Projects page** (the old `PROJECTS` constant was removed as unused; the bio mentions self-hosted experiments and a home server).
 - [ ] **"Currently playing/reading" widget** (the bio mentions games and board games). Needs an external API; would require ISR or client fetch, so weigh against the fully-static rule first.
 - [ ] **Contact form — considered and deferred (2026-10-07).** Needs a server action/route handler, an email service (e.g. Resend) with secrets, spam protection (honeypot/Turnstile, rate limiting), server-side validation, accessible error handling and sender-domain deliverability setup (~half a day plus ongoing upkeep). `Connect` already has email and socials, which is the norm for developer portfolios. It would also invalidate the "no user input" premise behind the no-CSP decision (`docs/DECISIONS.md`), so revisit that if built. Cheaper alternatives first: email obfuscation, a "copy email" palette action, or a third-party form service (Formspree/Web3Forms) if a form is wanted later. Revisit if inbound contact demand shows up or the plain-text address becomes a spam problem.

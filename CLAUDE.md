@@ -22,6 +22,7 @@ Verify with lint + typecheck + build, plus `test:e2e` for UI changes (it is part
 - Server Components by default; add `"use client"` only for leaf interactivity. Never import `lib/content.ts` (Node `fs`) from a client component — shared constants live in `lib/consts.ts`.
 - Styling: Tailwind utilities, zinc palette, dark mode via `class` + `next-themes`. Shared class fragments are plain string constants (`HOVER_TRANSITION_CLASS`); no `clsx`/`cn()`.
 - Accent colour: use the `accent` utilities (`text-accent`, `border-accent`, `outline-accent`) backed by `--accent` in `styles/globals.css`; never hard-code rose classes. Large text/graphics only. See `docs/DECISIONS.md`.
+- Contact email: never write the address as a literal anywhere (code, docs, tests). It lives encoded in `lib/email.ts`; decode with `getEmail()` in the browser on a user action only.
 - Copy: plain hyphens only; never en/em dashes in site text, titles or posts.
 - Motion/decoration: every animation respects `prefers-reduced-motion`; ambient motion (e.g. background parallax) also needs a user toggle. Text contrast must stay WCAG AA. See `docs/DECISIONS.md` (Design principles).
 - Content: `content/<type>/*.mdx` + frontmatter, read at build time via helpers in `lib/` (no external data source).
