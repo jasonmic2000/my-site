@@ -21,7 +21,10 @@ work history, bio, Connect copy).
 ## Next, in this order
 1. **Background texture.** The comparison page is built: `docs/design/background-options.html` (see the TODO
    findings: light mode needs white highlight lines because the accent has almost no contrast headroom).
-   **Waiting on the owner's pick**, then implement it (reduced motion, user toggle, hidden from AT).
+   Owner narrowed to dots or fine grid, no fade, 24px unit; light accent deepened to `#e5456a` (done). Second page
+   `docs/design/background-options-v2.html` compares A (dots), B (grid), C (grid, old accent). **Waiting on the owner's
+   A/B/C pick**, then implement it (reduced motion, user toggle, hidden from AT). Notebook text alignment is deferred
+   to the design polish pass (details in TODO.md).
    Original brief: show 3-4 *static* options before building. Guardrails are in TODO.md (WCAG AA contrast
    against the worst pixel, reduced-motion respected, visible persisted user toggle, parallax only if
    the static version feels flat).
